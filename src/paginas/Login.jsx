@@ -4,7 +4,7 @@ import clienteAxios from '../config/clienteAxios';
 
 import useAuth from "../hooks/useAuth";
 
-const Login = ({ setIsLoggedIn }) => {
+const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -23,9 +23,8 @@ const Login = ({ setIsLoggedIn }) => {
             if (response.status >= 200 && response.status < 300) {
                 // La solicitud fue exitosa (código de respuesta en el rango 200-299)
                 // Manejar la respuesta aquí
-                const data = response.data;
-                console.log('Response data:', data);
-                setIsLoggedIn(true);
+                localStorage.setItem("token", JSON.stringify(response.data.token));
+                setAuth(response.data);
                 navigate("/home");
                 console.log("Se ingresó correctamente");
             } else {
