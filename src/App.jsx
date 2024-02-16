@@ -1,24 +1,25 @@
 import { useState } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import Signin from './components/Signin';
-import Home from './components/Home';
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import AuthLayout from './layouts/AuthLayout';
+import Login from './paginas/Login';
+import { AuthProvider } from "./context/AuthProvider.jsx";
+
 
 function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
-    <>
+
+    <AuthProvider>
       <Routes>
-        <Route path='/' element={<Signin setIsLoggedIn={setIsLoggedIn} />} />
-        {/* Ruta protegida */}
-        {isLoggedIn ? (
-          <Route path='/home' element={<Home />} />
-        ) : (
-          null
-        )}
+        <Route path="/" element={<AuthLayout />}>
+          <Route index element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+        </Route>
       </Routes>
-    </>
+    </AuthProvider>
+
+
   );
 }
 
