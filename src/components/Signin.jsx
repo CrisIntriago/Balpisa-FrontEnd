@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import clienteAxios from '../config/clienteAxios';
 
 const Signin = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState('');
@@ -11,26 +11,29 @@ const Signin = ({ setIsLoggedIn }) => {
     e.preventDefault()
     // llamar db para verif
     try {
-      const response = await fetch('http://localhost:4000/api/usuarios/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          nombre: username,
-          contrasena: password
-        })
+      const response = await clienteAxios.post('/usuarios/login', {
+        nombre: username,
+        contrasena: password
       });
 
-      if(response.ok){
+      if (response.status >= 200 && response.status < 300) {
+        // La solicitud fue exitosa (código de respuesta en el rango 200-299)
+        // Manejar la respuesta aquí
+        const data = response.data;
+        console.log('Response data:', data);
         setIsLoggedIn(true);
         navigate("/home");
         console.log("Se ingresó correctamente");
+      } else {
+        // La solicitud no fue exitosa (código de respuesta fuera del rango 200-299)
+        // Manejar el error aquí
+        console.error('Error:', response.statusText);
       }
-
     } catch (error) {
-      console.error('Error:', error);
+      // Manejar errores de red u otros errores relacionados con la solicitud
+      console.error('Error:', error.message);
     }
+
 
   };
 
