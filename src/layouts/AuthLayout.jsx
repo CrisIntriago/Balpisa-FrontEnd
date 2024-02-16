@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom'
 
 const AuthLayout = () => {
   return (
-    <section className="bg-gray-100 py-20 dark:bg-dark lg:py-[120px]">
+    <section className="bg-gray-100 py-20 dark:bg-dark lg:py-[120px] h-screen">
       <div className="container mx-auto">
         <div className="-mx-4 flex flex-wrap">
           <div className="w-full px-4">

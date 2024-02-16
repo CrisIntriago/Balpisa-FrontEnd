@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const Navbar = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
     <header className={`flex w-full items-center bg-white dark:bg-dark`}>
@@ -15,7 +15,7 @@ const Navbar = () => {
                 className="dark:hidden"
               />
               <img
-                src="https://cdn.tailgrids.com/2.0/image/assets/images/logo/logo-white.svg"
+                src="\src\assets\logo.png"
                 alt="logo"
                 className="hidden dark:block"
               />
@@ -42,9 +42,9 @@ const Navbar = () => {
                 } `}
               >
                 <ul className="block lg:flex">
-                  <ListItem NavLink="/home">Consultas</ListItem>
-                  <ListItem NavLink="/home">Movimientos</ListItem>
-                  <ListItem NavLink="/home">Reportes</ListItem>
+                  <ListItem NavLink="/#">Consultas</ListItem>
+                  <ListItem NavLink="/#">Movimientos</ListItem>
+                  <ListItem NavLink="/#">Reportes</ListItem>
                 </ul>
               </nav>
             </div>
@@ -53,14 +53,14 @@ const Navbar = () => {
                 href="/#"
                 className="px-7 py-3 text-base font-medium text-dark hover:text-primary dark:text-white"
               >
-                Sign in
+               Ingresar
               </a>
 
               <a
                 href="/#"
                 className="rounded-md bg-primary px-7 py-3 text-base font-medium text-white hover:bg-primary/90"
               >
-                Sign Up
+                Bienvenid@ Cristian
               </a>
             </div>
           </div>
