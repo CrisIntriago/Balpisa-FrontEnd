@@ -1,18 +1,37 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
 const Signin = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     // llamar db para verif
-    if (username === 'admin' && password === 'password') {
+    try {
+      const response = await fetch('http://localhost:4000/api/usuarios/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          nombre: username,
+          contrasena: password
+        })
+      });
+
+      if(response.ok){
         setIsLoggedIn(true);
-        navigate('/home');
-    }    
+        navigate("/home");
+        console.log("Se ingresó correctamente");
+      }
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
   };
 
   return (
@@ -33,9 +52,9 @@ const Signin = ({ setIsLoggedIn }) => {
                 </a>
               </div>
               <form onSubmit={handleSubmit}>
-                <InputBox 
-                  type="text" 
-                  name="user" 
+                <InputBox
+                  type="text"
+                  name="user"
                   placeholder="Usuario"
                   onChange={(e) => setUsername(e.target.value)}
                 />
@@ -65,15 +84,15 @@ export default Signin;
 
 
 const InputBox = ({ type, placeholder, name, onChange }) => {
-    return (
-      <div className="mb-6">
-        <input
-          type={type}
-          placeholder={placeholder}
-          name={name}
-          onChange={onChange} // Añadido el evento onChange
-          className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-base text-body-color outline-none focus:border-primary focus-visible:shadow-none dark:border-dark-3 dark:text-black"
-        />
-      </div>
-    );
-  };
+  return (
+    <div className="mb-6">
+      <input
+        type={type}
+        placeholder={placeholder}
+        name={name}
+        onChange={onChange} // Añadido el evento onChange
+        className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-base text-body-color outline-none focus:border-primary focus-visible:shadow-none dark:border-dark-3 dark:text-black"
+      />
+    </div>
+  );
+};
