@@ -3,11 +3,11 @@ import { Outlet } from 'react-router-dom'
 
 const AuthLayout = () => {
   return (
-    <section className="bg-gray-100 py-20 dark:bg-dark lg:py-[120px] h-screen">
+    <section className="bg-gray-100 py-20 lg:py-[120px] h-screen">
       <div className="container mx-auto">
         <div className="-mx-4 flex flex-wrap">
           <div className="w-full px-4">
-            <div className="relative mx-auto max-w-[525px] overflow-hidden rounded-lg bg-white px-10 py-16 text-center dark:bg-dark-2 sm:px-12 md:px-[60px]">
+            <div className="relative mx-auto max-w-[525px] overflow-hidden rounded-lg bg-white px-10 py-16 text-center sm:px-12 md:px-[60px]">
               <Outlet />
             </div>
           </div>

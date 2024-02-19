@@ -3,9 +3,7 @@ import clienteAxios from "../config/clienteAxios";
 
 const AuthContext = createContext();
 
-
 const AuthProvider = ({ children }) => {
-
     const [auth, setAuth] = useState({});
 
     useEffect(() => {
@@ -13,18 +11,22 @@ const AuthProvider = ({ children }) => {
             const token = localStorage.getItem("token");
 
             if (!token) {
-                return
+                return;
             }
 
             const config = {
                 headers: {
-                    "Content-Type":"application/json",
-                    Authorization:`Bearer ${token}`
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
                 }
-            }
+            };
             try {
-                const {usuario} = await clienteAxios.get("/usuarios/perfil", config);
-               // setAuth(usuario);
+                const response = await clienteAxios.get("/usuarios/perfil", config);
+                console.log(response)
+                setAuth({
+                    ...response.data.usuario, // Asumiendo que el nombre de usuario está en el objeto usuario
+                    token: token
+                });
 
             } catch (error) {
                 console.log("Error al pedir Token");
@@ -33,24 +35,17 @@ const AuthProvider = ({ children }) => {
         autenticarUsuario();
     }, []);
 
-    //Aquí hay funciones que puedes definir;
     return (
         <AuthContext.Provider
-            value={
-                {
-                    //Aquí pones lo que quieres que esté disponible en toda tu app
-                    setAuth
-                }
-            }
+            value={{
+                auth,
+                setAuth
+            }}
         >
             {children}
         </AuthContext.Provider>
-    )
+    );
+};
 
-}
-
-export {
-    AuthProvider
-}
-
+export { AuthProvider };
 export default AuthContext;

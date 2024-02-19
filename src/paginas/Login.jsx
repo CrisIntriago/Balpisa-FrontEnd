@@ -25,7 +25,7 @@ const Login = () => {
                 // Manejar la respuesta aquí
                 localStorage.setItem("token", JSON.stringify(response.data.token));
                 setAuth(response.data);
-                navigate("/home");
+                navigate("/consultas");
                 console.log("Se ingresó correctamente");
             } else {
                 // La solicitud no fue exitosa (código de respuesta fuera del rango 200-299)
@@ -89,7 +89,7 @@ const InputBox = ({ type, placeholder, name, onChange }) => {
                 placeholder={placeholder}
                 name={name}
                 onChange={onChange} // Añadido el evento onChange
-                className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-base text-body-color outline-none focus:border-primary focus-visible:shadow-none dark:border-dark-3 dark:text-black"
+                className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-base text-black outline-none focus:border-primary focus-visible:shadow-none"
             />
         </div>
     );
