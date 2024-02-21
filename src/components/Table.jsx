@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Loading from "./Loading";
-import useCeramicas from "../hooks/useCeramicas";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -9,38 +8,36 @@ const TdStyle = {
   TdButton: `inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary hover:text-white font-medium`,
 }
 
-const Table = ({tipoSeleccionado, nombreSeleccionado, ceramicas}) => {
+const Table = ({familiaSeleccionada, modeloSeleccionado, arreglo}) => {
 
   const [currentPage, setCurrentPage] = useState(0)
 
-  const isLoading = useCeramicas()[0];
-
   useEffect(() => {
     setCurrentPage(0)
-  }, [tipoSeleccionado, nombreSeleccionado])
+  }, [familiaSeleccionada, modeloSeleccionado])
 
 
-  const filteredCeramicas = () => {
-    if(tipoSeleccionado === '' && nombreSeleccionado === ''){
-      return ceramicas.slice(currentPage, currentPage + 5)
-    } else if(tipoSeleccionado !== '' && nombreSeleccionado === ''){
-      return ceramicas.filter( ceramica => ceramica.postId === tipoSeleccionado).slice(currentPage, currentPage + 5)
+  const filteredElements = () => {
+    if(familiaSeleccionada === '' && modeloSeleccionado === ''){
+      return arreglo.slice(currentPage, currentPage + 5)
+    } else if(familiaSeleccionada !== '' && modeloSeleccionado === ''){
+      return arreglo.filter( elemento => elemento.id === familiaSeleccionada).slice(currentPage, currentPage + 5)
     }
-    const filtered = ceramicas.filter( ceramica => ceramica.id === nombreSeleccionado)
+    const filtered = arreglo.filter( elemento => elemento.idmodelo === modeloSeleccionado)
     return filtered.slice(currentPage, currentPage + 5)
   }
 
   const nextPage = () => {
-    const totalItems = ceramicas.length;
+    const totalItems = arreglo.length;
     const maxPage = Math.ceil(totalItems / 5);
-    const nextPage = (currentPage + 1) % maxPage; // Calcula el siguiente índice de página (circular)
+    const nextPage = (currentPage + 1) % maxPage; 
     setCurrentPage(nextPage);
   };
   
   const prevPage = () => {
-    const totalItems = ceramicas.length;
+    const totalItems = arreglo.length;
     const maxPage = Math.ceil(totalItems / 5);
-    const prevPage = (currentPage - 1 + maxPage) % maxPage; // Calcula el índice de página anterior (circular)
+    const prevPage = (currentPage - 1 + maxPage) % maxPage;
     setCurrentPage(prevPage);
   };
 
@@ -64,7 +61,7 @@ const Table = ({tipoSeleccionado, nombreSeleccionado, ceramicas}) => {
                   </thead>
 
                   <tbody>
-                    {filteredCeramicas().map(({ postId, id, name, email }) => (
+                    {filteredElements().map(({ postId, id, name, email }) => (
                       <tr key={id}>
                         <td className={TdStyle.TdStyle}>{postId}</td>
                         <td className={TdStyle.TdStyle2}>{name}</td>
@@ -80,7 +77,7 @@ const Table = ({tipoSeleccionado, nombreSeleccionado, ceramicas}) => {
                 </table>
               </div>
 
-              {isLoading && <Loading />}
+              {<Loading />}
             </div>
           </div>
         </div>

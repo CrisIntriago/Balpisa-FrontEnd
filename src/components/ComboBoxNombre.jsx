@@ -1,24 +1,27 @@
 import Select from 'react-select';
+import useModelosPorFamilia from '../hooks/useModeloPorFamilia';
 
-const ComboBoxNombre = ({ tipoSeleccionado, onSelectNombre, ceramicas }) => {
+const ComboBoxNombre = ({ familiaSeleccionada, onSelectModelo, modeloSeleccionado }) => {
+    const { modelos } = useModelosPorFamilia(familiaSeleccionada);
 
-    // Filtrar nombres de cerámica basados en el tipo seleccionado
-    const nombresFiltrados = [{ value: '', label: "Todos" }, ...ceramicas
-        .filter(ceramica => ceramica.postId === tipoSeleccionado)
-        .map(ceramica => ({ value: ceramica.id, label: ceramica.email }))];
+    const modelosFiltrados = [{ value: '', label: "Todos" }, ...modelos
+        .filter(modelo => modelo.FamiliaId === familiaSeleccionada)
+        .map(modelo => ({ value: modelo.id, label: modelo.nombre }))];
 
     const handleSelectChange = (selectedOption) => {
-        onSelectNombre(selectedOption.value);
+        onSelectModelo(selectedOption ? selectedOption.value : null);
     };
 
     return (
         <div>
-            <p>Nombre:</p>
+            <p>Modelo:</p>
             <Select 
-                placeholder ='Seleccione un nombre'
-                options = {nombresFiltrados}
-                onChange={ handleSelectChange }
+                placeholder ='Seleccione un modelo'
+                options = {modelosFiltrados}
+                onChange={handleSelectChange}
+                value={modelosFiltrados.find(option => option.value === modeloSeleccionado)}
                 defaultInputValue=''
+                isClearable={true} // Permite un ícono para limpiar la selección
                 styles={{
                     control: (provided, state) => ({
                         ...provided,

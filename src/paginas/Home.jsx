@@ -3,26 +3,30 @@ import Table from '../components/Table';
 import ComboBoxTipo from '../components/ComboBoxTipo';
 import ComboBoxNombre from '../components/ComboBoxNombre';
 import Plancha from '../components/Plancha'; 
-import useCeramicas from '../hooks/useCeramicas';
+import useFamilias from '../hooks/useFamilias';
 
 const Home = () => {
-  const [tipoSeleccionado, setTipoSeleccionado] = useState('');
-  const [nombreSeleccionado, setNombreSeleccionado] = useState('');
+  const [familiaSeleccionada, setFamiliaSeleccionada] = useState('');
+  const [modeloSeleccionado, setModeloSeleccionado] = useState('');
   const [searchMode, setSearchMode] = useState('modelo'); 
-  const [isLoading, ceramicas] = useCeramicas();
+  const { familias } = useFamilias();
 
   useEffect(() => {
-    setTipoSeleccionado('')
-    setNombreSeleccionado('')
+    setFamiliaSeleccionada(null)
+    setModeloSeleccionado(null)
   }, [searchMode])
 
-  const handleTipoSelect = (tipo) => {
-    setTipoSeleccionado(tipo);
-    setNombreSeleccionado('');
+  useEffect(() => {
+    // Cada vez que el id de la familia seleccionada cambie, limpia la selección de modelo.
+    setModeloSeleccionado(null);
+}, [familiaSeleccionada]);
+
+  const handleFamiliaSelect = (familia) => {
+    setFamiliaSeleccionada(familia);
   };
 
-  const handleNombreSelect = (nombre) => {
-    setNombreSeleccionado(nombre);
+  const handleModeloSelect = (modelo) => {
+    setModeloSeleccionado(modelo);
   };
 
 
@@ -44,28 +48,27 @@ const Home = () => {
         </button>
       </div>
           
-      {/* Mostrar los componentes según el modo de búsqueda */}
       {searchMode === 'modelo' && (
-        <div className="flex justify-between mb-4 mx-4 md:mx-auto w-full md:w-3/4 lg:w-1/3">
-          <ComboBoxTipo 
-            onSelectTipo={handleTipoSelect} 
-            ceramicas={ceramicas}
-          />
-          {tipoSeleccionado && <ComboBoxNombre 
-            tipoSeleccionado={tipoSeleccionado} 
-            onSelectNombre={handleNombreSelect} 
-            ceramicas={ceramicas}
-          />}
-        </div>
-      )}
+  <>
+    <div className="flex justify-between mb-4 mx-4 md:mx-auto w-full md:w-3/4 lg:w-1/3">
+      <ComboBoxTipo 
+        onSelectFamilia={handleFamiliaSelect} 
+        familias={familias}
+      />
+      {familiaSeleccionada && <ComboBoxNombre 
+        familiaSeleccionada={familiaSeleccionada} 
+        onSelectModelo={handleModeloSelect} 
+        modeloSeleccionado={modeloSeleccionado}
+      />}
+    </div>
 
-      {searchMode === 'modelo' && (
-        <Table 
-          tipoSeleccionado={tipoSeleccionado}
-          nombreSeleccionado={nombreSeleccionado}
-          ceramicas={ceramicas}
-        />
-      )}
+    <Table 
+      familiaSeleccionada={familiaSeleccionada}
+      modeloSeleccionado={modeloSeleccionado}
+      modelosPorFamiliaFilt={[]}
+    />
+  </>
+)}
 
       {searchMode === 'plancha' && (
         <Plancha />

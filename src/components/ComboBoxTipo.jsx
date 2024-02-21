@@ -1,26 +1,22 @@
 import Select from 'react-select';
 
+const ComboBoxTipo = ({ onSelectFamilia, familias }) => {
 
-const ComboBoxTipo = ({ onSelectTipo, ceramicas }) => {
-
-    // Obtener tipos únicos de cerámica
-    const tiposUnicos = [...new Set(ceramicas.map(ceramica => ceramica.postId))];
-
-    // Convertir a opciones para el Select
-    const opcionesTipos = [{ value: '', label: "Todos" }, ...tiposUnicos.map( (postId) => ({ value: postId, label: postId }))];
+    const opcionesFamilias = familias.map(({ id, nombre }) => ({ value: id, label: nombre }));
 
     const handleSelectChange = (selectedOption) => {
-        onSelectTipo(selectedOption.value);
+        onSelectFamilia(selectedOption.value);
     };
 
     return (
         <div>
-            <p>Tipo:</p>
+            <p>Familia:</p>
             <Select 
-                placeholder ='Seleccione un tipo'
-                options = {opcionesTipos}
+                placeholder ='Seleccione una familia'
+                options = {opcionesFamilias}
                 onChange={ handleSelectChange }
                 defaultInputValue=''
+                isClearable={true}
                 styles={{
                     control: (provided, state) => ({
                         ...provided,
