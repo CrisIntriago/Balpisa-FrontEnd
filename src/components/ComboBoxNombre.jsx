@@ -3,13 +3,10 @@ import useModelosPorFamilia from '../hooks/useModeloPorFamilia';
 
 const ComboBoxNombre = ({ familiaSeleccionada, onSelectModelo, modeloSeleccionado }) => {
     const { modelos } = useModelosPorFamilia(familiaSeleccionada);
-
-    const modelosFiltrados = [{ value: '', label: "Todos" }, ...modelos
-        .filter(modelo => modelo.FamiliaId === familiaSeleccionada)
-        .map(modelo => ({ value: modelo.id, label: modelo.nombre }))];
+    const modelosFiltrados = [{ value: '', label: "Todos" }, ...modelos.map(modelo => ({ value: modelo.nombre, label: modelo.nombre }))];
 
     const handleSelectChange = (selectedOption) => {
-        onSelectModelo(selectedOption ? selectedOption.value : null);
+        onSelectModelo(selectedOption ? selectedOption.value : '');
     };
 
     return (

@@ -7,7 +7,6 @@ export const obtenerModelosFromFamilia = async (idFamilia) => {
             "familiaId": idFamilia
         };
         const response = await clienteAxios.post(`/modelos/familia/modelos/`,json);
-        console.log(response.data)
         return response.data;
     } catch (error) {
         throw error;

@@ -13,13 +13,13 @@ const Home = () => {
   const { familias } = useFamilias();
 
   useEffect(() => {
-    setFamiliaSeleccionada(null)
-    setModeloSeleccionado(null)
+    setFamiliaSeleccionada('')
+    setModeloSeleccionado('')
   }, [searchMode])
 
   useEffect(() => {
     // Cada vez que el id de la familia seleccionada cambie, limpia la selección de modelo.
-    setModeloSeleccionado(null);
+    setModeloSeleccionado('');
 }, [familiaSeleccionada]);
 
   const handleFamiliaSelect = (familia) => {
@@ -66,7 +66,6 @@ const Home = () => {
     <Table 
       familiaSeleccionada={familiaSeleccionada}
       modeloSeleccionado={modeloSeleccionado}
-      arreglo={[]}
     />
   </>
 )}

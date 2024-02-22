@@ -5,7 +5,7 @@ const ComboBoxTipo = ({ onSelectFamilia, familias }) => {
     const opcionesFamilias = familias.map(({ id, nombre }) => ({ value: id, label: nombre }));
 
     const handleSelectChange = (selectedOption) => {
-        onSelectFamilia(selectedOption ? selectedOption.value : null);
+        onSelectFamilia(selectedOption ? selectedOption.value : '');
     };
 
     return (
