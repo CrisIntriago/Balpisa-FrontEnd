@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Loading from "./Loading";
-import useModelosPorFamilia from "../hooks/useModeloPorFamilia";
+import useModelosCompletos from "../hooks/useModelosCompletos";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -10,9 +10,9 @@ const TdStyle = {
 }
 
 const Table = ({ familiaSeleccionada, modeloSeleccionado }) => {
-  const { modelos } = useModelosPorFamilia(familiaSeleccionada);
+  const { modelosCompletos } = useModelosCompletos(familiaSeleccionada);
   const [currentPage, setCurrentPage] = useState(0);
-
+  
   useEffect(() => {
     setCurrentPage(0);
   }, [familiaSeleccionada, modeloSeleccionado]);
@@ -21,25 +21,24 @@ const Table = ({ familiaSeleccionada, modeloSeleccionado }) => {
     if (familiaSeleccionada === '' && modeloSeleccionado === '') {
       //return modelos.slice(currentPage, currentPage + 5);
     } else if (familiaSeleccionada !== '' && modeloSeleccionado === '') {
-      return modelos
+      return modelosCompletos.slice(currentPage, currentPage + 5);
     }
-    const filtered = modelos.filter(modelo => modelo.nombre === modeloSeleccionado);
+    const filtered = modelosCompletos.filter(modelo => modelo.id === modeloSeleccionado);
     return filtered.slice(currentPage, currentPage + 5);
   };
 
   const nextPage = () => {
-    const totalItems = modelos.length;
+    const totalItems = modelosCompletos.length;
     const maxPage = Math.ceil(totalItems / 5);
     setCurrentPage((currentPage + 1) % maxPage);
   };
   
   const prevPage = () => {
-    const totalItems = modelos.length;
+    const totalItems = modelosCompletos.length;
     const maxPage = Math.ceil(totalItems / 5);
     setCurrentPage((currentPage - 1 + maxPage) % maxPage);
   };
 
-  // Condicionamos la renderización del contenido de la tabla
   if (!familiaSeleccionada) {
     return <Loading />; // Muestra el componente Loading mientras se cargan los datos o no se ha seleccionado una familia
   }
