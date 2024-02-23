@@ -117,15 +117,11 @@ const Home = () => {
                       </button>
                   )}
                   {tablaVisible && (
-                      // Asume que tienes un componente Table para mostrar los resultados
-                      // <Table familiaSeleccionada={familiaSeleccionada} modeloSeleccionado={modeloSeleccionado} bodegaSeleccionada={bodegaSeleccionada} />
-                      // Por simplicidad, solo mostraremos un mensaje aquí
-                      <p>Mostrando resultados para la familia {familiaSeleccionada}, modelo {modeloSeleccionado}, y bodega {bodegaSeleccionada}.</p>
+                      < Table familiaSeleccionada={familiaSeleccionada} modeloSeleccionado={modeloSeleccionado} />
                   )}
               </>
           )}
 
-          {/* Aquí puedes agregar cualquier otro caso de búsqueda si es necesario */}
       </div>
   );
 };
