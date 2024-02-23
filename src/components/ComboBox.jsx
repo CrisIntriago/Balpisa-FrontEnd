@@ -12,6 +12,7 @@ const ComboBox = ({ placeholder, value, onChange, options, width = 250 }) => {
                 control: (provided) => ({
                     ...provided,
                     width: width,
+                    marginRight: 10,
                 }),
             }}
         />
