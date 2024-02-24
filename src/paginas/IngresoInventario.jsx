@@ -1,28 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import Table from '../components/Table'; 
+import React, { useState, useEffect } from 'react'; 
 import useFamilias from '../hooks/useFamilias';
 import ComboBox from '../components/ComboBox';
 import useModelosPorFamilia from '../hooks/useModeloPorFamilia';
 import useBodegas from '../hooks/useBodegas';
-import TablePlanchas from '../components/TablePlanchas';
+import Table from '../components/Table';
 
-const Home = () => {
+const IngresoInventario = () => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState('');
   const [modeloSeleccionado, setModeloSeleccionado] = useState('');
   const [bodegaSeleccionada, setBodegaSeleccionada] = useState('');
   const [tablaVisible, setTablaVisible] = useState(false);
-  const [searchMode, setSearchMode] = useState('modelo');
 
   const { familias } = useFamilias();
   const { modelos } = useModelosPorFamilia(familiaSeleccionada);
   const { bodegas } = useBodegas();
-
-  useEffect(() => {
-    setFamiliaSeleccionada('');
-    setModeloSeleccionado('');
-    setBodegaSeleccionada('');
-    setTablaVisible(false);
-  }, [searchMode]);
 
   useEffect(() => {
     setModeloSeleccionado('');
@@ -43,7 +34,7 @@ const Home = () => {
   };
 
   const handleBuscarClick = () => {
-    if (familiaSeleccionada && (searchMode === 'modelo' || (searchMode === 'plancha' && bodegaSeleccionada))) {
+    if (familiaSeleccionada && bodegaSeleccionada) {
       setTablaVisible(true);
     } else {
       alert("Por favor, completa todas las secciones requeridas.");
@@ -55,31 +46,15 @@ const Home = () => {
   const opcionesBodegas = bodegas.map(({ id, nombre }) => ({ value: id, label: nombre }));
 
   return (
-    <div className="flex flex-col items-center bg-gray-100">
-      <div className="mb-10 mt-10">
-        <button
-          className={`rounded-md px-7 py-3 text-base font-medium ${searchMode === 'modelo' ? 'bg-primary text-white hover:bg-primary/90' : 'bg-gray-300 text-black hover:bg-gray-400'} mx-10`}
-          onClick={() => setSearchMode('modelo')}
-        >
-          Búsqueda Modelo
-        </button>
-        <button
-          className={`rounded-md px-7 py-3 text-base font-medium ${searchMode === 'plancha' ? 'bg-primary text-white hover:bg-primary/90' : 'bg-gray-300 text-black hover:bg-gray-400'} mx-10`}
-          onClick={() => setSearchMode('plancha')}
-        >
-          Búsqueda Plancha
-        </button>
-      </div>
-
-      {(searchMode === 'modelo' || searchMode === 'plancha') && (
+    <div className=" flex flex-col items-center bg-gray-100">
         <>
-          <div className="flex justify-between mb-4 mx-4 md:mx-auto w-full md:w-3/4 lg:w-1/3">
+          <div className="flex justify-between my-10 mx-4 md:mx-auto w-full md:w-3/4 lg:w-1/3">
             <ComboBox
               placeholder="Seleccione una familia"
               value={familiaSeleccionada}
               onChange={handleFamiliaSelect}
               options={opcionesFamilias}
-              label={"Familia:"}
+              label={"Familia"}
             />
             {familiaSeleccionada && (
               <>
@@ -88,17 +63,16 @@ const Home = () => {
                   value={modeloSeleccionado}
                   onChange={handleModeloSelect}
                   options={opcionesModelos}
-                  label={"Modelo:"}
+                  label={"Modelo"}
                 />
-                {searchMode === 'plancha' && (
-                  <ComboBox
+
+                <ComboBox
                     placeholder="Seleccione una bodega"
                     value={bodegaSeleccionada}
                     onChange={handleBodegaSelect}
                     options={opcionesBodegas}
-                    label={"Bodega:"}
-                  />
-                )}
+                    label={"Bodega"}
+                />
               </>
             )}
           </div>
@@ -110,21 +84,14 @@ const Home = () => {
               Buscar
             </button>
           )}
-          {tablaVisible && searchMode === 'modelo' && (
+          {tablaVisible && (
             <Table 
             familiaSeleccionada={familiaSeleccionada} 
             modeloSeleccionado={modeloSeleccionado} />
           )}
-          {tablaVisible && searchMode === 'plancha' && (
-            <TablePlanchas 
-            familiaSeleccionada={familiaSeleccionada} 
-            modeloSeleccionado={modeloSeleccionado}
-            bodegaSeleccionada={bodegaSeleccionada} />
-          )}
         </>
-      )}
     </div>
   );
 };
 
-export default Home;
+export default IngresoInventario;

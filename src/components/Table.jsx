@@ -54,8 +54,8 @@ const Table = ({ familiaSeleccionada, modeloSeleccionado }) => {
                   <thead className="text-center bg-primary">
                     <tr>
                       <th className={TdStyle.ThStyle}>Modelo</th>
-                      <th className={TdStyle.ThStyle}>m<sup>2</sup> Disponibles</th>
                       <th className={TdStyle.ThStyle}>Precio/m<sup>2</sup></th>
+                      <th className={TdStyle.ThStyle}>m<sup>2</sup> Disponibles</th>
                       <th className={TdStyle.ThStyle}>Acciones</th>
                     </tr>
                   </thead>

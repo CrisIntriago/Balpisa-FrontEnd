@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
+
 const Navbar = () => {
   const { auth } = useAuth();
   const [open, setOpen] = useState(false);
@@ -56,6 +57,23 @@ const Navbar = () => {
           .navbar.open {
             background-color: #ffffff;
           }
+
+          .sub-menu {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            z-index: 1;
+          }
+
+          .sub-menu.show {
+            display: block;
+          }
+
+          .dropdown:hover .sub-menu {
+            display: block;
+          }
         `}
       </style>
       <div className="container mx-auto">
@@ -80,8 +98,20 @@ const Navbar = () => {
                   <ListItem NavLink="/consultas" active={currentSection === 'consultas'} onClick={() => handleSectionClick('consultas')}>
                     Consultas
                   </ListItem>
-                  <ListItem NavLink="/movimientos" active={currentSection === 'movimientos'} onClick={() => handleSectionClick('movimientos')}>
-                    Movimientos
+                  <ListItem
+                  NavLink="#"
+                  active={currentSection === 'movimientos' || ['movimientos', '/ingreso-inventario', '/salida-inventario', '/cambio-bodega', '/modificar-plancha'].includes(currentSection)}
+                  onClick={() => handleSectionClick('movimientos')}
+                  subMenu={[
+                    { name: 'Ingreso de inventario', link: '/ingreso-inventario' },
+                    { name: 'Salida de inventario', link: '/salida-inventario' },
+                    { name: 'Cambio de bodega', link: '/cambio-bodega' },
+                    { name: 'Modificar plancha', link: '/modificar-plancha' }
+                  ]}
+                  currentSection={currentSection}
+                  setCurrentSection={setCurrentSection}
+                  >
+                    Movimientos &#9660;
                   </ListItem>
                   <ListItem NavLink="/reportes" active={currentSection === 'reportes'} onClick={() => handleSectionClick('reportes')}>
                     Reportes
@@ -113,12 +143,19 @@ const Navbar = () => {
   );
 };
 
+
 export default Navbar;
 
-const ListItem = ({ children, NavLink, active, onClick }) => {
+const ListItem = ({ children, NavLink, active, onClick, subMenu, currentSection, setCurrentSection }) => {
+  const [showSubMenu, setShowSubMenu] = useState(false);
+
+  const handleSubMenuItemClick = (section) => {
+    setCurrentSection(section); // Esta función actualiza la sección actualmente seleccionada
+  };
+
   return (
     <>
-      <li>
+      <li className={subMenu ? 'dropdown' : ''} onMouseEnter={() => setShowSubMenu(true)} onMouseLeave={() => setShowSubMenu(false)}>
         <Link
           to={NavLink}
           className={`flex py-2 text-base font-medium ${active ? 'text-primary font-bold' : 'text-body-color'} hover:text-dark lg:ml-12 lg:inline-flex`}
@@ -126,6 +163,20 @@ const ListItem = ({ children, NavLink, active, onClick }) => {
         >
           {children}
         </Link>
+        {subMenu && (
+          <div className={`sub-menu ${showSubMenu ? 'show' : ''}`}>
+            {subMenu.map((item, index) => (
+              <Link 
+                to={item.link} 
+                key={index} 
+                className={`block py-2 text-base font-medium ${currentSection === item.link ? 'text-primary font-bold' : 'text-body-color'} hover:text-dark`}
+                onClick={() => handleSubMenuItemClick(item.link)}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+        )}
       </li>
     </>
   );
