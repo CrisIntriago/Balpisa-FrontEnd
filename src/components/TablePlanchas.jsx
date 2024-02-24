@@ -10,24 +10,13 @@ const TdStyle = {
 }
 
 
-const TablePlanchas = ({ familiaSeleccionada, modeloSeleccionado, bodegaSeleccionada }) => {
-    console.log(modeloSeleccionado +" " +bodegaSeleccionada)
+const TablePlanchas = ({ modeloSeleccionado, bodegaSeleccionada }) => {
   const { planchas } = useallPlanchas(modeloSeleccionado, bodegaSeleccionada);
   const [currentPage, setCurrentPage] = useState(0);
   
   useEffect(() => {
     setCurrentPage(0);
   }, [modeloSeleccionado, bodegaSeleccionada]);
-
-  const filteredElements = () => {
-    if (modeloSeleccionado === '' && bodegaSeleccionada === '') {
-      //return modelos.slice(currentPage, currentPage + 5);
-    } else if (modeloSeleccionado !== '' && bodegaSeleccionada === '') {
-      //
-    }
-    //const filtered = planchas.filter(plancha => plancha.id === modeloSeleccionado);
-    return planchas.slice(currentPage, currentPage + 5);
-  };
 
   const nextPage = () => {
     const totalItems = planchas.length;
@@ -70,7 +59,7 @@ const TablePlanchas = ({ familiaSeleccionada, modeloSeleccionado, bodegaSeleccio
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredElements().map(({ id, nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B }) => (
+                    {planchas.slice(currentPage, currentPage + 5).map(({ id, nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B }) => (
                       <tr key={id}>
                         <td className={TdStyle.TdStyle}>{bodegaSeleccionada}</td>
                         <td className={TdStyle.TdStyle2}>{nombre}</td>

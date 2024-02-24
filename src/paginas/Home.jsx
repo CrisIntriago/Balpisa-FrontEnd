@@ -117,7 +117,6 @@ const Home = () => {
           )}
           {tablaVisible && searchMode === 'plancha' && (
             <TablePlanchas 
-            familiaSeleccionada={familiaSeleccionada} 
             modeloSeleccionado={modeloSeleccionado}
             bodegaSeleccionada={bodegaSeleccionada} />
           )}

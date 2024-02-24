@@ -18,9 +18,7 @@ const Table = ({ familiaSeleccionada, modeloSeleccionado }) => {
   }, [familiaSeleccionada, modeloSeleccionado]);
 
   const filteredElements = () => {
-    if (familiaSeleccionada === '' && modeloSeleccionado === '') {
-      //return modelos.slice(currentPage, currentPage + 5);
-    } else if (familiaSeleccionada !== '' && modeloSeleccionado === '') {
+    if (familiaSeleccionada !== '' && modeloSeleccionado === '') {
       return modelosCompletos.slice(currentPage, currentPage + 5);
     }
     const filtered = modelosCompletos.filter(modelo => modelo.id === modeloSeleccionado);
