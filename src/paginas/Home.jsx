@@ -52,6 +52,7 @@ const Home = () => {
 
   const opcionesFamilias = familias.map(({ id, nombre }) => ({ value: id, label: nombre }));
   const opcionesModelos = [{ value: '', label: "Todos" }, ...modelos.map(modelo => ({ value: modelo.id, label: modelo.nombre }))];
+  const opcionesModelosCompletos = modelos.map(modelo => ({ value: modelo.id, label: modelo.nombre }));
   const opcionesBodegas = bodegas.map(({ id, nombre }) => ({ value: id, label: nombre }));
 
   return (
@@ -87,7 +88,7 @@ const Home = () => {
                   placeholder="Seleccione un modelo"
                   value={modeloSeleccionado}
                   onChange={handleModeloSelect}
-                  options={opcionesModelos}
+                  options={searchMode === 'modelo' ? opcionesModelos : opcionesModelosCompletos}
                   label={"Modelo:"}
                 />
                 {searchMode === 'plancha' && (
@@ -105,7 +106,7 @@ const Home = () => {
           {familiaSeleccionada && (
             <button
               onClick={handleBuscarClick}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded"
             >
               Buscar
             </button>
