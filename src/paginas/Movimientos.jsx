@@ -6,6 +6,7 @@ import useBodegas from '../hooks/useBodegas';
 import TableSalida from '../components/TableSalida';
 import Table from '../components/Table';
 import usePlanchasSimple from '../hooks/usePlanchasSimple';
+import TableIngreso from '../components/TableIngreso';
 
 const Movimientos = ({ opcion }) => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState('');
@@ -52,7 +53,10 @@ const Movimientos = ({ opcion }) => {
   };
 
   const handleBuscarClick = () => {
-    if (familiaSeleccionada && modeloSeleccionado && bodegaSeleccionada && planchaSeleccionada) {
+    if (familiaSeleccionada &&
+    modeloSeleccionado &&
+    bodegaSeleccionada &&
+    (opcion !== "Salida Inventario" || (opcion === "Salida Inventario" && planchaSeleccionada))) {
       setTablaVisible(true);
     } else {
       alert("Por favor, completa todas las secciones requeridas.");
@@ -112,7 +116,7 @@ const Movimientos = ({ opcion }) => {
               </>
             )}
           </div>
-          {(familiaSeleccionada && modeloSeleccionado && bodegaSeleccionada && planchaSeleccionada) && (
+          {(familiaSeleccionada && modeloSeleccionado && bodegaSeleccionada ) && (
             <button
               onClick={handleBuscarClick}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -121,9 +125,10 @@ const Movimientos = ({ opcion }) => {
             </button>
           )}
           {tablaVisible && opcion === "Ingreso Inventario" && (
-            <Table 
-            familiaSeleccionada={familiaSeleccionada} 
-            modeloSeleccionado={modeloSeleccionado} />
+            <TableIngreso 
+            modeloSeleccionado={modeloSeleccionado} 
+            bodegaSeleccionada={bodegaSeleccionada}
+            />
           )}
           {tablaVisible && opcion === "Salida Inventario" && (
             <TableSalida 
