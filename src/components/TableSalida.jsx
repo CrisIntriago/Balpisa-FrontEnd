@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Loading from "./Loading";
-import useModelosCompletos from "../hooks/useModelosCompletos"; 
+import useModelosCompletos from "../hooks/useModelosCompletos";
 import ConfirmationModal from '../components/ConfirmationModal';
 import TableModal from "./TableModal";
 import usePlanchaFromId from "../hooks/usePlanchaFromId";
@@ -13,50 +13,59 @@ const TdStyle = {
   InputSmall: `w-full max-w-xs px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center`
 };
 
-const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccionada, isModal=false }) => {
-    const { planchas } = usePlanchaFromId(planchaSeleccionada);
-    const { modelosCompletos } = useModelosCompletos(familiaSeleccionada); 
-    const [editableData, setEditableData] = useState([]);
-    const [isTableModalOpen, setTableModalOpen] = useState(false);
-    const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
-    const [alto, setAlto] = useState(0);
-    const [total, setTotal] = useState(0);
+const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccionada, isModal = false }) => {
+  const { planchas } = usePlanchaFromId(planchaSeleccionada);
+  const { modelosCompletos } = useModelosCompletos(familiaSeleccionada);
+  const [editableData, setEditableData] = useState([]);
+  const [isTableModalOpen, setTableModalOpen] = useState(false);
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [precio, setPrecio] = useState(0);
 
-    const handleVenderClick = () => {
-        setConfirmationModalOpen(true);
-      };
-    
-    const handleConfirm = () => {
-        setConfirmationModalOpen(false);
-        setTableModalOpen(true);
-      };
-    
-    const handleClose = () => {
-        setConfirmationModalOpen(false);
-        setTableModalOpen(false);
-      };
-    useEffect(() => {
+  const handleVenderClick = () => {
+    setConfirmationModalOpen(true);
+  };
 
-      setEditableData(planchas.map(plancha => ({ ...plancha })));
-    }, [planchas, planchaSeleccionada]);
-  
-  
-    const handleInputChange = (event, nombre, key) => {
-      const value = event.target.value;
-      setEditableData(currentData =>
-        currentData.map(data => {
-          if (data.nombre === nombre) {
-            return { ...data, [key]: value };
-          }
-          return data;
-        })
-      );
-    };
-  
-    if (!familiaSeleccionada) {
-      return <Loading />;
-    }
-  
+  const handleConfirm = () => {
+    setConfirmationModalOpen(false);
+    setTableModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setConfirmationModalOpen(false);
+    setTableModalOpen(false);
+  };
+  useEffect(() => {
+
+    setEditableData(planchas.map(plancha => ({ ...plancha })));
+  }, [planchas, planchaSeleccionada]);
+
+
+  const handleInputChange = (event, nombre, key) => {
+    const value = event.target.value;
+    setEditableData(currentData =>
+      currentData.map(data => {
+        if (data.nombre === nombre) {
+          const num = data.alto * data.ancho - (data.despunte1A * data.despunte1B) - (data.despunte2A * data.despunte2B) - (data.despunte3A * data.despunte3B);
+          const fixedNum = num.toFixed(2);
+          setTotal(parseFloat(fixedNum));
+          const num2 = fixedNum * data.preciom2;
+          const fixedNum2 = num2.toFixed(2);
+          setPrecio(parseFloat(fixedNum2));
+          return { ...data, [key]: value };
+        }
+
+        return data;
+      })
+    );
+  };
+
+
+
+  if (!familiaSeleccionada) {
+    return <Loading />;
+  }
+
   return (
     <section className="bg-gray-100 py-20 lg:py-[50px] w-full">
       <div className="container mx-auto">
@@ -84,28 +93,28 @@ const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccion
                     <tr key={id}>
                       <td className={TdStyle.TdStyle}>{nombre}</td>
                       <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="text" value={alto} onChange={(e) => handleInputChange(e, nombre, 'alto')} />
+                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={alto} onChange={(e) => handleInputChange(e, nombre, 'alto')} />
                       </td>
                       <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="text" value={ancho} onChange={(e) => handleInputChange(e, nombre, 'ancho')} />
+                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={ancho} onChange={(e) => handleInputChange(e, nombre, 'ancho')} />
                       </td>
                       <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="text" value={despunte1A} onChange={(e) => handleInputChange(e, nombre, 'despunte1A')} />
+                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={despunte1A} onChange={(e) => handleInputChange(e, nombre, 'despunte1A')} />
                       </td>
                       <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="text" value={despunte1B} onChange={(e) => handleInputChange(e, nombre, 'despunte1B')} />
+                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={despunte1B} onChange={(e) => handleInputChange(e, nombre, 'despunte1B')} />
                       </td>
                       <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="text" value={despunte2A} onChange={(e) => handleInputChange(e, nombre, 'despunte2A')} />
+                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={despunte2A} onChange={(e) => handleInputChange(e, nombre, 'despunte2A')} />
                       </td>
                       <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="text" value={despunte2B} onChange={(e) => handleInputChange(e, nombre, 'despunte2B')} />
+                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={despunte2B} onChange={(e) => handleInputChange(e, nombre, 'despunte2B')} />
                       </td>
                       <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="text" value={despunte3A} onChange={(e) => handleInputChange(e, nombre, 'despunte3A')} />
+                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={despunte3A} onChange={(e) => handleInputChange(e, nombre, 'despunte3A')} />
                       </td>
                       <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="text" value={despunte3B} onChange={(e) => handleInputChange(e, nombre, 'despunte3B')} />
+                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={despunte3B} onChange={(e) => handleInputChange(e, nombre, 'despunte3B')} />
                       </td>
                       <td className={TdStyle.TdStyle}>{total}</td>
                       <td className={TdStyle.TdStyle}>{precio}</td>
@@ -118,22 +127,22 @@ const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccion
         </div>
         {!isModal && (
 
-<div className="flex justify-center mt-4">
-<button
-  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded"
-  onClick={handleVenderClick}
->
-  Vender
-</button>
-</div>
+          <div className="flex justify-center mt-4">
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded"
+              onClick={handleVenderClick}
+            >
+              Vender
+            </button>
+          </div>
         )}
-        
-        
+
+
         <ConfirmationModal isOpen={isConfirmationModalOpen} onClose={handleClose} onConfirm={handleConfirm} />
-        <TableModal isOpen={isTableModalOpen} onClose={handleClose} familiaSeleccionada={familiaSeleccionada} modelo={modeloSeleccionado}/>
+        <TableModal isOpen={isTableModalOpen} onClose={handleClose} familiaSeleccionada={familiaSeleccionada} modelo={modeloSeleccionado} />
       </div>
     </section>
-    
+
   );
 };
 
