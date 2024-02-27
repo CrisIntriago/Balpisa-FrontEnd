@@ -6,8 +6,6 @@ import useBodegas from '../hooks/useBodegas';
 import TableSalida from '../components/TableSalida';
 import Table from '../components/Table';
 import usePlanchasSimple from '../hooks/usePlanchasSimple';
-import useallPlanchas from '../hooks/useallPlanchas';
-
 
 const Movimientos = ({ opcion }) => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState('');
@@ -99,7 +97,7 @@ const Movimientos = ({ opcion }) => {
                     label={"Bodega"}
                 />
 
-                {(bodegaSeleccionada && modeloSeleccionado) && (
+                {(bodegaSeleccionada && modeloSeleccionado && opcion==="Salida Inventario") && (
                   <ComboBox
                   placeholder="Seleccione una plancha"
                   value={planchaSeleccionada}
