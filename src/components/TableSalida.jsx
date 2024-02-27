@@ -37,18 +37,9 @@ const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccion
       };
     useEffect(() => {
 
-      setEditableData(filteredElements().map(plancha => ({ ...plancha })));
+      setEditableData(planchas.map(plancha => ({ ...plancha })));
     }, [planchas, planchaSeleccionada]);
   
-    const filteredElements = () => {
-      {/*let filtered = modelosCompletos;
-      if (familiaSeleccionada !== '' && modeloSeleccionado !== '' && planchaSeleccionada !== '' ) {
-        filtered = modelosCompletos.filter(modelo => modelo.id === modeloSeleccionado);
-      }
-    const startIndex = currentPage * itemsPerPage;
-      return filtered.slice(startIndex, startIndex + itemsPerPage);*/}
-      return planchas;
-    };
   
     const handleInputChange = (event, nombre, key) => {
       const value = event.target.value;
