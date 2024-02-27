@@ -15,7 +15,7 @@ const TablePlanchas = ({ modeloSeleccionado, bodegaSeleccionada }) => {
   const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
-    setCurrentPage(0); // Resetear la página actual al cambiar el modelo o la bodega
+    setCurrentPage(0);
   }, [modeloSeleccionado, bodegaSeleccionada]);
 
   const itemsPerPage = 5;

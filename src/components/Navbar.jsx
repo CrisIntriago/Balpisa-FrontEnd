@@ -79,7 +79,7 @@ const Navbar = () => {
       <div className="container mx-auto">
         <div className="relative flex items-center justify-between">
           <div className="w-60 max-w-full">
-            <Link to="/home" className="block w-full py-5">
+            <Link to="/consultas" className="block w-full py-5">
               <img
                 src="\src\assets\logo.png"
                 alt="logo"

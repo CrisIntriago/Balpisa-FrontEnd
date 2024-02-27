@@ -6,7 +6,7 @@ import { AuthProvider } from "./context/AuthProvider.jsx";
 import Home from './paginas/Home';
 import RutaProtegida from './layouts/RutaProtegida';
 import Reportes from './paginas/Reportes.jsx';
-import IngresoInventario from './paginas/IngresoInventario.jsx';
+import Movimientos from './paginas/Movimientos.jsx';
 
 
 function App() {
@@ -28,22 +28,29 @@ function App() {
         </Route>
 
         <Route path="/ingreso-inventario" element={<RutaProtegida />}>
-          <Route index element={<IngresoInventario/>} />
+          <Route index element={<Movimientos 
+          opcion={"Ingreso Inventario"}/>}
+          />
         </Route>
 
-        {/*
+        
         <Route path="/salida-inventario" element={<RutaProtegida />}>
-          <Route index element={<IngresoInventario/>} />
+          <Route index element={<Movimientos 
+          opcion={"Salida Inventario"}/>}
+          />
         </Route>
-
+    
         <Route path="/cambio-bodega" element={<RutaProtegida />}>
-          <Route index element={<IngresoInventario/>} />
+          <Route index element={<Movimientos
+          opcion={"Cambio Bodega"}/>} 
+          />
         </Route>
 
         <Route path="/modificar-plancha" element={<RutaProtegida />}>
-          <Route index element={<IngresoInventario/>} />
+          <Route index element={<Movimientos 
+          opcion={"Modificar Plancha"}/>} 
+          />
         </Route>
-  */}
       </Routes>
     </AuthProvider>
 
