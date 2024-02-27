@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import useAgregarPlancha from '../hooks/useAgregarPlancha';
 
-// Estilos para la tabla y los inputs
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
   TdStyle: `text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium`,
@@ -8,33 +8,54 @@ const TdStyle = {
 };
 
 const TableIngreso = ({ modeloSeleccionado, bodegaSeleccionada }) => {
-
-  const [values, setValues] = useState({
-    COD: '',
-    alto: '',
-    ancho: '',
-    D1A: '',
-    D1B: '',
-    D2A: '',
-    D2B: '',
-    D3A: '',
-    D3B: '',
-  });
-
-
-  const handleInputChange = (e, field) => {
-    setValues({ ...values, [field]: e.target.value });
-  };
-
-
-  const handleSave = () => {
-    const { COD, alto, ancho, D1A, D1B, D2A, D2B, D3A, D3B } = values;
-    if (!COD || !alto || !ancho || !D1A || !D1B || !D2A || !D2B || !D3A || !D3B) {
-      alert('Por favor, complete todos los campos antes de guardar.');
-      return;
-    }
-    console.log({ modeloSeleccionado, bodegaSeleccionada, ...values });
-  };
+    const [values, setValues] = useState({
+      COD: '',
+      alto: '',
+      ancho: '',
+      D1A: '',
+      D1B: '',
+      D2A: '',
+      D2B: '',
+      D3A: '',
+      D3B: '',
+    });
+  
+    // Destructuramos correctamente lo que retorna el hook
+    const { enviarPlancha } = useAgregarPlancha();
+  
+    const handleInputChange = (e, field) => {
+      setValues({ ...values, [field]: e.target.value });
+    };
+  
+    const handleSave = async () => {
+      const { COD, alto, ancho, D1A, D1B, D2A, D2B, D3A, D3B } = values;
+      if (!COD || !alto || !ancho || !D1A || !D1B || !D2A || !D2B || !D3A || !D3B) {
+        alert('Por favor, complete todos los campos antes de guardar.');
+        return;
+      }
+  
+      const datosPlancha = {
+        nombre: COD,
+        alto,
+        ancho,
+        despunte1A: D1A,
+        despunte1B: D1B,
+        despunte2A: D2A,
+        despunte2B: D2B,
+        despunte3A: D3A,
+        despunte3B: D3B,
+        modeloId: modeloSeleccionado,
+        bodegaId: bodegaSeleccionada,
+      };
+  
+      try {
+        await enviarPlancha(datosPlancha);
+        alert('La plancha ha sido guardada con éxito.');
+      } catch (error) {
+        alert('Hubo un error al guardar la plancha.');
+        console.error(error);
+      }
+    };
 
   return (
     <section className="bg-gray-100 py-20 lg:py-[50px] w-full">
