@@ -11,7 +11,7 @@ const TdStyle = {
   InputSmall: `w-full max-w-xs px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center`
 };
 
-const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccionada, isModal = false }) => {
+const TableSalida = ({ planchaSeleccionada }) => {
   const { planchas } = usePlanchaFromId(planchaSeleccionada);
   const [editableData, setEditableData] = useState([]);
   const [isTableModalOpen, setTableModalOpen] = useState(false);
@@ -21,7 +21,7 @@ const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccion
   useEffect(() => {
     const data = planchas.map(plancha => ({ ...plancha }));
     setEditableData(data);
-    calculateTotals(data); // Calcular totales al cargar los datos
+    calculateTotals(data); 
   }, [planchas, planchaSeleccionada]);
 
   const handleVenderClick = () => {
@@ -44,7 +44,7 @@ const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccion
     );
   };
 
-  // Nueva función para calcular totales
+
   const calculateTotals = (data) => {
     let tempTotal = 0;
     let tempPrecio = 0;
@@ -57,14 +57,10 @@ const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccion
     setPrecio(tempPrecio.toFixed(2));
   };
 
-  // Agregar botón para calcular
+
   const handleCalculateClick = () => {
     calculateTotals(editableData);
   };
-
-  if (!familiaSeleccionada) {
-    return <Loading />;
-  }
 
   return (
     <section className="bg-gray-100 py-20 lg:py-[50px] w-full">
@@ -125,8 +121,6 @@ const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccion
             </div>
           </div>
         </div>
-        {!isModal && (
-
           <div className="flex justify-center mt-4">
             <button 
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 mx-5 my-2 px-4 rounded w-40" 
@@ -139,9 +133,9 @@ const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccion
               Vender
             </button>
           </div>
-        )}
 
-        <TableModal isOpen={isTableModalOpen} onClose={handleClose} familiaSeleccionada={familiaSeleccionada} modelo={modeloSeleccionado} />
+
+        <TableModal isOpen={isTableModalOpen} onClose={handleClose} planchaSeleccionada={planchaSeleccionada} />
       </div>
     </section>
 

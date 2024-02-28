@@ -7,6 +7,7 @@ import TableSalida from '../components/TableSalida';
 import Table from '../components/Table';
 import usePlanchasSimple from '../hooks/usePlanchasSimple';
 import TableIngreso from '../components/TableIngreso';
+import TablePlanchaIndividual from '../components/TablePlanchaIndividual';
 
 const Movimientos = ({ opcion }) => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState('');
@@ -71,8 +72,8 @@ const Movimientos = ({ opcion }) => {
   return (
     <div className=" flex flex-col items-center bg-gray-100">
         <>
-          <p className="font-bold text-4xl mt-10 text-center md:w-1/2 mx-auto pb-10 ">{opcion}</p>
-          <div className="flex justify-between mb-10 mx-4 md:mx-auto w-full md:w-3/4 lg:w-1/3">
+          <p className="font-bold text-4xl mt-10 text-center md:w-1/2 lg:w-1/2 mx-auto pb-10 ">{opcion}</p>
+          <div className="flex justify-between mb-10 mx-4 md:mx-auto w-full md:w-1/2 lg:w-1/2">
             <ComboBox
               placeholder="Seleccione una familia"
               value={familiaSeleccionada}
@@ -98,10 +99,10 @@ const Movimientos = ({ opcion }) => {
                     onChange={handleBodegaSelect}
                     options={opcionesBodegas}
                     width={230}
-                    label={"Bodega"}
+                    label={opcion==="Cambio Bodega" ? "Bodega Origen" : "Bodega"}
                 />
 
-                {(bodegaSeleccionada && modeloSeleccionado && opcion==="Salida Inventario") && (
+                {(bodegaSeleccionada && modeloSeleccionado && (opcion==="Salida Inventario" || opcion==="Cambio Bodega")) && (
                   <ComboBox
                   placeholder="Seleccione una plancha"
                   value={planchaSeleccionada}
@@ -117,12 +118,14 @@ const Movimientos = ({ opcion }) => {
             )}
           </div>
           {(familiaSeleccionada && modeloSeleccionado && bodegaSeleccionada ) && (
+            <div className="flex justify-center mb-10 mx-4 md:mx-auto w-full md:w-1/2 lg:w-1/2">
             <button
               onClick={handleBuscarClick}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               Buscar
             </button>
+            </div>
           )}
           {tablaVisible && opcion === "Ingreso Inventario" && (
             <TableIngreso 
@@ -137,9 +140,11 @@ const Movimientos = ({ opcion }) => {
             planchaSeleccionada={planchaSeleccionada}/>
           )}
           {tablaVisible && opcion === "Cambio Bodega" && (
-            <Table 
-            familiaSeleccionada={familiaSeleccionada} 
-            modeloSeleccionado={modeloSeleccionado} />
+            <TablePlanchaIndividual
+            planchaSeleccionada={planchaSeleccionada} 
+            bodegaSeleccionada={bodegaSeleccionada}
+            opcionesBodegas={opcionesBodegas}
+            />
           )}
           {tablaVisible && opcion === "Modificar Plancha" && (
             <Table 

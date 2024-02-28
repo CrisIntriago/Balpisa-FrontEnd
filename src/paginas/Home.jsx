@@ -74,7 +74,7 @@ const Home = () => {
 
       {(searchMode === 'modelo' || searchMode === 'plancha') && (
         <>
-          <div className="flex justify-between mb-4 mx-4 md:mx-auto w-full md:w-3/4 lg:w-1/3">
+          <div className="flex justify-between mb-4 mx-4 md:mx-auto w-full md:w-1/2 lg:w-1/2 ">
             <ComboBox
               placeholder="Seleccione una familia"
               value={familiaSeleccionada}

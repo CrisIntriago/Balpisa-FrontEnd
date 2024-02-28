@@ -13,7 +13,6 @@ const usePlanchaFromId = (planchaId) => {
             try {
                 // Llamada a la API o función para obtener los modelos
                 const response = await obtenerPlanchaFromId(planchaId);
-                console.log(response)
                 // Acceder al arreglo dentro del objeto 'data' de la respuesta
                 const planchas = response.data;
                 // Actualizar el estado con el arreglo de modelos

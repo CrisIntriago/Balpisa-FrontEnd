@@ -20,7 +20,7 @@ const TableIngreso = ({ modeloSeleccionado, bodegaSeleccionada }) => {
       D3B: '',
     });
   
-    // Destructuramos correctamente lo que retorna el hook
+    
     const { enviarPlancha } = useAgregarPlancha();
   
     const handleInputChange = (e, field) => {
