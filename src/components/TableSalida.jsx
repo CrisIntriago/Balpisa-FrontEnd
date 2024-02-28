@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Loading from "./Loading";
-import useModelosCompletos from "../hooks/useModelosCompletos";
-import ConfirmationModal from '../components/ConfirmationModal';
 import TableModal from "./TableModal";
 import usePlanchaFromId from "../hooks/usePlanchaFromId";
 
@@ -15,7 +13,6 @@ const TdStyle = {
 
 const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccionada, isModal = false }) => {
   const { planchas } = usePlanchaFromId(planchaSeleccionada);
-  const { modelosCompletos } = useModelosCompletos(familiaSeleccionada);
   const [editableData, setEditableData] = useState([]);
   const [isTableModalOpen, setTableModalOpen] = useState(false);
   const [total, setTotal] = useState(0);

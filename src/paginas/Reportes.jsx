@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const Reportes = () => {
   const [fechaInicio, setFechaInicio] = useState('');

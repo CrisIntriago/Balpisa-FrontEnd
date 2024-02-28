@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Loading from "./Loading";
-import useModelosCompletos from "../hooks/useModelosCompletos"; // Asegúrate de tener este hook
+import useModelosCompletos from "../hooks/useModelosCompletos"; 
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
