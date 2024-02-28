@@ -18,20 +18,25 @@ const Reportes = () => {
     <div className="flex flex-col items-center bg-gray-100 pb-5">
       <p className="font-bold text-3xl mt-10 text-center md:w-1/2 mx-auto pb-10 ">Reporte de movimientos por fecha</p>
       <div className="flex justify-between my-4 mx-4 md:mx-auto w-full md:w-3/4 lg:w-1/3">
+        <div>
+          <p>Fecha Inicio</p>
+          <input 
+            type="date" 
+            value={fechaInicio} 
+            onChange={(e) => setFechaInicio(e.target.value)}
+            className="border-2 border-gray-300 p-2 rounded w-60"
+          />
+        </div>
 
-        <input 
-          type="date" 
-          value={fechaInicio} 
-          onChange={(e) => setFechaInicio(e.target.value)}
-          className="border-2 border-gray-300 p-2 rounded w-60"
-        />
-
-        <input 
-          type="date" 
-          value={fechaFin} 
-          onChange={(e) => setFechaFin(e.target.value)}
-          className="border-2 border-gray-300 p-2 rounded w-60"
-        />
+        <div>
+          <p>Fecha Fin</p>
+          <input 
+            type="date" 
+            value={fechaFin} 
+            onChange={(e) => setFechaFin(e.target.value)}
+            className="border-2 border-gray-300 p-2 rounded w-60"
+          />
+        </div>
       </div>
       
       <button

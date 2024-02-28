@@ -34,8 +34,20 @@ const Navbar = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const storedSection = localStorage.getItem('currentSection');
+    if (storedSection) {
+      setCurrentSection(storedSection);
+    }
+  }, []);
+
   const handleSectionClick = (section) => {
     setCurrentSection(section);
+    localStorage.setItem('currentSection', section); 
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('currentSection'); 
   };
 
   return (
@@ -131,6 +143,7 @@ const Navbar = () => {
                 <a
                   href="/"
                   className="rounded-md bg-primary px-7 py-3 text-base font-medium text-white hover:bg-primary/90"
+                  onClick={handleLogout}
                 >
                   Cerrar Sesión
                 </a>
@@ -150,7 +163,8 @@ const ListItem = ({ children, NavLink, active, onClick, subMenu, currentSection,
   const [showSubMenu, setShowSubMenu] = useState(false);
 
   const handleSubMenuItemClick = (section) => {
-    setCurrentSection(section); // Esta función actualiza la sección actualmente seleccionada
+    localStorage.setItem('currentSection', section);
+    setCurrentSection(section); 
   };
 
   return (

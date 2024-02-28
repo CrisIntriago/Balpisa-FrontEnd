@@ -18,49 +18,52 @@ const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccion
   const { modelosCompletos } = useModelosCompletos(familiaSeleccionada);
   const [editableData, setEditableData] = useState([]);
   const [isTableModalOpen, setTableModalOpen] = useState(false);
-  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [total, setTotal] = useState(0);
   const [precio, setPrecio] = useState(0);
 
-  const handleVenderClick = () => {
-    setConfirmationModalOpen(true);
-  };
+  useEffect(() => {
+    const data = planchas.map(plancha => ({ ...plancha }));
+    setEditableData(data);
+    calculateTotals(data); // Calcular totales al cargar los datos
+  }, [planchas, planchaSeleccionada]);
 
-  const handleConfirm = () => {
-    setConfirmationModalOpen(false);
+  const handleVenderClick = () => {
     setTableModalOpen(true);
   };
 
   const handleClose = () => {
-    setConfirmationModalOpen(false);
     setTableModalOpen(false);
   };
-  useEffect(() => {
-
-    setEditableData(planchas.map(plancha => ({ ...plancha })));
-  }, [planchas, planchaSeleccionada]);
-
 
   const handleInputChange = (event, nombre, key) => {
     const value = event.target.value;
     setEditableData(currentData =>
       currentData.map(data => {
         if (data.nombre === nombre) {
-          const num = data.alto * data.ancho - (data.despunte1A * data.despunte1B) - (data.despunte2A * data.despunte2B) - (data.despunte3A * data.despunte3B);
-          const fixedNum = num.toFixed(2);
-          setTotal(parseFloat(fixedNum));
-          const num2 = fixedNum * data.preciom2;
-          const fixedNum2 = num2.toFixed(2);
-          setPrecio(parseFloat(fixedNum2));
           return { ...data, [key]: value };
         }
-
         return data;
       })
     );
   };
 
+  // Nueva función para calcular totales
+  const calculateTotals = (data) => {
+    let tempTotal = 0;
+    let tempPrecio = 0;
+    data.forEach(({ alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B, preciom2 }) => {
+      const num = alto * ancho - (despunte1A * despunte1B) - (despunte2A * despunte2B) - (despunte3A * despunte3B);
+      tempTotal += num;
+      tempPrecio += num * preciom2;
+    });
+    setTotal(tempTotal.toFixed(2));
+    setPrecio(tempPrecio.toFixed(2));
+  };
 
+  // Agregar botón para calcular
+  const handleCalculateClick = () => {
+    calculateTotals(editableData);
+  };
 
   if (!familiaSeleccionada) {
     return <Loading />;
@@ -68,7 +71,7 @@ const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccion
 
   return (
     <section className="bg-gray-100 py-20 lg:py-[50px] w-full">
-      <div className="container mx-auto">
+       <div className="container mx-auto">
         <div className="flex flex-wrap -mx-4">
           <div className="w-full">
             <div className="max-w-full overflow-x-auto">
@@ -128,17 +131,19 @@ const TableSalida = ({ familiaSeleccionada, modeloSeleccionado, planchaSeleccion
         {!isModal && (
 
           <div className="flex justify-center mt-4">
+            <button 
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 mx-5 my-2 px-4 rounded w-40" 
+            onClick={handleCalculateClick}>
+              Calcular
+            </button>
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded"
-              onClick={handleVenderClick}
-            >
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 mx-5 my-2 px-4 rounded w-40"
+              onClick={handleVenderClick}>
               Vender
             </button>
           </div>
         )}
 
-
-        <ConfirmationModal isOpen={isConfirmationModalOpen} onClose={handleClose} onConfirm={handleConfirm} />
         <TableModal isOpen={isTableModalOpen} onClose={handleClose} familiaSeleccionada={familiaSeleccionada} modelo={modeloSeleccionado} />
       </div>
     </section>
