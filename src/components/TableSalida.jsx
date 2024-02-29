@@ -44,7 +44,6 @@ const TableSalida = ({ planchaSeleccionada }) => {
     );
   };
 
-
   const calculateTotals = (data) => {
     let tempTotal = 0;
     let tempPrecio = 0;
@@ -130,12 +129,12 @@ const TableSalida = ({ planchaSeleccionada }) => {
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 mx-5 my-2 px-4 rounded w-40"
               onClick={handleVenderClick}>
-              Vender
+              Modificar Plancha
             </button>
           </div>
 
 
-        <TableModal isOpen={isTableModalOpen} onClose={handleClose} planchaSeleccionada={planchaSeleccionada} />
+        <TableModal isOpen={isTableModalOpen} onClose={handleClose} planchaSeleccionada={planchaSeleccionada} plancha={planchas[0]}/>
       </div>
     </section>
 

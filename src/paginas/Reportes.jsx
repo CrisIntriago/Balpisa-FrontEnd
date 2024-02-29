@@ -7,7 +7,7 @@ const Reportes = () => {
 
   const handleBuscarClick = () => {
     if (fechaInicio !== '' && fechaFin !== '') {
-      console.log(fechaInicio, fechaFin); 
+      console.log(fechaInicio +" "+ fechaFin); 
       // setTablaVisible(true);
     } else {
       alert("Por favor, completa todas las secciones requeridas.");

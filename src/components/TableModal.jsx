@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import ConfirmationModal from './ConfirmationModal';
 import useActualizarPlancha from '../hooks/useActualizarPlancha';
+import useAgregarMovimiento from '../hooks/useAgregarMovimiento';
+import useGastarPlancha from '../hooks/useGastarPlancha';
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -11,9 +13,12 @@ const TdStyle = {
   InputSmall: `w-full max-w-xs px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center`
 };
 
-const TableModal = ({ isOpen, onClose, planchaSeleccionada}) => {
+const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+  const [planchaTerminada, setPlanchaTerminada] = useState(false); 
   const [values, setValues] = useState({
+    factura: '',
+    precioVenta: '',
     COD: '',
     alto: '',
     ancho: '',
@@ -24,9 +29,9 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada}) => {
     D3A: '',
     D3B: '',
   });
-
-  //const { enviarPlancha } = useAgregarPlancha();
   const { enviarPlanchaActualizada } = useActualizarPlancha();
+  const { enviarMovimiento } = useAgregarMovimiento();
+  const { gastarPlanchaPorId } = useGastarPlancha();
 
   const handleOpenConfirmation = () => {
     setConfirmationModalOpen(true);
@@ -36,23 +41,85 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada}) => {
     setConfirmationModalOpen(false);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setConfirmationModalOpen(false);
-    handleSave();
+    if (!planchaTerminada) {
+      // Lógica para guardar cuando la plancha no está marcada como terminada
+      handleSave();
+    } else {
+      // Lógica para solo enviar el movimiento cuando la plancha está marcada como terminada
+      handleSaveMovimiento();
+    }
   };
 
-  const handleInputChange = (e, field) => {
-    setValues({ ...values, [field]: e.target.value });
-  };
-
-  const handleSave = async () => {
-    const { COD, alto, ancho, D1A, D1B, D2A, D2B, D3A, D3B } = values;
-    if (!COD || !alto || !ancho || !D1A || !D1B || !D2A || !D2B || !D3A || !D3B) {
+  const handleSaveMovimiento = async () => {
+    const { precioVenta, factura } = values;
+    if (!factura || !precioVenta) {
       alert('Por favor, complete todos los campos antes de guardar.');
       return;
     }
 
+    const datosMovimiento = {
+      valorRegistro: `${plancha.nombre}-${plancha.alto}-${plancha.ancho}-${plancha.despunte1A}-${plancha.despunte1B}-${plancha.despunte2A}-${plancha.despunte2B}-${plancha.despunte1A}-${plancha.despunte3B}`,
+      planchaId: planchaSeleccionada,
+      nFactura: factura,
+      precioVenta: precioVenta,
+      tipo: "Salida",
+
+    };
+
+    try {
+      await enviarMovimiento(datosMovimiento);
+      onClose(); // Cierra el modal después de enviar
+    } catch (error) {
+      alert('Hubo un error al guardar el movimiento.');
+      console.error(error);
+    }
+    
+    await gastarPlanchaPorId(planchaSeleccionada);
+  };
+
+  const handleInputChange = (e, field) => {
+    let value = e.target.value;
+    const numericFields = ['alto', 'ancho', 'D1A', 'D1B', 'D2A', 'D2B', 'D3A', 'D3B', 'precioVenta'];
+
+    if (numericFields.includes(field)) {
+      value = value.replace(',', '.');
+      // Permitir solo valores numéricos y decimales
+      if (/^\d*\.?\d*$/.test(value) || value === '') {
+        setValues({ ...values, [field]: value });
+      }
+    } else {
+      // Para campos no numéricos, actualizar directamente
+      setValues({ ...values, [field]: value });
+    }
+  };
+
+
+  const handleSave = async () => {
+    const { precioVenta, factura, COD, alto, ancho, D1A, D1B, D2A, D2B, D3A, D3B } = values;
+    if (!precioVenta || !factura || !COD || !alto || !ancho || !D1A || !D1B || !D2A || !D2B || !D3A || !D3B) {
+      alert('Por favor, complete todos los campos antes de guardar.');
+      return;
+    }
+
+    const datosMovimiento = {
+      valorRegistro: `${plancha.nombre}-${plancha.alto}-${plancha.ancho}-${plancha.despunte1A}-${plancha.despunte1B}-${plancha.despunte2A}-${plancha.despunte2B}-${plancha.despunte1A}-${plancha.despunte3B}`,
+      planchaId: planchaSeleccionada,
+      nFactura: factura,
+      precioVenta: precioVenta,
+      tipo: "Salida",
+
+    };
+    try {
+      await enviarMovimiento(datosMovimiento);
+    } catch (error) {
+      alert('Hubo un error al guardar el movimiento.');
+      console.error(error);
+    }
+
     const datosPlancha = {
+      
       nombre: COD,
       alto,
       ancho,
@@ -66,9 +133,7 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada}) => {
 
     try {
       await enviarPlanchaActualizada(planchaSeleccionada, datosPlancha);
-      //await enviarPlancha(datosPlancha);
       onClose();
-      alert('La plancha ha sido guardada con éxito.');
     } catch (error) {
       alert('Hubo un error al guardar la plancha.');
       console.error(error);
@@ -81,55 +146,71 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada}) => {
     <>
       <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex justify-center items-center">
         <div className="bg-white p-6 rounded-lg shadow-lg">
-        <div className="max-w-full overflow-x-auto">
-        <table className="w-full table-fixed">
-                <thead className="text-center bg-primary">
-                  <tr>
-                  <th className={TdStyle.ThStyle}>COD</th>
-                    <th className={TdStyle.ThStyle}>Alto</th>
-                    <th className={TdStyle.ThStyle}>Ancho</th>
-                    <th className={TdStyle.ThStyle}>D1A</th>
-                    <th className={TdStyle.ThStyle}>D1B</th>
-                    <th className={TdStyle.ThStyle}>D2A</th>
-                    <th className={TdStyle.ThStyle}>D2B</th>
-                    <th className={TdStyle.ThStyle}>D3A</th>
-                    <th className={TdStyle.ThStyle}>D3B</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    {Object.keys(values).map((key) => (
-                      <td key={key} className={TdStyle.TdStyle}>
-                        <input
-                          className={TdStyle.InputSmall}
-                          type="text"
-                          value={values[key]}
-                          onChange={(e) => handleInputChange(e, key)}
-                        />
-                      </td>
-                    ))}
-                  </tr>
-                </tbody>
-              </table>
+          <div className="max-w-full overflow-x-auto">
+            <p className="font-bold text-xl mt-10 text-center md:w-1/2 lg:w-1/2 mx-auto pb-10">Ahora la plancha {plancha.nombre} quedó con:</p>
+            <div className="flex justify-between items-center mb-4">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={planchaTerminada}
+                  onChange={(e) => setPlanchaTerminada(e.target.checked)}
+                  className="mr-2"
+                />
+                Marcar plancha como terminada
+              </label>
             </div>
-            
+            <table className="w-full table-fixed">
+              <thead className="text-center bg-primary">
+                <tr>
+                  <th className={TdStyle.ThStyle}>Factura</th>
+                  <th className={TdStyle.ThStyle}>Precio Venta</th>
+                  <th className={TdStyle.ThStyle}>COD</th>
+                  <th className={TdStyle.ThStyle}>Alto</th>
+                  <th className={TdStyle.ThStyle}>Ancho</th>
+                  <th className={TdStyle.ThStyle}>D1A</th>
+                  <th className={TdStyle.ThStyle}>D1B</th>
+                  <th className={TdStyle.ThStyle}>D2A</th>
+                  <th className={TdStyle.ThStyle}>D2B</th>
+                  <th className={TdStyle.ThStyle}>D3A</th>
+                  <th className={TdStyle.ThStyle}>D3B</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {Object.keys(values).map((key) => (
+                    <td key={key} className={TdStyle.TdStyle}>
+                      <input
+                        className={TdStyle.InputSmall}
+                        type="text"
+                        name={key}
+                        value={values[key]}
+                        onChange={(e) => handleInputChange(e, key)}
+                        disabled={planchaTerminada && key !== 'factura' && key !== 'precioVenta'}
+                      />
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
           
           <div className="flex justify-center mt-4">
-            <button 
-              className="bg-blue-500 hover:bg-blue-700 text-white mx-5 py-2 px-4 rounded" 
-              onClick={handleOpenConfirmation}
-            >Confirmar
-            </button>
             <button 
               className="bg-blue-500 hover:bg-blue-700 text-white mx-5 py-2 px-4 rounded" 
               onClick={onClose}
             >
               Cancelar 
             </button>
+            <button 
+              className="bg-blue-500 hover:bg-blue-700 text-white mx-5 py-2 px-4 rounded" 
+              onClick={handleOpenConfirmation}
+            >
+              Confirmar
+            </button>
           </div>
         </div>
       </div>
-
+  
       <ConfirmationModal 
         isOpen={isConfirmationModalOpen} 
         onClose={handleCloseConfirmation} 
@@ -138,5 +219,5 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada}) => {
       />
     </>,
     document.getElementById('modal-root')
-);};
+  );};
 export default TableModal;

@@ -58,7 +58,7 @@ const handleBodegaDestinoSelect = selectedOption => {
                       <td className={TdStyle.TdStyle}>{despunte3A}</td>
                       <td className={TdStyle.TdStyle}>{despunte3B}</td>
                       <td className={TdStyle.TdStyle}>{
-                      alto * ancho - (despunte1A * despunte1B) - (despunte2A * despunte2B) - (despunte3A * despunte3B)}</td>
+                      (alto * ancho - (despunte1A * despunte1B) - (despunte2A * despunte2B) - (despunte3A * despunte3B)).toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -9,7 +9,6 @@ const TdStyle = {
   TdButton: `inline-block px-3 py-2.5 border rounded-md border-primary text-primary hover:bg-primary hover:text-white font-medium`,
 }
 
-
 const TablePlanchas = ({ modeloSeleccionado, bodegaSeleccionada }) => {
   const { planchas } = useallPlanchas(modeloSeleccionado, bodegaSeleccionada);
   const [currentPage, setCurrentPage] = useState(0);
@@ -19,7 +18,8 @@ const TablePlanchas = ({ modeloSeleccionado, bodegaSeleccionada }) => {
   }, [modeloSeleccionado, bodegaSeleccionada]);
 
   const itemsPerPage = 5;
-  const totalItems = planchas.length;
+  const filteredPlanchas = planchas;
+  const totalItems = filteredPlanchas.length;
   const maxPage = Math.ceil(totalItems / itemsPerPage);
 
   const nextPage = () => {

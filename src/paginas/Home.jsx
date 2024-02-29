@@ -92,6 +92,7 @@ const Home = () => {
                   label={"Modelo:"}
                 />
                 {searchMode === 'plancha' && (
+                  
                   <ComboBox
                     placeholder="Seleccione una bodega"
                     value={bodegaSeleccionada}
