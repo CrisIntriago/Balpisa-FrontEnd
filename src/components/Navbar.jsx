@@ -93,7 +93,7 @@ const Navbar = () => {
           <div className="w-60 max-w-full">
             <Link to="/consultas" className="block w-full py-5">
               <img
-                src="\src\assets\logo.png"
+                src="\public\logo.png"
                 alt="logo"
               />
             </Link>
