@@ -48,7 +48,7 @@ const Login = () => {
                     className="mx-auto inline-block max-w-[160px]"
                 >
                     <img
-                        src="public\logo.png"
+                        src="/logo.png"
                         alt="logo"
                     />
                 </a>
