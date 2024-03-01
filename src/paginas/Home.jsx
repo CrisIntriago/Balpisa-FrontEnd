@@ -5,6 +5,7 @@ import ComboBox from '../components/ComboBox';
 import useModelosPorFamilia from '../hooks/useModeloPorFamilia';
 import useBodegas from '../hooks/useBodegas';
 import TablePlanchas from '../components/TablePlanchas';
+import TableBusquedaModeloUnitario from '../components/TableBusquedaModeloUnitario';
 
 const Home = () => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState('');
@@ -16,6 +17,7 @@ const Home = () => {
   const { familias } = useFamilias();
   const { modelos } = useModelosPorFamilia(familiaSeleccionada);
   const { bodegas } = useBodegas();
+  const familiasUnitarias = ['Porcelanato','Ceramica','Ferretería','Varios']
 
   useEffect(() => {
     setFamiliaSeleccionada('');
@@ -52,6 +54,8 @@ const Home = () => {
 
   const opcionesFamilias = familias.map(({ id, nombre }) => ({ value: id, label: nombre }));
   const opcionesModelos = [{ value: '', label: "Todos" }, ...modelos.map(modelo => ({ value: modelo.id, label: modelo.nombre }))];
+  const opcionesFamiliasNoUnitarias = familias.filter(({ id, nombre }) => !familiasUnitarias.includes(nombre)).map(({ id, nombre }) => ({ value: id, label: nombre }));
+  const idsFamiliasUnitarias = familias.filter(familia => familiasUnitarias.includes(familia.nombre)).map(familia => familia.id)
   const opcionesModelosCompletos = modelos.map(modelo => ({ value: modelo.id, label: modelo.nombre }));
   const opcionesBodegas = bodegas.map(({ id, nombre }) => ({ value: id, label: nombre }));
 
@@ -74,12 +78,12 @@ const Home = () => {
 
       {(searchMode === 'modelo' || searchMode === 'plancha') && (
         <>
-          <div className="flex justify-between mb-4 mx-4 md:mx-auto w-full md:w-1/2 lg:w-1/2 ">
+          <div className="flex flex-wrap justify-center mb-4 mx-4 md:mx-auto w-full">
             <ComboBox
               placeholder="Seleccione una familia"
               value={familiaSeleccionada}
               onChange={handleFamiliaSelect}
-              options={opcionesFamilias}
+              options={searchMode==='modelo' ? opcionesFamilias : opcionesFamiliasNoUnitarias}
               label={"Familia:"}
             />
             {familiaSeleccionada && (
@@ -112,12 +116,17 @@ const Home = () => {
               Buscar
             </button>
           )}
-          {tablaVisible && searchMode === 'modelo' && (
+          {tablaVisible && searchMode === 'modelo' && idsFamiliasUnitarias.includes(familiaSeleccionada) && (      
+            <TableBusquedaModeloUnitario
+            familiaSeleccionada={familiaSeleccionada} 
+            modeloSeleccionado={modeloSeleccionado} />
+          )}
+          {tablaVisible && searchMode === 'modelo' && !idsFamiliasUnitarias.includes(familiaSeleccionada) && (   
             <Table 
             familiaSeleccionada={familiaSeleccionada} 
             modeloSeleccionado={modeloSeleccionado} />
           )}
-          {tablaVisible && searchMode === 'plancha' && (
+          {tablaVisible && searchMode === 'plancha' && !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
             <TablePlanchas 
             modeloSeleccionado={modeloSeleccionado}
             bodegaSeleccionada={bodegaSeleccionada} />

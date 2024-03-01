@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import usePlanchaFromId from "../hooks/usePlanchaFromId";
 import ComboBox from "./ComboBox";
+import useCambiarBodega from "../hooks/useCambiarBodega";
+import useAgregarMovimiento from "../hooks/useAgregarMovimiento";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -11,17 +13,51 @@ const TdStyle = {
 };
 
 
+
 const TablePlanchaIndividual = ({ planchaSeleccionada, bodegaSeleccionada, opcionesBodegas }) => {
   const [bodegaDestinoSeleccionada, setBodegaSeleccionada] = useState('');
   const { planchas } = usePlanchaFromId(planchaSeleccionada);
+  const [factura, setFactura] = useState('');
 
-  const handleCambiar = () => {
-    console.log(opcionesBodegas)
-    console.log(bodegaSeleccionada +" "+ bodegaDestinoSeleccionada)
-  }
+  const { hacerCambioBodega } = useCambiarBodega();
+  const { enviarMovimiento } = useAgregarMovimiento();
+
+  const handleCambiar = async () => {
+    const { nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B } = planchas[0];
+    if (planchaSeleccionada === '' || bodegaSeleccionada === '' || bodegaDestinoSeleccionada === '' ) {
+      alert('Por favor, complete todos los campos antes de guardar.');
+      return;
+    }
+
+    const datosMovimiento = {
+      valorRegistro: `${nombre}-${alto}-${ancho}-${despunte1A}-${despunte1B}-${despunte2A}-${despunte2B}-${despunte3A}-${despunte3B}`,
+      planchaId: planchaSeleccionada,
+      nFactura: factura,
+      precioVenta: 0,
+      tipo: "CambioBodega",
+
+    };
+    try {
+      await enviarMovimiento(datosMovimiento);
+    } catch (error) {
+      alert('Hubo un error al hacer el movimiento.');
+      console.error(error);
+    }
+
+    try {
+      await hacerCambioBodega(planchaSeleccionada, bodegaDestinoSeleccionada);
+    } catch (error) {
+      alert('Hubo un error al hacer el cambio la plancha.');
+      console.error(error);
+    }
+  };
 
 const handleBodegaDestinoSelect = selectedOption => {
     setBodegaSeleccionada(selectedOption ? selectedOption.value : '');
+  };
+
+  const handleFacturaChange = (e) => {
+    setFactura(e.target.value);
   };
 
   return (
@@ -33,6 +69,7 @@ const handleBodegaDestinoSelect = selectedOption => {
               <table className="w-full table-fixed">
                 <thead className="text-center bg-primary">
                   <tr>
+                  <th className={TdStyle.ThStyle}>Factura</th>
                     <th className={TdStyle.ThStyle}>COD</th>
                     <th className={TdStyle.ThStyle}>Alto</th>
                     <th className={TdStyle.ThStyle}>Ancho</th>
@@ -48,6 +85,15 @@ const handleBodegaDestinoSelect = selectedOption => {
                 <tbody>
                   {planchas.map(({ id, nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B }) => (
                     <tr key={id}>
+                       <td className={TdStyle.TdStyle}>
+                <input
+                  type="text"
+                  className={TdStyle.InputSmall}
+                  value={factura}
+                  onChange={handleFacturaChange}
+                  placeholder="Número de Factura"
+                />
+              </td>
                       <td className={TdStyle.TdStyle}>{nombre}</td>
                       <td className={TdStyle.TdStyle}>{alto}</td>
                       <td className={TdStyle.TdStyle}>{ancho}</td>

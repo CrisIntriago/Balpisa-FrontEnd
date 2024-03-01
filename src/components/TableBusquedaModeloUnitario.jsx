@@ -9,7 +9,7 @@ const TdStyle = {
   TdButton: `inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary hover:text-white font-medium`,
 };
 
-const Table = ({ familiaSeleccionada, modeloSeleccionado }) => {
+const TableBusquedaModeloUnitario = ({ familiaSeleccionada, modeloSeleccionado }) => {
   const { modelosCompletos } = useModelosCompletos(familiaSeleccionada);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
@@ -73,12 +73,12 @@ const Table = ({ familiaSeleccionada, modeloSeleccionado }) => {
                     <tr>
                       <th className={TdStyle.ThStyle}>Modelo</th>
                       <th className={TdStyle.ThStyle}>
-                        Precio/m<sup>2</sup> ($)
+                        Unidades<sup>2</sup> ($)
                       </th>
                       <th className={TdStyle.ThStyle}>
                         m<sup>2</sup> Disponibles
                       </th>
-                      <th className={TdStyle.ThStyle}>Acciones</th>
+                      <th className={TdStyle.ThStyle}>Precio/m<sup>2</sup></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -88,11 +88,7 @@ const Table = ({ familiaSeleccionada, modeloSeleccionado }) => {
                         <td className={TdStyle.TdStyle}>{nombre}</td>
                         <td className={TdStyle.TdStyle2}>{preciom2}</td>
                         <td className={TdStyle.TdStyle}>{m2Disponibles}</td>
-                        <td className={TdStyle.TdStyle2}>
-                          <a href="/#" className={TdStyle.TdButton}>
-                            Ver Planchas
-                          </a>
-                        </td>
+                        <td className={TdStyle.TdStyle2}>$10</td>
                       </tr>
                     ))}
                   </tbody>
@@ -125,4 +121,4 @@ const Table = ({ familiaSeleccionada, modeloSeleccionado }) => {
   );
 };
 
-export default Table;
+export default TableBusquedaModeloUnitario;

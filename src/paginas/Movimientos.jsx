@@ -4,10 +4,10 @@ import ComboBox from '../components/ComboBox';
 import useModelosPorFamilia from '../hooks/useModeloPorFamilia';
 import useBodegas from '../hooks/useBodegas';
 import TableSalida from '../components/TableSalida';
-import Table from '../components/Table';
 import usePlanchasSimple from '../hooks/usePlanchasSimple';
 import TableIngreso from '../components/TableIngreso';
 import TablePlanchaIndividual from '../components/TablePlanchaIndividual';
+import TableModificarPlancha from '../components/TableModificarPlancha';
 
 const Movimientos = ({ opcion }) => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState('');
@@ -79,7 +79,6 @@ const Movimientos = ({ opcion }) => {
               value={familiaSeleccionada}
               onChange={handleFamiliaSelect}
               options={opcionesFamilias}
-              width={220}
               label={"Familia"}
             />
             {familiaSeleccionada && (
@@ -89,7 +88,6 @@ const Movimientos = ({ opcion }) => {
                   value={modeloSeleccionado}
                   onChange={handleModeloSelect}
                   options={opcionesModelos}
-                  width={220}
                   label={"Modelo"}
                 />
 
@@ -98,17 +96,15 @@ const Movimientos = ({ opcion }) => {
                     value={bodegaSeleccionada}
                     onChange={handleBodegaSelect}
                     options={opcionesBodegas}
-                    width={230}
                     label={opcion==="Cambio Bodega" ? "Bodega Origen" : "Bodega"}
                 />
 
-                {(bodegaSeleccionada && modeloSeleccionado && (opcion==="Salida Inventario" || opcion==="Cambio Bodega")) && (
+                {(bodegaSeleccionada && modeloSeleccionado && (opcion==="Salida Inventario" || opcion==="Cambio Bodega" || opcion==="Modificar Plancha")) && (
                   <ComboBox
                   placeholder="Seleccione una plancha"
                   value={planchaSeleccionada}
                   onChange={handlePlanchaSelect}
                   options={opcionesPlanchas}
-                  width={230}
                   label={"Plancha"}
               />
 
@@ -147,9 +143,8 @@ const Movimientos = ({ opcion }) => {
             />
           )}
           {tablaVisible && opcion === "Modificar Plancha" && (
-            <Table 
-            familiaSeleccionada={familiaSeleccionada} 
-            modeloSeleccionado={modeloSeleccionado} />
+            <TableModificarPlancha 
+            planchaSeleccionada={planchaSeleccionada}/>
           )}
 
         </>

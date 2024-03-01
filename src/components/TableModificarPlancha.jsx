@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import ReactDOM from 'react-dom';
+import React, {useState, useEffect } from 'react';
 import ConfirmationModal from './ConfirmationModal';
 import useActualizarPlancha from '../hooks/useActualizarPlancha';
 import useAgregarMovimiento from '../hooks/useAgregarMovimiento';
-import useGastarPlancha from '../hooks/useGastarPlancha';
+import usePlanchaFromId from '../hooks/usePlanchaFromId';
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -13,9 +12,9 @@ const TdStyle = {
   InputSmall: `w-full max-w-xs px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center`
 };
 
-const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
+const TableModificarPlancha = ({ planchaSeleccionada }) => {
+    const [plancha, setPlancha] = useState('');
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
-  const [planchaTerminada, setPlanchaTerminada] = useState(false); 
   const [values, setValues] = useState({
     factura: '',
     precioVenta: '',
@@ -29,9 +28,17 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
     D3A: '',
     D3B: '',
   });
+
   const { enviarPlanchaActualizada } = useActualizarPlancha();
   const { enviarMovimiento } = useAgregarMovimiento();
-  const { gastarPlanchaPorId } = useGastarPlancha();
+
+  const { planchas } = usePlanchaFromId(planchaSeleccionada)
+
+  useEffect(() => {
+    if (planchas.length > 0) {
+      setPlancha(planchas[0]);
+    }
+  }, [planchas]);
 
   const handleOpenConfirmation = () => {
     setConfirmationModalOpen(true);
@@ -43,38 +50,7 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
 
   const handleConfirm = async () => {
     setConfirmationModalOpen(false);
-    if (!planchaTerminada) {
       handleSave();
-    } else {
-      handleSaveMovimiento();
-    }
-  };
-
-  const handleSaveMovimiento = async () => {
-    const { precioVenta, factura } = values;
-    if (!factura || !precioVenta) {
-      alert('Por favor, complete todos los campos antes de guardar.');
-      return;
-    }
-
-    const datosMovimiento = {
-      valorRegistro: `${plancha.nombre}-${plancha.alto}-${plancha.ancho}-${plancha.despunte1A}-${plancha.despunte1B}-${plancha.despunte2A}-${plancha.despunte2B}-${plancha.despunte3A}-${plancha.despunte3B}`,
-      planchaId: planchaSeleccionada,
-      nFactura: factura,
-      precioVenta: precioVenta,
-      tipo: "Salida",
-
-    };
-
-    try {
-      await enviarMovimiento(datosMovimiento);
-      onClose(); 
-    } catch (error) {
-      alert('Hubo un error al guardar el movimiento.');
-      console.error(error);
-    }
-    
-    await gastarPlanchaPorId(planchaSeleccionada);
   };
 
   const handleInputChange = (e, field) => {
@@ -106,7 +82,7 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
       planchaId: planchaSeleccionada,
       nFactura: factura,
       precioVenta: precioVenta,
-      tipo: "Salida",
+      tipo: "Modificación",
 
     };
     try {
@@ -131,34 +107,18 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
 
     try {
       await enviarPlanchaActualizada(planchaSeleccionada, datosPlancha);
-      onClose();
     } catch (error) {
       alert('Hubo un error al guardar la plancha.');
       console.error(error);
     }
   };
 
-  if (!isOpen) return null;
-
-  return ReactDOM.createPortal(
-    <>
-      <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex justify-center items-center">
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <div className="max-w-full overflow-x-auto">
-            <p className="font-bold text-xl mt-10 text-center md:w-1/2 lg:w-1/2 mx-auto pb-10">Ahora la plancha {plancha.nombre} quedó con:</p>
-            <div className="flex justify-between items-center mb-4">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={planchaTerminada}
-                  onChange={(e) => setPlanchaTerminada(e.target.checked)}
-                  className="mr-2"
-                />
-                Marcar plancha como terminada
-              </label>
-            </div>
-            <table className="w-full table-fixed">
-              <thead className="text-center bg-primary">
+  return (
+    <div className="bg-white p-6 rounded-lg shadow-lg">
+      <div className="max-w-full overflow-x-auto">
+        <p className="font-bold text-xl mt-10 text-center md:w-1/2 lg:w-1/2 mx-auto pb-10">Modificar los datos de la plancha {plancha.nombre}</p>
+        <table className="w-full table-fixed">
+          <thead className="text-center bg-primary">
                 <tr>
                   <th className={TdStyle.ThStyle}>Factura</th>
                   <th className={TdStyle.ThStyle}>Precio Venta</th>
@@ -183,39 +143,28 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
                         name={key}
                         value={values[key]}
                         onChange={(e) => handleInputChange(e, key)}
-                        disabled={planchaTerminada && key !== 'factura' && key !== 'precioVenta'}
                       />
                     </td>
                   ))}
                 </tr>
               </tbody>
-            </table>
-          </div>
-          
-          <div className="flex justify-center mt-4">
-            <button 
-              className="bg-blue-500 hover:bg-blue-700 text-white mx-5 py-2 px-4 rounded" 
-              onClick={onClose}
-            >
-              Cancelar 
-            </button>
-            <button 
-              className="bg-blue-500 hover:bg-blue-700 text-white mx-5 py-2 px-4 rounded" 
-              onClick={handleOpenConfirmation}
-            >
-              Confirmar
-            </button>
-          </div>
-        </div>
+              </table>
       </div>
-  
+      <div className="flex justify-center mt-4">
+        <button 
+          className="bg-blue-500 hover:bg-blue-700 text-white mx-5 py-2 px-4 rounded" 
+          onClick={handleSave}
+        >
+          Guardar cambios
+        </button>
+      </div>
       <ConfirmationModal 
         isOpen={isConfirmationModalOpen} 
         onClose={handleCloseConfirmation} 
         onConfirm={handleConfirm} 
-        message={"¿Estás seguro de que deseas modificar los datos de la plancha?"}
-      />
-    </>,
-    document.getElementById('modal-root')
-  );};
-export default TableModal;
+        message={"¿Estás seguro de que deseas modificar los datos de la plancha?"}/>
+    </div>
+  );
+};
+
+export default TableModificarPlancha;

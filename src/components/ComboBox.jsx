@@ -2,7 +2,7 @@ import Select from 'react-select';
 
 const ComboBox = ({ placeholder, value, onChange, options, label, width = 250 }) => {
     return (
-        <div>
+        <div className='mx-10'>
             <p>{label}</p>
             <Select
                 placeholder={placeholder}
@@ -12,10 +12,10 @@ const ComboBox = ({ placeholder, value, onChange, options, label, width = 250 })
                 isClearable={true}
                 styles={{
                     control: (provided) => ({
-                        ...provided,
-                        width: width,
-                        marginRight: 10,
-                    }),
+                    ...provided,
+                    width: width, // Usa un porcentaje para el ancho
+                    maxWidth: 300, // Un máximo fijo para evitar que sea demasiado grande
+                }),
                 }}
             />
         </div>
