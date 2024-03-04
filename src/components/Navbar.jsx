@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
 
+
 const Navbar = () => {
-  const { auth } = useAuth();
+  const { auth, cerrarSesionAuth } = useAuth();
   const [open, setOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState('consultas');
   const [navbarHeight, setNavbarHeight] = useState(0);
@@ -43,11 +44,14 @@ const Navbar = () => {
 
   const handleSectionClick = (section) => {
     setCurrentSection(section);
-    localStorage.setItem('currentSection', section); 
+    localStorage.setItem('currentSection', section);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('currentSection'); 
+    localStorage.removeItem('currentSection');
+    cerrarSesionAuth()
+    localStorage.removeItem('token')
+
   };
 
   return (
@@ -102,26 +106,25 @@ const Navbar = () => {
             <div>
               <nav
                 id="navbarCollapse"
-                className={`absolute top-full w-full max-w-[250px] bg-white px-6 py-5 shadow lg:static lg:block lg:w-full lg:max-w-full lg:shadow-none ${
-                  !open && "hidden"
-                } `}
+                className={`absolute top-full w-full max-w-[250px] bg-white px-6 py-5 shadow lg:static lg:block lg:w-full lg:max-w-full lg:shadow-none ${!open && "hidden"
+                  } `}
               >
                 <ul className="block lg:flex">
                   <ListItem NavLink="/consultas" active={currentSection === 'consultas'} onClick={() => handleSectionClick('consultas')}>
                     Consultas
                   </ListItem>
                   <ListItem
-                  NavLink="#"
-                  active={currentSection === 'movimientos' || ['movimientos', '/ingreso-inventario', '/salida-inventario', '/cambio-bodega', '/modificar-plancha'].includes(currentSection)}
-                  onClick={() => handleSectionClick('movimientos')}
-                  subMenu={[
-                    { name: 'Ingreso de inventario', link: '/ingreso-inventario' },
-                    { name: 'Salida de inventario', link: '/salida-inventario' },
-                    { name: 'Cambio de bodega', link: '/cambio-bodega' },
-                    { name: 'Modificar plancha', link: '/modificar-plancha' }
-                  ]}
-                  currentSection={currentSection}
-                  setCurrentSection={setCurrentSection}
+                    NavLink="#"
+                    active={currentSection === 'movimientos' || ['movimientos', '/ingreso-inventario', '/salida-inventario', '/cambio-bodega', '/modificar-plancha'].includes(currentSection)}
+                    onClick={() => handleSectionClick('movimientos')}
+                    subMenu={[
+                      { name: 'Ingreso de inventario', link: '/ingreso-inventario' },
+                      { name: 'Salida de inventario', link: '/salida-inventario' },
+                      { name: 'Cambio de bodega', link: '/cambio-bodega' },
+                      { name: 'Modificar plancha', link: '/modificar-plancha' }
+                    ]}
+                    currentSection={currentSection}
+                    setCurrentSection={setCurrentSection}
                   >
                     Movimientos &#9660;
                   </ListItem>
@@ -136,7 +139,7 @@ const Navbar = () => {
                 <p
                   className="px-7 py-3 text-base font-medium text-dark"
                 >
-                 Bienvenid@ {auth.nombre}
+                  Bienvenid@ {auth.nombre}
                 </p>
               </div>
               <div className="hidden sm:flex lg:pr-0">
@@ -164,7 +167,7 @@ const ListItem = ({ children, NavLink, active, onClick, subMenu, currentSection,
 
   const handleSubMenuItemClick = (section) => {
     localStorage.setItem('currentSection', section);
-    setCurrentSection(section); 
+    setCurrentSection(section);
   };
 
   return (
@@ -180,9 +183,9 @@ const ListItem = ({ children, NavLink, active, onClick, subMenu, currentSection,
         {subMenu && (
           <div className={`sub-menu ${showSubMenu ? 'show' : ''}`}>
             {subMenu.map((item, index) => (
-              <Link 
-                to={item.link} 
-                key={index} 
+              <Link
+                to={item.link}
+                key={index}
                 className={`block py-2 text-base font-medium ${currentSection === item.link ? 'text-primary font-bold' : 'text-body-color'} hover:text-dark`}
                 onClick={() => handleSubMenuItemClick(item.link)}
               >

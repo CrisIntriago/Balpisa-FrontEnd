@@ -9,7 +9,11 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const {setAuth} = useAuth();
+    const {auth, setAuth, cargando} = useAuth();
+
+    console.log(auth);
+    console.log(cargando);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault()
