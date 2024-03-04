@@ -1,34 +1,43 @@
-import React, {useState, useEffect} from 'react';
-import ReactDOM from 'react-dom';
-import ConfirmationModal from './ConfirmationModal';
-import useActualizarPlancha from '../hooks/useActualizarPlancha';
-import useAgregarMovimiento from '../hooks/useAgregarMovimiento';
-import useGastarPlancha from '../hooks/useGastarPlancha';
+import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
+import ConfirmationModal from "./ConfirmationModal";
+import useActualizarPlancha from "../hooks/useActualizarPlancha";
+import useAgregarMovimiento from "../hooks/useAgregarMovimiento";
+import useGastarPlancha from "../hooks/useGastarPlancha";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
   TdStyle: `text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium`,
   TdStyle2: `text-dark border-b border-[#E8E8E8] bg-white py-5 px-2 text-center text-base font-medium`,
   TdButton: `inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary hover:text-white font-medium`,
-  InputSmall: `w-full max-w-xs px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center`
+  InputSmall: `w-full max-w-xs px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center`,
 };
 
-const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
+const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha }) => {
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
-  const [planchaTerminada, setPlanchaTerminada] = useState(false); 
+  const [planchaTerminada, setPlanchaTerminada] = useState(false);
   const [values, setValues] = useState({
-    factura: '',
-    precioVenta: '',
-    COD: '',
-    alto: '',
-    ancho: '',
-    D1A: '',
-    D1B: '',
-    D2A: '',
-    D2B: '',
-    D3A: '',
-    D3B: '',
+    factura: "",
+    precioVenta: "",
+    m2Usados: "",
+    COD: "",
+    alto: "",
+    ancho: "",
+    D1A: "",
+    D1B: "",
+    D2A: "",
+    D2B: "",
+    D3A: "",
+    D3B: "",
   });
+
+  const initialStateUnitario = {
+    factura: "",
+    nombre: "",
+    cantidad: "",
+    totalm2: "",
+    precioVenta: "",
+  }
   const { enviarPlanchaActualizada } = useActualizarPlancha();
   const { enviarMovimiento } = useAgregarMovimiento();
   const { gastarPlanchaPorId } = useGastarPlancha();
@@ -43,6 +52,20 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
 
   const handleConfirm = async () => {
     setConfirmationModalOpen(false);
+    setValues({
+      factura: "",
+      precioVenta: "",
+      m2Usados: "",
+      COD: "",
+      alto: "",
+      ancho: "",
+      D1A: "",
+      D1B: "",
+      D2A: "",
+      D2B: "",
+      D3A: "",
+      D3B: "",
+    });
     if (!planchaTerminada) {
       handleSave();
     } else {
@@ -51,40 +74,50 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
   };
 
   const handleSaveMovimiento = async () => {
-    const { precioVenta, factura } = values;
-    if (!factura || !precioVenta) {
-      alert('Por favor, complete todos los campos antes de guardar.');
+    const { precioVenta, factura, m2Usados } = values;
+    if (!factura || !precioVenta || !m2Usados) {
+      alert("Por favor, complete todos los campos antes de guardar.");
       return;
     }
 
     const datosMovimiento = {
-      valorRegistro: `${plancha.nombre}-${plancha.alto}-${plancha.ancho}-${plancha.despunte1A}-${plancha.despunte1B}-${plancha.despunte2A}-${plancha.despunte2B}-${plancha.despunte3A}-${plancha.despunte3B}`,
+      valorRegistro: `${m2Usados}`,
       planchaId: planchaSeleccionada,
       nFactura: factura,
       precioVenta: precioVenta,
       tipo: "Salida",
-
     };
 
     try {
       await enviarMovimiento(datosMovimiento);
-      onClose(); 
+      onClose();
     } catch (error) {
-      alert('Hubo un error al guardar el movimiento.');
+      alert("Hubo un error al guardar el movimiento.");
       console.error(error);
     }
-    
+
     await gastarPlanchaPorId(planchaSeleccionada);
   };
 
   const handleInputChange = (e, field) => {
     let value = e.target.value;
-    const numericFields = ['alto', 'ancho', 'D1A', 'D1B', 'D2A', 'D2B', 'D3A', 'D3B', 'precioVenta'];
+    const numericFields = [
+      "m2Usados",
+      "alto",
+      "ancho",
+      "D1A",
+      "D1B",
+      "D2A",
+      "D2B",
+      "D3A",
+      "D3B",
+      "precioVenta",
+    ];
 
     if (numericFields.includes(field)) {
-      value = value.replace(',', '.');
+      value = value.replace(",", ".");
       // Permitir solo valores numéricos y decimales
-      if (/^\d*\.?\d*$/.test(value) || value === '') {
+      if (/^\d*\.?\d*$/.test(value) || value === "") {
         setValues({ ...values, [field]: value });
       }
     } else {
@@ -93,31 +126,53 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
     }
   };
 
-
   const handleSave = async () => {
-    const { precioVenta, factura, COD, alto, ancho, D1A, D1B, D2A, D2B, D3A, D3B } = values;
-    if (!precioVenta || !factura || !COD || !alto || !ancho || !D1A || !D1B || !D2A || !D2B || !D3A || !D3B) {
-      alert('Por favor, complete todos los campos antes de guardar.');
+    const {
+      precioVenta,
+      m2Usados,
+      factura,
+      COD,
+      alto,
+      ancho,
+      D1A,
+      D1B,
+      D2A,
+      D2B,
+      D3A,
+      D3B,
+    } = values;
+    if (
+      !precioVenta ||
+      !factura ||
+      !COD ||
+      !alto ||
+      !ancho ||
+      !D1A ||
+      !D1B ||
+      !D2A ||
+      !D2B ||
+      !D3A ||
+      !D3B
+    ) {
+      alert("Por favor, complete todos los campos antes de guardar.");
       return;
     }
 
     const datosMovimiento = {
-      valorRegistro: `${plancha.nombre}-${plancha.alto}-${plancha.ancho}-${plancha.despunte1A}-${plancha.despunte1B}-${plancha.despunte2A}-${plancha.despunte2B}-${plancha.despunte3A}-${plancha.despunte3B}`,
+      valorRegistro: `${m2Usados}`,
       planchaId: planchaSeleccionada,
       nFactura: factura,
       precioVenta: precioVenta,
       tipo: "Salida",
-
     };
     try {
       await enviarMovimiento(datosMovimiento);
     } catch (error) {
-      alert('Hubo un error al guardar el movimiento.');
+      alert("Hubo un error al guardar el movimiento.");
       console.error(error);
     }
 
     const datosPlancha = {
-      
       nombre: COD,
       alto,
       ancho,
@@ -133,7 +188,7 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
       await enviarPlanchaActualizada(planchaSeleccionada, datosPlancha);
       onClose();
     } catch (error) {
-      alert('Hubo un error al guardar la plancha.');
+      alert("Hubo un error al guardar la plancha.");
       console.error(error);
     }
   };
@@ -145,7 +200,9 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
       <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex justify-center items-center">
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <div className="max-w-full overflow-x-auto">
-            <p className="font-bold text-xl mt-10 text-center md:w-1/2 lg:w-1/2 mx-auto pb-10">Ahora la plancha {plancha.nombre} quedó con:</p>
+            <p className="font-bold text-xl mt-10 text-center md:w-1/2 lg:w-1/2 mx-auto pb-10">
+              Ahora la plancha {plancha.nombre} quedó con:
+            </p>
             <div className="flex justify-between items-center mb-4">
               <label className="flex items-center">
                 <input
@@ -162,6 +219,9 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
                 <tr>
                   <th className={TdStyle.ThStyle}>Factura</th>
                   <th className={TdStyle.ThStyle}>Precio Venta</th>
+                  <th className={TdStyle.ThStyle}>
+                    m<sup>2</sup> Usados
+                  </th>
                   <th className={TdStyle.ThStyle}>COD</th>
                   <th className={TdStyle.ThStyle}>Alto</th>
                   <th className={TdStyle.ThStyle}>Ancho</th>
@@ -183,7 +243,12 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
                         name={key}
                         value={values[key]}
                         onChange={(e) => handleInputChange(e, key)}
-                        disabled={planchaTerminada && key !== 'factura' && key !== 'precioVenta'}
+                        disabled={
+                          planchaTerminada &&
+                          key !== "factura" &&
+                          key !== "precioVenta" &&
+                          key !== "m2Usados"
+                        }
                       />
                     </td>
                   ))}
@@ -191,16 +256,16 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
               </tbody>
             </table>
           </div>
-          
+
           <div className="flex justify-center mt-4">
-            <button 
-              className="bg-blue-500 hover:bg-blue-700 text-white mx-5 py-2 px-4 rounded" 
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white mx-5 py-2 px-4 rounded"
               onClick={onClose}
             >
-              Cancelar 
+              Cancelar
             </button>
-            <button 
-              className="bg-blue-500 hover:bg-blue-700 text-white mx-5 py-2 px-4 rounded" 
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white mx-5 py-2 px-4 rounded"
               onClick={handleOpenConfirmation}
             >
               Confirmar
@@ -208,14 +273,17 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha}) => {
           </div>
         </div>
       </div>
-  
-      <ConfirmationModal 
-        isOpen={isConfirmationModalOpen} 
-        onClose={handleCloseConfirmation} 
-        onConfirm={handleConfirm} 
-        message={"¿Estás seguro de que deseas modificar los datos de la plancha?"}
+
+      <ConfirmationModal
+        isOpen={isConfirmationModalOpen}
+        onClose={handleCloseConfirmation}
+        onConfirm={handleConfirm}
+        message={
+          "¿Estás seguro de que deseas modificar los datos de la plancha?"
+        }
       />
     </>,
-    document.getElementById('modal-root')
-  );};
+    document.getElementById("modal-root")
+  );
+};
 export default TableModal;

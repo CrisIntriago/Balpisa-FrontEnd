@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import useAgregarPlancha from "../hooks/useAgregarPlancha";
 import ConfirmationModal from "./ConfirmationModal";
 import useAgregarMovimiento from "../hooks/useAgregarMovimiento";
+import useIncrementarModeloUnitario from "../hooks/useIncrementarModeloUnitario";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -9,7 +10,7 @@ const TdStyle = {
   InputSmall: `w-full max-w-xs px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center`,
 };
 
-const TableIngreso = ({ modeloSeleccionado, bodegaSeleccionada }) => {
+const TableIngresoUnitario = ({ modeloSeleccionado, bodegaSeleccionada }) => {
   const initialState = {
     factura: "",
     COD: "",
@@ -22,6 +23,12 @@ const TableIngreso = ({ modeloSeleccionado, bodegaSeleccionada }) => {
     D3A: "",
     D3B: "",
   };
+
+  const initialStateUnitario = {
+    factura: "",
+    nombre: "",
+    cantidad: "",
+  }
 
   const [values, setValues] = useState(initialState);
   const { enviarPlancha } = useAgregarPlancha();
@@ -183,4 +190,4 @@ const TableIngreso = ({ modeloSeleccionado, bodegaSeleccionada }) => {
   );
 };
 
-export default TableIngreso;
+export default TableIngresoUnitario;

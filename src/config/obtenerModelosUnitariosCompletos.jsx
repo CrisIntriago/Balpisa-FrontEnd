@@ -1,15 +1,15 @@
 import clienteAxios from "./clienteAxios";
 
-const obtenerModelosFromFamilia = async (idFamilia) => {
+const obtenerModelosUnitariosCompletos = async (idFamilia) => {
     try {
         const json = {
             "familiaId": idFamilia
         };
-        const response = await clienteAxios.post(`/modelos/deFamilia/`,json);
+        const response = await clienteAxios.post(`/modelos/unitarios/m2Disponibles/`,json);
         return response.data;
     } catch (error) {
         throw error;
     }
 };
 
-export default obtenerModelosFromFamilia;
+export default obtenerModelosUnitariosCompletos;

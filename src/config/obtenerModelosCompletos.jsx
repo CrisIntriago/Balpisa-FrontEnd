@@ -2,7 +2,6 @@ import clienteAxios from "./clienteAxios";
 
 const obtenerModelosCompletos = async (idFamilia) => {
     try {
-        console.log("haciendo fetch modelos completos")
         const json = {
             "familiaId": idFamilia
         };

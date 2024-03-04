@@ -2,7 +2,6 @@ import clienteAxios from "./clienteAxios";
 
 const obtenerMovimientos = async (fechaInicio, fechaFin) => {
     try {
-        console.log("Mostrando modelos from familia")
         const json = {
             "fechaInicio": fechaInicio,
             "fechaFin": fechaFin

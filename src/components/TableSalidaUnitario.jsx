@@ -11,7 +11,7 @@ const TdStyle = {
   InputSmall: `w-full max-w-xs px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center`
 };
 
-const TableSalida = ({ planchaSeleccionada }) => {
+const TableSalidaUnitario = ({ planchaSeleccionada }) => {
   const { planchas } = usePlanchaFromId(planchaSeleccionada);
   const [editableData, setEditableData] = useState([]);
   const [isTableModalOpen, setTableModalOpen] = useState(false);
@@ -70,47 +70,22 @@ const TableSalida = ({ planchaSeleccionada }) => {
               <table className="w-full table-fixed">
                 <thead className="text-center bg-primary">
                   <tr>
-                    <th className={TdStyle.ThStyle}>COD</th>
-                    <th className={TdStyle.ThStyle}>Alto</th>
-                    <th className={TdStyle.ThStyle}>Ancho</th>
-                    <th className={TdStyle.ThStyle}>D1A</th>
-                    <th className={TdStyle.ThStyle}>D2A</th>
-                    <th className={TdStyle.ThStyle}>D1B</th>
-                    <th className={TdStyle.ThStyle}>D2B</th>
-                    <th className={TdStyle.ThStyle}>D3A</th>
+                    <th className={TdStyle.ThStyle}>Nombre</th>
+                    <th className={TdStyle.ThStyle}>Tipo</th>
+                    <th className={TdStyle.ThStyle}>Factura</th>
+                    <th className={TdStyle.ThStyle}>Cantidad</th>
                     <th className={TdStyle.ThStyle}>D3B</th>
                     <th className={TdStyle.ThStyle}>Total m<sup>2</sup></th>
                     <th className={TdStyle.ThStyle}>Precio</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {editableData.map(({ id, nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B }) => (
+                  {editableData.map(({ id, nombre, preciom2, m2Disponibles}) => (
                     <tr key={id}>
                       <td className={TdStyle.TdStyle}>{nombre}</td>
-                      <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={alto} onChange={(e) => handleInputChange(e, nombre, 'alto')} />
-                      </td>
-                      <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={ancho} onChange={(e) => handleInputChange(e, nombre, 'ancho')} />
-                      </td>
-                      <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={despunte1A} onChange={(e) => handleInputChange(e, nombre, 'despunte1A')} />
-                      </td>
-                      <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={despunte1B} onChange={(e) => handleInputChange(e, nombre, 'despunte1B')} />
-                      </td>
-                      <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={despunte2A} onChange={(e) => handleInputChange(e, nombre, 'despunte2A')} />
-                      </td>
-                      <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={despunte2B} onChange={(e) => handleInputChange(e, nombre, 'despunte2B')} />
-                      </td>
-                      <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={despunte3A} onChange={(e) => handleInputChange(e, nombre, 'despunte3A')} />
-                      </td>
-                      <td className={TdStyle.TdStyle}>
-                        <input className={TdStyle.InputSmall} type="number" step="0.01" max="9.99" min="0.00" value={despunte3B} onChange={(e) => handleInputChange(e, nombre, 'despunte3B')} />
-                      </td>
+                      <td className={TdStyle.TdStyle}>{tipo}</td>
+                      <td className={TdStyle.TdStyle}>{factura}</td>
+                      <td className={TdStyle.TdStyle}>{cantidad}</td>
                       <td className={TdStyle.TdStyle}>{total}</td>
                       <td className={TdStyle.TdStyle}>{precio}</td>
                     </tr>
@@ -141,4 +116,4 @@ const TableSalida = ({ planchaSeleccionada }) => {
   );
 };
 
-export default TableSalida;
+export default TableSalidaUnitario;

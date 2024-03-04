@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Loading from "./Loading";
 import useModelosCompletos from "../hooks/useModelosCompletos"; 
+import useModelosUnitariosCompletos from "../hooks/useModelosUnitariosCompletos";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -10,7 +11,7 @@ const TdStyle = {
 };
 
 const TableBusquedaModeloUnitario = ({ familiaSeleccionada, modeloSeleccionado }) => {
-  const { modelosCompletos } = useModelosCompletos(familiaSeleccionada);
+  const { modelosCompletos } = useModelosUnitariosCompletos(familiaSeleccionada);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
 
@@ -72,23 +73,19 @@ const TableBusquedaModeloUnitario = ({ familiaSeleccionada, modeloSeleccionado }
                   <thead className="text-center bg-primary">
                     <tr>
                       <th className={TdStyle.ThStyle}>Modelo</th>
-                      <th className={TdStyle.ThStyle}>
-                        Unidades<sup>2</sup> ($)
-                      </th>
-                      <th className={TdStyle.ThStyle}>
-                        m<sup>2</sup> Disponibles
-                      </th>
+                      <th className={TdStyle.ThStyle}>Unidades</th>
+                      <th className={TdStyle.ThStyle}>m<sup>2</sup> Disponibles</th>
                       <th className={TdStyle.ThStyle}>Precio/m<sup>2</sup></th>
                     </tr>
                   </thead>
                   <tbody>
                     {/* Llamada a currentElements para obtener y mapear los elementos de la página actual */}
-                    {currentElements().map(({ nombre, m2Disponibles, preciom2 }) => (
-                      <tr key={nombre}>
+                    {currentElements().map(({ id, nombre, unidades, m2Disponibles, preciom2 }) => (
+                      <tr key={id}>
                         <td className={TdStyle.TdStyle}>{nombre}</td>
-                        <td className={TdStyle.TdStyle2}>{preciom2}</td>
+                        <td className={TdStyle.TdStyle2}>{unidades}</td>
                         <td className={TdStyle.TdStyle}>{m2Disponibles}</td>
-                        <td className={TdStyle.TdStyle2}>$10</td>
+                        <td className={TdStyle.TdStyle2}>{preciom2}</td>
                       </tr>
                     ))}
                   </tbody>
