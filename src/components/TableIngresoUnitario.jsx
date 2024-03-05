@@ -84,7 +84,7 @@ const TableIngresoUnitario = ({ modeloSeleccionado }) => {
         cantidadCambiada: cantidad,
         nFactura: factura,
         precioVenta: 0,
-        modeloUnitarioId: modeloSeleccionado,
+        modelounitarioId: modeloSeleccionado,
         valorRegistro: totalm2,
       };
 
