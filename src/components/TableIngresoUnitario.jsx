@@ -78,13 +78,14 @@ const TableIngresoUnitario = ({ modeloSeleccionado }) => {
 
     try {
       await incrementarUnitario(modeloSeleccionado, cantidad);
-
+      const totalm2 = cantidad * modelo.m2PorUnidad
       const datosMovimiento = {
         tipo: "Ingreso",
         cantidadCambiada: cantidad,
         nFactura: factura,
         precioVenta: 0,
         modeloUnitarioId: modeloSeleccionado,
+        valorRegistro: totalm2,
       };
 
       await enviarMovimientoUnitario(datosMovimiento);

@@ -19,7 +19,8 @@ const TableSalidaUnitario = ({ modeloSeleccionado }) => {
 
   const [nombre, setNombre] = useState('');
   const [values, setValues] = useState(initialStateUnitario);
-  const [totalm2, setTotalm2] = useState(0); 
+  const [totalm2, setTotalm2] = useState(0);
+  const [isDesperfecto, setIsDesperfecto] = useState(false); 
 
   const { decrementarUnitario } = useDecrementarModeloUnitario();
   const { enviarMovimientoUnitario } = useAgregarMovimientoUnitario();
@@ -44,8 +45,8 @@ const TableSalidaUnitario = ({ modeloSeleccionado }) => {
   };
 
   const handleConfirm = async () => {
-    await handleSave();
     setConfirmationModalOpen(false);
+    await handleSave();
     setValues({...initialStateUnitario});
   };
 
@@ -82,13 +83,13 @@ const TableSalidaUnitario = ({ modeloSeleccionado }) => {
 
     try {
       await decrementarUnitario(modeloSeleccionado, cantidad);
-      console.log(cantidad + " " +factura+" "+precioVenta +" "+ modeloSeleccionado);
       const datosMovimiento = {
-        tipo: "Salida",
+        tipo: isDesperfecto ? "Desperfecto" : "Salida", 
         cantidadCambiada: cantidad,
         nFactura: factura,
         precioVenta: precioVenta,
-        modeloUnitarioId: modeloSeleccionado,
+        valorRegistro: totalm2.toFixed(2), 
+        modelounitarioId: modeloSeleccionado,
       };
 
       await enviarMovimientoUnitario(datosMovimiento);
@@ -98,6 +99,7 @@ const TableSalidaUnitario = ({ modeloSeleccionado }) => {
     }
   };
 
+  
   return (
     <section className="bg-gray-100 py-20 lg:py-[50px] w-full">
       <div className="container mx-auto">
@@ -132,12 +134,20 @@ const TableSalidaUnitario = ({ modeloSeleccionado }) => {
                 </tbody>
               </table>
             </div>
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-between mt-4">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={isDesperfecto}
+                  onChange={(e) => setIsDesperfecto(e.target.checked)}
+                />
+                <span>Salida por desperfecto</span>
+              </label>
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 onClick={handleOpenConfirmation}
               >
-                Agregar
+                Hacer Salida
               </button>
             </div>
           </div>
