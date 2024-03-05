@@ -3,6 +3,7 @@ import usePlanchaFromId from "../hooks/usePlanchaFromId";
 import ComboBox from "./ComboBox";
 import useCambiarBodega from "../hooks/useCambiarBodega";
 import useAgregarMovimiento from "../hooks/useAgregarMovimiento";
+import ConfirmationModal from "./ConfirmationModal";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -20,9 +21,33 @@ const TablePlanchaIndividual = ({
   const [bodegaDestinoSeleccionada, setBodegaSeleccionada] = useState("");
   const { planchas } = usePlanchaFromId(planchaSeleccionada);
   const [factura, setFactura] = useState("");
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
 
   const { hacerCambioBodega } = useCambiarBodega();
   const { enviarMovimiento } = useAgregarMovimiento();
+
+  const handleOpenConfirmation = () => {
+    if (
+      planchaSeleccionada === "" ||
+      bodegaSeleccionada === "" ||
+      bodegaDestinoSeleccionada === "" || 
+      factura === ""
+    ) {
+      alert("Por favor, complete todos los campos antes de guardar.");
+      return;
+    }
+    setConfirmationModalOpen(true);
+  };
+
+  const handleCloseConfirmation = () => {
+    setFactura('');
+    setConfirmationModalOpen(false);
+  };
+
+  const handleConfirm = async () => {
+    await handleCambiar();
+    setConfirmationModalOpen(false);
+  };
 
   const handleCambiar = async () => {
     const {
@@ -35,14 +60,6 @@ const TablePlanchaIndividual = ({
       despunte3A,
       despunte3B,
     } = planchas[0];
-    if (
-      planchaSeleccionada === "" ||
-      bodegaSeleccionada === "" ||
-      bodegaDestinoSeleccionada === ""
-    ) {
-      alert("Por favor, complete todos los campos antes de guardar.");
-      return;
-    }
 
     const m2Usados = (
       alto * ancho -
@@ -166,12 +183,19 @@ const TablePlanchaIndividual = ({
 
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 mx-5 my-2 px-4 rounded w-40"
-            onClick={handleCambiar}
+            onClick={handleOpenConfirmation}
           >
             Cambiar
           </button>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={isConfirmationModalOpen}
+        onClose={handleCloseConfirmation}
+        onConfirm={handleConfirm}
+        header={"Confirmación de cambio de bodega"}
+        message={"¿Estás seguro de que deseas cambiar de bodega?"}
+      />
     </section>
   );
 };
