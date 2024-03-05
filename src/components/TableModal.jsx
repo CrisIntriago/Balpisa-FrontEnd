@@ -278,6 +278,7 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha }) => {
         isOpen={isConfirmationModalOpen}
         onClose={handleCloseConfirmation}
         onConfirm={handleConfirm}
+        header={"Confirmación de salida"}
         message={
           "¿Estás seguro de que deseas modificar los datos de la plancha?"
         }

@@ -1,6 +1,6 @@
 import clienteAxios from "./clienteAxios";
 
-const incrementarModeloUnitario = async (modeloId, cantidad) => {
+const IncrementarModeloUnitario = async (modeloId, cantidad) => {
     try {
         const response = await clienteAxios.patch(`/modelos/unitarios/operacion/${modeloId}/incrementar/${cantidad}`);
         alert('La cantidad ha sido aumentada con éxito');
@@ -10,4 +10,4 @@ const incrementarModeloUnitario = async (modeloId, cantidad) => {
     }
 };
 
-export default incrementarModeloUnitario;
+export default IncrementarModeloUnitario;

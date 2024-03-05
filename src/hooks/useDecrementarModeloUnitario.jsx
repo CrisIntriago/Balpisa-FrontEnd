@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import IncrementarModeloUnitario from '../config/IncrementarModeloUnitario';
+import DecrementarModeloUnitario from '../config/DecrementarModeloUnitario';
 
-const useIncrementarModeloUnitario = () => {
+const useDecrementarModeloUnitario = () => {
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState(null);
     const [respuesta, setRespuesta] = useState(null);
 
-    const incrementarUnitario = async (modeloId, cantidad) => {
+    const decrementarUnitario = async (modeloId, cantidad) => {
         setCargando(true);
         try {
-            const data = await IncrementarModeloUnitario(modeloId, cantidad);
+            const data = await DecrementarModeloUnitario(modeloId, cantidad);
             setRespuesta(data);
             setError(null);
         } catch (error) {
-            setError("Error al guardar el incremento en la base de datos");
+            setError("Error al guardar el decremento en la base de datos");
             setRespuesta(null);
             console.error(error);
         } finally {
@@ -21,7 +21,7 @@ const useIncrementarModeloUnitario = () => {
         }
     };
 
-    return { incrementarUnitario };
+    return { decrementarUnitario };
 };
 
-export default useIncrementarModeloUnitario;
+export default useDecrementarModeloUnitario;

@@ -1,69 +1,106 @@
-import React, { useState, useEffect } from "react";
-import Loading from "./Loading";
-import TableModal from "./TableModal";
-import usePlanchaFromId from "../hooks/usePlanchaFromId";
+import React, { useEffect, useState } from "react";
+import ConfirmationModal from "./ConfirmationModal";
+import useAgregarMovimientoUnitario from "../hooks/useAgregarMovimientoUnitario";
+import useModeloUnitarioFromId from "../hooks/useModeloUnitarioFromId";
+import useDecrementarModeloUnitario from "../hooks/useDecrementarModeloUnitario";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
   TdStyle: `text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium`,
-  TdStyle2: `text-dark border-b border-[#E8E8E8] bg-white py-5 px-2 text-center text-base font-medium`,
-  TdButton: `inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary hover:text-white font-medium`,
-  InputSmall: `w-full max-w-xs px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center`
+  InputSmall: `w-full max-w-xs px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center`,
 };
 
-const TableSalidaUnitario = ({ planchaSeleccionada }) => {
-  const { planchas } = usePlanchaFromId(planchaSeleccionada);
-  const [editableData, setEditableData] = useState([]);
-  const [isTableModalOpen, setTableModalOpen] = useState(false);
-  const [total, setTotal] = useState(0);
-  const [precio, setPrecio] = useState(0);
-
-  useEffect(() => {
-    const data = planchas.map(plancha => ({ ...plancha }));
-    setEditableData(data);
-    calculateTotals(data); 
-  }, [planchas, planchaSeleccionada, isTableModalOpen]);
-
-  const handleVenderClick = () => {
-    setTableModalOpen(true);
+const TableSalidaUnitario = ({ modeloSeleccionado }) => {
+  const initialStateUnitario = {
+    factura: "",
+    cantidad: "",
+    precioVenta: "",
   };
 
-  const handleClose = () => {
-    setTableModalOpen(false);
+  const [nombre, setNombre] = useState('');
+  const [values, setValues] = useState(initialStateUnitario);
+  const [totalm2, setTotalm2] = useState(0); 
+
+  const { decrementarUnitario } = useDecrementarModeloUnitario();
+  const { enviarMovimientoUnitario } = useAgregarMovimientoUnitario();
+  const { modelo } = useModeloUnitarioFromId(modeloSeleccionado);
+
+  useEffect (() => {
+    setNombre(modelo.nombre);
+    const total = modelo.m2PorUnidad * parseFloat(values.cantidad || 0);
+    setTotalm2(total);
+    const precioVenta = total * modelo.precio;
+    setValues(values => ({ ...values, precioVenta: precioVenta.toFixed(2) }));
+  }, [modelo, values.cantidad]);
+
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+
+  const handleOpenConfirmation = () => {
+    setConfirmationModalOpen(true);
   };
 
-  const handleInputChange = (event, nombre, key) => {
-    const value = event.target.value;
-    setEditableData(currentData =>
-      currentData.map(data => {
-        if (data.nombre === nombre) {
-          return { ...data, [key]: value };
-        }
-        return data;
-      })
-    );
+  const handleCloseConfirmation = () => {
+    setConfirmationModalOpen(false);
   };
 
-  const calculateTotals = (data) => {
-    let tempTotal = 0;
-    let tempPrecio = 0;
-    data.forEach(({ alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B, preciom2 }) => {
-      const num = alto * ancho - (despunte1A * despunte1B) - (despunte2A * despunte2B) - (despunte3A * despunte3B);
-      tempTotal += num;
-      tempPrecio += num * preciom2;
-    });
-    setTotal(tempTotal.toFixed(2));
-    setPrecio(tempPrecio.toFixed(2));
+  const handleConfirm = async () => {
+    await handleSave();
+    setConfirmationModalOpen(false);
+    setValues({...initialStateUnitario});
   };
 
+  const handleInputChange = (e, field) => {
+    let value = e.target.value;
+    const numericFields = [
+      "cantidad",
+      "precio",
+    ];
 
-  const handleCalculateClick = () => {
-    calculateTotals(editableData);
+    if (numericFields.includes(field)) {
+      value = value.replace(",", ".");
+
+      // Permitir solo valores numéricos y decimales
+      if (/^\d*\.?\d*$/.test(value) || value === "") {
+        setValues({ ...values, [field]: value });
+      }
+    } else {
+      // Para campos no numéricos, actualizar directamente
+      setValues({ ...values, [field]: value });
+    }
+  };
+
+  const handleSave = async () => {
+    const { factura, cantidad, precioVenta } = values;
+    if (
+      factura === "" ||
+      cantidad === "" ||
+      precioVenta === ""
+    ) {
+      alert("Por favor, complete todos los campos antes de guardar.");
+      return;
+    }
+
+    try {
+      await decrementarUnitario(modeloSeleccionado, cantidad);
+      console.log(cantidad + " " +factura+" "+precioVenta +" "+ modeloSeleccionado);
+      const datosMovimiento = {
+        tipo: "Salida",
+        cantidadCambiada: cantidad,
+        nFactura: factura,
+        precioVenta: precioVenta,
+        modeloUnitarioId: modeloSeleccionado,
+      };
+
+      await enviarMovimientoUnitario(datosMovimiento);
+    } catch (error) {
+      alert("Hubo un error al guardar la plancha o el movimiento.");
+      console.error(error);
+    }
   };
 
   return (
     <section className="bg-gray-100 py-20 lg:py-[50px] w-full">
-       <div className="container mx-auto">
+      <div className="container mx-auto">
         <div className="flex flex-wrap -mx-4">
           <div className="w-full">
             <div className="max-w-full overflow-x-auto">
@@ -71,48 +108,49 @@ const TableSalidaUnitario = ({ planchaSeleccionada }) => {
                 <thead className="text-center bg-primary">
                   <tr>
                     <th className={TdStyle.ThStyle}>Nombre</th>
-                    <th className={TdStyle.ThStyle}>Tipo</th>
                     <th className={TdStyle.ThStyle}>Factura</th>
                     <th className={TdStyle.ThStyle}>Cantidad</th>
-                    <th className={TdStyle.ThStyle}>D3B</th>
-                    <th className={TdStyle.ThStyle}>Total m<sup>2</sup></th>
-                    <th className={TdStyle.ThStyle}>Precio</th>
+                    <th className={TdStyle.ThStyle}>Precio</th> 
+                    <th className={TdStyle.ThStyle}>Total m<sup>2</sup></th> 
                   </tr>
                 </thead>
                 <tbody>
-                  {editableData.map(({ id, nombre, preciom2, m2Disponibles}) => (
-                    <tr key={id}>
-                      <td className={TdStyle.TdStyle}>{nombre}</td>
-                      <td className={TdStyle.TdStyle}>{tipo}</td>
-                      <td className={TdStyle.TdStyle}>{factura}</td>
-                      <td className={TdStyle.TdStyle}>{cantidad}</td>
-                      <td className={TdStyle.TdStyle}>{total}</td>
-                      <td className={TdStyle.TdStyle}>{precio}</td>
-                    </tr>
-                  ))}
+                  <tr>
+                  <td className={TdStyle.TdStyle}>{nombre}</td> 
+                  {Object.keys(values).map((key) => (
+                      <td key={key} className={TdStyle.TdStyle}>
+                        <input
+                          className={TdStyle.InputSmall}
+                          type="text"
+                          value={values[key]}
+                          onChange={(e) => handleInputChange(e, key)}
+                        />
+                      </td>
+                    ))}
+                    <td className={TdStyle.TdStyle}>{totalm2.toFixed(2)}</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
+            <div className="flex justify-center mt-4">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={handleOpenConfirmation}
+              >
+                Agregar
+              </button>
+            </div>
           </div>
         </div>
-          <div className="flex justify-center mt-4">
-            <button 
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 mx-5 my-2 px-4 rounded w-40" 
-            onClick={handleCalculateClick}>
-              Calcular
-            </button>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 mx-5 my-2 px-4 rounded w-40"
-              onClick={handleVenderClick}>
-              Modificar Plancha
-            </button>
-          </div>
-
-
-        <TableModal isOpen={isTableModalOpen} onClose={handleClose} planchaSeleccionada={planchaSeleccionada} plancha={planchas[0]}/>
       </div>
+      <ConfirmationModal
+        isOpen={isConfirmationModalOpen}
+        onClose={handleCloseConfirmation}
+        onConfirm={handleConfirm}
+        header={"Confirmación de salida"}
+        message={"¿Estás seguro de que deseas guardar la salida?"}
+      />
     </section>
-
   );
 };
 

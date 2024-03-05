@@ -177,6 +177,7 @@ const TableIngreso = ({ modeloSeleccionado, bodegaSeleccionada }) => {
         isOpen={isConfirmationModalOpen}
         onClose={handleCloseConfirmation}
         onConfirm={handleConfirm}
+        header={"Confirmación de ingreso"}
         message={"¿Estás seguro de que deseas agregar la plancha?"}
       />
     </section>

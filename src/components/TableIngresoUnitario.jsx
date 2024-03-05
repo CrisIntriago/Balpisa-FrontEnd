@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import useAgregarPlancha from "../hooks/useAgregarPlancha";
+import React, { useEffect, useState } from "react";
 import ConfirmationModal from "./ConfirmationModal";
-import useAgregarMovimiento from "../hooks/useAgregarMovimiento";
 import useIncrementarModeloUnitario from "../hooks/useIncrementarModeloUnitario";
+import useAgregarMovimientoUnitario from "../hooks/useAgregarMovimientoUnitario";
+import useModeloUnitarioFromId from "../hooks/useModeloUnitarioFromId";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -10,29 +10,26 @@ const TdStyle = {
   InputSmall: `w-full max-w-xs px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center`,
 };
 
-const TableIngresoUnitario = ({ modeloSeleccionado, bodegaSeleccionada }) => {
-  const initialState = {
-    factura: "",
-    COD: "",
-    alto: "",
-    ancho: "",
-    D1A: "",
-    D1B: "",
-    D2A: "",
-    D2B: "",
-    D3A: "",
-    D3B: "",
-  };
+const TableIngresoUnitario = ({ modeloSeleccionado }) => {
 
   const initialStateUnitario = {
     factura: "",
-    nombre: "",
     cantidad: "",
   }
 
-  const [values, setValues] = useState(initialState);
-  const { enviarPlancha } = useAgregarPlancha();
-  const { enviarMovimiento } = useAgregarMovimiento();
+  const [nombre, setNombre] = useState('');
+
+  
+  const [values, setValues] = useState(initialStateUnitario);
+  
+  const { incrementarUnitario } = useIncrementarModeloUnitario();
+  const { enviarMovimientoUnitario } = useAgregarMovimientoUnitario();
+  const { modelo } = useModeloUnitarioFromId(modeloSeleccionado);
+
+
+  useEffect (() => {
+    setNombre(modelo.nombre)
+  }, [modelo])
 
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
 
@@ -47,20 +44,13 @@ const TableIngresoUnitario = ({ modeloSeleccionado, bodegaSeleccionada }) => {
   const handleConfirm = async () => {
     await handleSave();
     setConfirmationModalOpen(false);
-    setValues({...initialState});
+    setValues({...initialStateUnitario});
   };
 
   const handleInputChange = (e, field) => {
     let value = e.target.value;
     const numericFields = [
-      "alto",
-      "ancho",
-      "D1A",
-      "D1B",
-      "D2A",
-      "D2B",
-      "D3A",
-      "D3B",
+      "cantidad",
     ];
 
     if (numericFields.includes(field)) {
@@ -77,55 +67,27 @@ const TableIngresoUnitario = ({ modeloSeleccionado, bodegaSeleccionada }) => {
   };
 
   const handleSave = async () => {
-    const { factura, COD, alto, ancho, D1A, D1B, D2A, D2B, D3A, D3B } = values;
+    const { factura, cantidad } = values;
     if (
       factura === "" ||
-      COD === "" ||
-      alto === "" ||
-      ancho === "" ||
-      D1A === "" ||
-      D1B === "" ||
-      D2A === "" ||
-      D2B === "" ||
-      D3A === "" ||
-      D3B === ""
+      cantidad === ""
     ) {
       alert("Por favor, complete todos los campos antes de guardar.");
       return;
     }
 
-    const datosPlancha = {
-      nombre: COD,
-      alto: parseFloat(alto),
-      ancho: parseFloat(ancho),
-      despunte1A: parseFloat(D1A),
-      despunte1B: parseFloat(D1B),
-      despunte2A: parseFloat(D2A),
-      despunte2B: parseFloat(D2B),
-      despunte3A: parseFloat(D3A),
-      despunte3B: parseFloat(D3B),
-      modeloId: modeloSeleccionado,
-      bodegaId: bodegaSeleccionada,
-    };
-
     try {
-      const idPlancha = await enviarPlancha(datosPlancha);
-      const m2Usados = (
-        alto * ancho -
-        D1A * D1B -
-        D2A * D1B -
-        D3A * D3B
-      ).toFixed(2);
+      await incrementarUnitario(modeloSeleccionado, cantidad);
 
       const datosMovimiento = {
-        valorRegistro: `${m2Usados}`,
-        planchaId: idPlancha,
+        tipo: "Ingreso",
+        cantidadCambiada: cantidad,
         nFactura: factura,
         precioVenta: 0,
-        tipo: "Ingreso",
+        modeloUnitarioId: modeloSeleccionado,
       };
 
-      await enviarMovimiento(datosMovimiento);
+      await enviarMovimientoUnitario(datosMovimiento);
     } catch (error) {
       alert("Hubo un error al guardar la plancha o el movimiento.");
       console.error(error);
@@ -141,20 +103,14 @@ const TableIngresoUnitario = ({ modeloSeleccionado, bodegaSeleccionada }) => {
               <table className="w-full table-fixed">
                 <thead className="text-center bg-primary">
                   <tr>
+                    <th className={TdStyle.ThStyle}>Nombre</th>
                     <th className={TdStyle.ThStyle}>Factura</th>
-                    <th className={TdStyle.ThStyle}>COD</th>
-                    <th className={TdStyle.ThStyle}>Alto</th>
-                    <th className={TdStyle.ThStyle}>Ancho</th>
-                    <th className={TdStyle.ThStyle}>D1A</th>
-                    <th className={TdStyle.ThStyle}>D1B</th>
-                    <th className={TdStyle.ThStyle}>D2A</th>
-                    <th className={TdStyle.ThStyle}>D2B</th>
-                    <th className={TdStyle.ThStyle}>D3A</th>
-                    <th className={TdStyle.ThStyle}>D3B</th>
+                    <th className={TdStyle.ThStyle}>Cantidad</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
+                    <td className={TdStyle.TdStyle}>{nombre}</td>
                     {Object.keys(values).map((key) => (
                       <td key={key} className={TdStyle.TdStyle}>
                         <input
@@ -174,7 +130,7 @@ const TableIngresoUnitario = ({ modeloSeleccionado, bodegaSeleccionada }) => {
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 onClick={handleOpenConfirmation}
               >
-                Agregar plancha
+                Agregar
               </button>
             </div>
           </div>
@@ -184,7 +140,8 @@ const TableIngresoUnitario = ({ modeloSeleccionado, bodegaSeleccionada }) => {
         isOpen={isConfirmationModalOpen}
         onClose={handleCloseConfirmation}
         onConfirm={handleConfirm}
-        message={"¿Estás seguro de que deseas agregar la plancha?"}
+        header={"Confirmación de ingreso"}
+        message={"¿Estás seguro de que deseas guardar el ingreso?"}
       />
     </section>
   );

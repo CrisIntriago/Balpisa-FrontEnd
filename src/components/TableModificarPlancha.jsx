@@ -202,6 +202,7 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
         isOpen={isConfirmationModalOpen}
         onClose={handleCloseConfirmation}
         onConfirm={handleConfirm}
+        header={"Confirmación de modificación"}
         message={
           "¿Estás seguro de que deseas modificar los datos de la plancha?"
         }

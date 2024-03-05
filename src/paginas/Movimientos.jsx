@@ -11,6 +11,8 @@ import TableModificarPlancha from "../components/TableModificarPlancha";
 import useModelosUnitariosPorFamilia from "../hooks/useModelosUnitariosFromFamilia";
 import TableIngresoUnitario from "../components/TableIngresoUnitario";
 import TableSalidaUnitario from "../components/TableSalidaUnitario";
+import usePlanchaDisponibleSimple from "../hooks/usePlanchaDisponibleSimple";
+import obtenerPlanchaDisponibleSimple from "../config/obtenerPlanchaDisponibleSimple";
 
 const Movimientos = ({ opcion }) => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState("");
@@ -20,6 +22,7 @@ const Movimientos = ({ opcion }) => {
   const [tablaVisible, setTablaVisible] = useState(false);
   const familiasUnitarias = ["Porcelanato", "Ceramica", "Ferreteria", "Varios"];
 
+  const { planchasDisponibles } = usePlanchaDisponibleSimple(modeloSeleccionado, bodegaSeleccionada);
   const { familias } = useFamilias();
   const { modelos } = useModelosPorFamilia(familiaSeleccionada);
   const { modelosUnitarios } =
@@ -97,7 +100,7 @@ const Movimientos = ({ opcion }) => {
     value: id,
     label: nombre,
   }));
-  const opcionesPlanchas = planchas.map(({ id, nombre }) => ({
+  const opcionesPlanchas = planchasDisponibles.map(({ id, nombre }) => ({
     value: id,
     label: nombre,
   }));
@@ -182,7 +185,6 @@ const Movimientos = ({ opcion }) => {
         {tablaVisible && opcion === "Ingreso Inventario" && idsFamiliasUnitarias.includes(familiaSeleccionada) && (
           <TableIngresoUnitario
             modeloSeleccionado={modeloSeleccionado}
-            bodegaSeleccionada={bodegaSeleccionada}
           />
         )}
         {tablaVisible && opcion === "Ingreso Inventario" && !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
@@ -193,9 +195,7 @@ const Movimientos = ({ opcion }) => {
         )}
         {tablaVisible && opcion === "Salida Inventario" && idsFamiliasUnitarias.includes(familiaSeleccionada) && (
           <TableSalidaUnitario
-            familiaSeleccionada={familiaSeleccionada}
             modeloSeleccionado={modeloSeleccionado}
-            planchaSeleccionada={planchaSeleccionada}
           />
         )}
         {tablaVisible && opcion === "Salida Inventario" && !idsFamiliasUnitarias.includes(familiaSeleccionada) && (

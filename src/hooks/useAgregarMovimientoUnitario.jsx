@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import IncrementarModeloUnitario from '../config/IncrementarModeloUnitario';
+import agregarMovimientoUnitario from '../config/agregarMovimientoUnitario';
 
-const useIncrementarModeloUnitario = () => {
+const useAgregarMovimientoUnitario = () => {
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState(null);
     const [respuesta, setRespuesta] = useState(null);
 
-    const incrementarUnitario = async (modeloId, cantidad) => {
+    const enviarMovimientoUnitario = async (datosMovimiento) => {
         setCargando(true);
         try {
-            const data = await IncrementarModeloUnitario(modeloId, cantidad);
+            const data = await agregarMovimientoUnitario(datosMovimiento);
             setRespuesta(data);
             setError(null);
         } catch (error) {
-            setError("Error al guardar el incremento en la base de datos");
+            setError("Error al guardar el movimiento en la base de datos");
             setRespuesta(null);
             console.error(error);
         } finally {
@@ -21,7 +21,7 @@ const useIncrementarModeloUnitario = () => {
         }
     };
 
-    return { incrementarUnitario };
+    return { enviarMovimientoUnitario };
 };
 
-export default useIncrementarModeloUnitario;
+export default useAgregarMovimientoUnitario;
