@@ -1,34 +1,16 @@
 import React, { useState } from 'react';
-import useMovimientos from '../hooks/useMovimientos';
-import clienteAxios from '../config/clienteAxios';
+import TableReportes from '../components/TableReportes';
 
 
 const Reportes = () => {
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
-  // const [tablaVisible, setTablaVisible] = useState(false);
+  const [tablaVisible, setTablaVisible] = useState(false);
 
 
   const handleBuscarClick = () => {
     if (fechaInicio !== '' && fechaFin !== '') {
-
-      const obtenerData = async (fechaInicio, fechaFin) => {
-        try {
-          console.log("Mostrando modelos from familia")
-          const json = {
-            "fechaInicio": fechaInicio,
-            "fechaFin": fechaFin
-          }
-          const response = await clienteAxios.post(`/movimientos/movimientosEnFecha`, json);
-          console.log(response.data);
-          return response.data;
-        } catch (error) {
-          throw error;
-        }
-      }
-      obtenerData(fechaInicio,fechaFin);
-
-      // setTablaVisible(true);
+      setTablaVisible(true);
     } else {
       alert("Por favor, completa todas las secciones requeridas.");
     }
@@ -66,11 +48,13 @@ const Reportes = () => {
         Buscar
       </button>
 
-      {/* Para mstrar la tabla
       {tablaVisible && (
-        <div>Contenido de la tabla</div>
+        <TableReportes 
+        fechaInicio={fechaInicio}
+        fechaFin={fechaFin}
+        />
       )}
-      */}
+    
     </div>
   );
 };
