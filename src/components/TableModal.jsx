@@ -6,6 +6,7 @@ import useAgregarMovimiento from "../hooks/useAgregarMovimiento";
 import useGastarPlancha from "../hooks/useGastarPlancha";
 
 const TdStyle = {
+  
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
   TdStyle: `text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium`,
   TdStyle2: `text-dark border-b border-[#E8E8E8] bg-white py-5 px-2 text-center text-base font-medium`,
@@ -31,13 +32,34 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha }) => {
     D3B: "",
   });
 
-  const initialStateUnitario = {
-    factura: "",
-    nombre: "",
-    cantidad: "",
-    totalm2: "",
-    precioVenta: "",
-  }
+  // Función para formatear la factura
+  const formatFactura = (factura) => {
+    const parts = factura.split('-');
+    if (parts.length === 3) {
+      return `${parts[0].padStart(3, '0')}-${parts[1].padStart(3, '0')}-${parts[2].padStart(9, '0')}`;
+    }
+    return "000-000-000000000";
+  };
+
+  useEffect(() => {
+    // Establecer los valores iniciales de los inputs con los valores de `plancha`
+    if (plancha) {
+      setValues({
+        ...values,
+        factura: formatFactura(plancha.factura || ""),
+        COD: plancha.nombre || "",
+        alto: plancha.alto || "",
+        ancho: plancha.ancho || "",
+        D1A: plancha.despunte1A || "",
+        D1B: plancha.despunte1B || "",
+        D2A: plancha.despunte2A || "",
+        D2B: plancha.despunte2B || "",
+        D3A: plancha.despunte3A || "",
+        D3B: plancha.despunte3B || "",
+      });
+    }
+  }, [plancha]);
+
   const { enviarPlanchaActualizada } = useActualizarPlancha();
   const { enviarMovimiento } = useAgregarMovimiento();
   const { gastarPlanchaPorId } = useGastarPlancha();
@@ -101,30 +123,26 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha }) => {
 
   const handleInputChange = (e, field) => {
     let value = e.target.value;
-    const numericFields = [
-      "m2Usados",
-      "alto",
-      "ancho",
-      "D1A",
-      "D1B",
-      "D2A",
-      "D2B",
-      "D3A",
-      "D3B",
-      "precioVenta",
-    ];
-
-    if (numericFields.includes(field)) {
-      value = value.replace(",", ".");
-      // Permitir solo valores numéricos y decimales
-      if (/^\d*\.?\d*$/.test(value) || value === "") {
-        setValues({ ...values, [field]: value });
-      }
+  
+    if (field === "factura") {
+      // Verificar si el valor tiene la longitud esperada y sigue el patrón correcto.
+      const regexFactura = /^\d{3}-\d{3}-\d{9}$/;
+      // Extraer solo dígitos y reinsertar guiones en las posiciones adecuadas.
+      let digits = value.replace(/\D/g, '');
+      if (digits.length > 15) digits = digits.substring(0, 15); // Asegurar la longitud máxima de dígitos.
+      value = `${digits.substring(0, 3)}-${digits.substring(3, 6)}-${digits.substring(6, 15)}`;
+  
+      if (!regexFactura.test(value)) return; // Si no coincide con el formato, no actualizar.
     } else {
-      // Para campos no numéricos, actualizar directamente
-      setValues({ ...values, [field]: value });
+      const numericFields = ["alto", "ancho", "D1A", "D1B", "D2A", "D2B", "D3A", "D3B"];
+  
+      if (numericFields.includes(field)) {
+        const regexNumeric = /^(\d{0,2})(\.\d{0,2})?$/;
+        if (!regexNumeric.test(value)) return; // Si no cumple con el formato numérico deseado, no actualizar.
+      }
     }
-  };
+    setValues({ ...values, [field]: value });
+  }  
 
   const handleSave = async () => {
     const {
