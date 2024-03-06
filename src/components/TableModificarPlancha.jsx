@@ -16,9 +16,6 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
   const [plancha, setPlancha] = useState("");
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [values, setValues] = useState({
-    factura: "",
-    precioVenta: "",
-    m2Usados: "",
     COD: "",
     alto: "",
     ancho: "",
@@ -54,38 +51,41 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
     handleSave();
   };
 
+  useEffect(() => {
+    if (planchas.length > 0) {
+      const { nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B } = planchas[0];
+      setPlancha(planchas[0]);
+      setValues({
+        ...values,
+        COD: nombre,
+        alto: alto.toString(),
+        ancho: ancho.toString(),
+        D1A: despunte1A.toString(),
+        D1B: despunte1B.toString(),
+        D2A: despunte2A.toString(),
+        D2B: despunte2B.toString(),
+        D3A: despunte3A.toString(),
+        D3B: despunte3B.toString(),
+      });
+    }
+  }, [planchas]);
+
   const handleInputChange = (e, field) => {
     let value = e.target.value;
-    const numericFields = [
-      "alto",
-      "ancho",
-      "m2Usados",
-      "D1A",
-      "D1B",
-      "D2A",
-      "D2B",
-      "D3A",
-      "D3B",
-      "precioVenta",
-    ];
-
-    if (numericFields.includes(field)) {
-      value = value.replace(",", ".");
-      // Permitir solo valores numéricos y decimales
-      if (/^\d*\.?\d*$/.test(value) || value === "") {
+    value = value.replace(",", ".");
+      // Campos con restricción de valores numéricos del 0 al 9.99
+      const restrictedFields = ["alto", "ancho", "D1A", "D1B", "D2A", "D2B", "D3A", "D3B"];
+      if (restrictedFields.includes(field)) {
+        if ((/^\d*\.?\d{0,2}$/.test(value) && value <= 9.99) || value === "") {
+          setValues({ ...values, [field]: value });
+        }
+      } else {
+        // Para campos no numéricos o sin restricciones específicas, actualizar directamente
         setValues({ ...values, [field]: value });
       }
-    } else {
-      // Para campos no numéricos, actualizar directamente
-      setValues({ ...values, [field]: value });
-    }
   };
-
   const handleSave = async () => {
     const {
-      precioVenta,
-      factura,
-      m2Usados,
       COD,
       alto,
       ancho,
@@ -97,9 +97,6 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
       D3B,
     } = values;
     if (
-      !precioVenta ||
-      !factura ||
-      !m2Usados ||
       !COD ||
       !alto ||
       !ancho ||
@@ -113,12 +110,18 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
       alert("Por favor, complete todos los campos antes de guardar.");
       return;
     }
+    const m2Usados = (
+      alto * ancho -
+      D1A * D1B -
+      D2A * D1B -
+      D3A * D3B
+    ).toFixed(2);
 
     const datosMovimiento = {
       valorRegistro: `${m2Usados}`,
       planchaId: planchaSeleccionada,
-      nFactura: factura,
-      precioVenta: precioVenta,
+      nFactura: "000-000-000000000",
+      precioVenta: 0,
       tipo: "Desperfecto",
     };
     try {
@@ -157,11 +160,6 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
         <table className="w-full table-fixed">
           <thead className="text-center bg-primary">
             <tr>
-              <th className={TdStyle.ThStyle}>Factura</th>
-              <th className={TdStyle.ThStyle}>Precio Venta</th>
-              <th className={TdStyle.ThStyle}>
-                m<sup>2</sup> Usados
-              </th>
               <th className={TdStyle.ThStyle}>COD</th>
               <th className={TdStyle.ThStyle}>Alto</th>
               <th className={TdStyle.ThStyle}>Ancho</th>

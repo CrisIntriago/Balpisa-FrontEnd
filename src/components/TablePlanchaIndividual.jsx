@@ -20,7 +20,6 @@ const TablePlanchaIndividual = ({
 }) => {
   const [bodegaDestinoSeleccionada, setBodegaSeleccionada] = useState("");
   const { planchas } = usePlanchaFromId(planchaSeleccionada);
-  const [factura, setFactura] = useState("");
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
 
   const { hacerCambioBodega } = useCambiarBodega();
@@ -30,8 +29,7 @@ const TablePlanchaIndividual = ({
     if (
       planchaSeleccionada === "" ||
       bodegaSeleccionada === "" ||
-      bodegaDestinoSeleccionada === "" || 
-      factura === ""
+      bodegaDestinoSeleccionada === "" 
     ) {
       alert("Por favor, complete todos los campos antes de guardar.");
       return;
@@ -40,7 +38,6 @@ const TablePlanchaIndividual = ({
   };
 
   const handleCloseConfirmation = () => {
-    setFactura('');
     setConfirmationModalOpen(false);
   };
 
@@ -70,7 +67,7 @@ const TablePlanchaIndividual = ({
     const datosMovimiento = {
       valorRegistro: `${m2Usados}`,
       planchaId: planchaSeleccionada,
-      nFactura: factura,
+      nFactura: "000-000-000000000",
       precioVenta: 0,
       tipo: "CambioBodega",
     };
@@ -93,10 +90,6 @@ const TablePlanchaIndividual = ({
     setBodegaSeleccionada(selectedOption ? selectedOption.value : "");
   };
 
-  const handleFacturaChange = (e) => {
-    setFactura(e.target.value);
-  };
-
   return (
     <section className="bg-gray-100 py-20 lg:py-[50px] w-full">
       <div className="container mx-auto">
@@ -106,7 +99,6 @@ const TablePlanchaIndividual = ({
               <table className="w-full table-fixed">
                 <thead className="text-center bg-primary">
                   <tr>
-                    <th className={TdStyle.ThStyle}>Factura</th>
                     <th className={TdStyle.ThStyle}>COD</th>
                     <th className={TdStyle.ThStyle}>Alto</th>
                     <th className={TdStyle.ThStyle}>Ancho</th>
@@ -136,14 +128,6 @@ const TablePlanchaIndividual = ({
                       despunte3B,
                     }) => (
                       <tr key={id}>
-                        <td className={TdStyle.TdStyle}>
-                          <input
-                            type="text"
-                            className={TdStyle.InputSmall}
-                            value={factura}
-                            onChange={handleFacturaChange}
-                          />
-                        </td>
                         <td className={TdStyle.TdStyle}>{nombre}</td>
                         <td className={TdStyle.TdStyle}>{alto}</td>
                         <td className={TdStyle.TdStyle}>{ancho}</td>
