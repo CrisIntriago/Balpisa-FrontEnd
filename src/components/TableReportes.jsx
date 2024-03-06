@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import Loading from "./Loading";
 import useMovimientos from "../hooks/useMovimientos";
-import useFilasMovimientos from "../hooks/useFilasMovimientos";
-
+import useFilasFromMovimientos from "../hooks/useFilasFromMovimientos";
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
   TdStyle: `text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium`,
@@ -14,12 +13,12 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 5;
 
-    const { totalFilas } = useFilasMovimientos(fechaInicio, fechaFin);
+    const { totalFilas } = useFilasFromMovimientos(fechaInicio, fechaFin);
 
     const { movimientos } = useMovimientos(fechaInicio, fechaFin, currentPage * itemsPerPage);
     const totalPages = Math.ceil(totalFilas / itemsPerPage);
     console.log(itemsPerPage)
-    console.log("El total de filas es " + totalFilas)
+    console.log(totalFilas)
     console.log(totalPages)
   
     const nextPage = () => {
@@ -45,7 +44,7 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
           <div className="flex flex-wrap -mx-4">
             <div className="w-full">
               <div className="max-w-full overflow-x-auto">
-                <div className="table-container" style={{ maxHeight: "560px", minHeight: "300px", overflowY: "auto" }}>
+                <div className="table-container" style={{ maxHeight: "560px", minHeight: "560px", overflowY: "auto" }}>
                   <table className="w-full table-fixed">
                     <thead className="text-center bg-primary">
                       <tr>

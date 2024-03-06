@@ -1,16 +1,16 @@
 import clienteAxios from './clienteAxios';
 
-const obtenerFilasMovimientos = async (fechaInicio, fechaFin) => {
+const filasFromMovimientosUnitarios = async (fechaInicio, fechaFin) => {
     try {
         const json = {
             "fechaInicio": fechaInicio,
             "fechaFin": fechaFin
         }
-        const response = await clienteAxios.post('/movimientos/nFilas',json);
+        const response = await clienteAxios.post('/movimientos/unitarios/nFilas',json);
         return response.data;
     } catch (error) {
         throw error;
     }
 };
 
-export default obtenerFilasMovimientos;
+export default filasFromMovimientosUnitarios;

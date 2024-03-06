@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Loading from "./Loading";
 import useMovimientosUnitarios from "../hooks/useMovimientosUnitarios";
-import useFilasMovimientos from "../hooks/useFilasMovimientos";
+import useFilasFromMovimientosUnitarios from "../hooks/useFilasFromMovimientosUnitarios";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -14,13 +14,12 @@ const TableReportesUnitarios = ({ fechaInicio, fechaFin }) => {
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 5;
 
-    const { totalFilas } = useFilasMovimientos();
+    const { totalFilas } = useFilasFromMovimientosUnitarios(fechaInicio, fechaFin);
 
     const { movimientos } = useMovimientosUnitarios(fechaInicio, fechaFin, currentPage * itemsPerPage);
     const totalPages = Math.ceil(totalFilas / itemsPerPage);
-    console.log(itemsPerPage)
+    console.log(movimientos);
     console.log(totalFilas)
-    console.log(totalPages)
   
     const nextPage = () => {
       setCurrentPage((prevCurrentPage) => (prevCurrentPage + 1) % totalPages);
@@ -45,7 +44,7 @@ const TableReportesUnitarios = ({ fechaInicio, fechaFin }) => {
           <div className="flex flex-wrap -mx-4">
             <div className="w-full">
               <div className="max-w-full overflow-x-auto">
-                <div className="table-container" style={{ maxHeight: "560px", minHeight: "300px", overflowY: "auto" }}>
+                <div className="table-container" style={{ maxHeight: "650px", minHeight: "650px", overflowY: "auto" }}>
                   <table className="w-full table-fixed">
                     <thead className="text-center bg-primary">
                       <tr>
