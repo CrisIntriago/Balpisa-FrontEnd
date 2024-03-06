@@ -45,7 +45,7 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
           <div className="flex flex-wrap -mx-4">
             <div className="w-full">
               <div className="max-w-full overflow-x-auto">
-                <div className="table-container" style={{ maxHeight: "560px", minHeight: "560px", overflowY: "auto" }}>
+                <div className="table-container" style={{ maxHeight: "560px", minHeight: "300px", overflowY: "auto" }}>
                   <table className="w-full table-fixed">
                     <thead className="text-center bg-primary">
                       <tr>
