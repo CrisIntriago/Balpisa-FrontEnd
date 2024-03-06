@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TableReportes from '../components/TableReportes';
-
+import TableReportesUnitarios from '../components/TableReportesUnitarios';
 
 const Reportes = () => {
   const [fechaInicio, setFechaInicio] = useState('');
@@ -48,13 +48,31 @@ const Reportes = () => {
         Buscar
       </button>
 
+
+      {
+        tablaVisible &&
+        <p className="font-bold text-2xl mt-10 text-center md:w-1/2 mx-auto pb-10 ">Movimiento de Granito / Quarcita y Onix/ Mármol </p>
+      }
+
       {tablaVisible && (
-        <TableReportes 
-        fechaInicio={fechaInicio}
-        fechaFin={fechaFin}
+        <TableReportes
+          fechaInicio={fechaInicio}
+          fechaFin={fechaFin}
         />
       )}
-    
+      {
+        tablaVisible &&
+        <p className="font-bold text-2xl mt-10 text-center md:w-1/2 mx-auto pb-10 ">Movimiento de Porcelanato, Cerámica, Ferretería y Varios </p>
+      }
+
+
+      {tablaVisible && (
+        <TableReportesUnitarios
+          fechaInicio={fechaInicio}
+          fechaFin={fechaFin}
+        />
+      )}
+
     </div>
   );
 };

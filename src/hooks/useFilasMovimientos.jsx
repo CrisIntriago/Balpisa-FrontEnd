@@ -12,7 +12,7 @@ const useFilasMovimientos = (fechaInicio, fechaFin) => {
             try {
                 const data = await obtenerFilasMovimientos(fechaInicio, fechaFin);
                 setFilas(data[0][total]);
-                console.log("mostrando"+ data)
+                console.log(data[0][total])
                 setError(null); // Limpia errores previos si la petición es exitosa
             } catch (error) {
                 setError(error);
