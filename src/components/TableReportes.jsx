@@ -14,7 +14,7 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 5;
 
-    const { totalFilas } = useFilasMovimientos();
+    const { totalFilas } = useFilasMovimientos(fechaInicio, fechaFin);
 
     const { movimientos } = useMovimientos(fechaInicio, fechaFin, currentPage * itemsPerPage);
     const totalPages = Math.ceil(totalFilas / itemsPerPage);
