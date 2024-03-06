@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import obtenerFilasMovimientos from '../config/obtenerFilasMovimientos';
 
-const useFilasMovimientos = () => {
+const useFilasMovimientos = (fechaInicio, fechaFin) => {
     const [totalFilas, setFilas] = useState('');
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState(null);
@@ -10,8 +10,9 @@ const useFilasMovimientos = () => {
         const cargarFilas = async () => {
             setCargando(true);
             try {
-                const data = await obtenerFilasMovimientos();
-                setFilas(data.nFilas);
+                const data = await obtenerFilasMovimientos(fechaInicio, fechaFin);
+                setFilas(data[0][total]);
+                console.log(data[0][total])
                 setError(null); // Limpia errores previos si la petición es exitosa
             } catch (error) {
                 setError(error);

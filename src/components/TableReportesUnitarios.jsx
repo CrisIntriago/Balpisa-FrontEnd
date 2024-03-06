@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Loading from "./Loading";
-import useMovimientos from "../hooks/useMovimientos";
+import useMovimientosUnitarios from "../hooks/useMovimientosUnitarios";
 import useFilasMovimientos from "../hooks/useFilasMovimientos";
 
 const TdStyle = {
@@ -10,16 +10,16 @@ const TdStyle = {
   TdButton: `inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary hover:text-white font-medium`,
 };
 
-const TableReportes = ({ fechaInicio, fechaFin }) => {
+const TableReportesUnitarios = ({ fechaInicio, fechaFin }) => {
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 5;
 
-    const { totalFilas } = useFilasMovimientos(fechaInicio, fechaFin);
+    const { totalFilas } = useFilasMovimientos();
 
-    const { movimientos } = useMovimientos(fechaInicio, fechaFin, currentPage * itemsPerPage);
+    const { movimientos } = useMovimientosUnitarios(fechaInicio, fechaFin, currentPage * itemsPerPage);
     const totalPages = Math.ceil(totalFilas / itemsPerPage);
     console.log(itemsPerPage)
-    console.log("El total de filas es " + totalFilas)
+    console.log(totalFilas)
     console.log(totalPages)
   
     const nextPage = () => {
@@ -50,24 +50,20 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
                     <thead className="text-center bg-primary">
                       <tr>
                         <th className={TdStyle.ThStyle}>Tipo Movimiento</th>
-                        <th className={TdStyle.ThStyle}>Bodega</th>
-                        <th className={TdStyle.ThStyle}>Familia</th>
-                        <th className={TdStyle.ThStyle}>Modelo</th>
-                        <th className={TdStyle.ThStyle}>Plancha</th>
+                        <th className={TdStyle.ThStyle}>Nombre</th>
                         <th className={TdStyle.ThStyle}>Cód. Contable</th>
+                        <th className={TdStyle.ThStyle}>Cantidad Cambiada</th>
                         <th className={TdStyle.ThStyle}>Valor Registro</th>
-                        <th className={TdStyle.ThStyle}>Factura</th>
+                        <th className={TdStyle.ThStyle}>nFactura</th>
                       </tr>
                     </thead>
                     <tbody>
                       {movimientos.map((mov, index) => (
                         <tr key={index}>
                           <td className={TdStyle.TdStyle2}>{mov.tipo}</td>
-                          <td className={TdStyle.TdStyle}>{mov.nombreBodega}</td>
-                          <td className={TdStyle.TdStyle2}>{mov.nombreFamilia}</td>
-                          <td className={TdStyle.TdStyle}>{mov.nombreModelo}</td>
-                          <td className={TdStyle.TdStyle2}>{mov.nombrePlancha}</td>
-                          <td className={TdStyle.TdStyle}>{mov.CodigoContable}</td>
+                          <td className={TdStyle.TdStyle}>{mov.nombre}</td>
+                          <td className={TdStyle.TdStyle2}>{mov.codContable}</td>
+                          <td className={TdStyle.TdStyle}>{mov.cantidadCambiada}</td>
                           <td className={TdStyle.TdStyle2}>{mov.valorRegistro}</td>
                           <td className={TdStyle.TdStyle}>{mov.nFactura}</td>
                         </tr>
@@ -96,4 +92,4 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
     );
   };
   
-  export default TableReportes;
+  export default TableReportesUnitarios;

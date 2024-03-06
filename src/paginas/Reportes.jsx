@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TableReportes from '../components/TableReportes';
-
+import TableReportesUnitarios from '../components/TableReportesUnitarios';
 
 const Reportes = () => {
   const [fechaInicio, setFechaInicio] = useState('');
@@ -67,7 +67,7 @@ const Reportes = () => {
 
 
       {tablaVisible && (
-        <TableReportes
+        <TableReportesUnitarios
           fechaInicio={fechaInicio}
           fechaFin={fechaFin}
         />
