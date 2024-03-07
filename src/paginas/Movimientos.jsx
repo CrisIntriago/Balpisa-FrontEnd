@@ -21,6 +21,7 @@ const Movimientos = ({ opcion }) => {
   const [planchaSeleccionada, setPlanchaSeleccionada] = useState("");
   const [tablaVisible, setTablaVisible] = useState(false);
   const familiasUnitarias = ["Porcelanato", "Ceramica", "Ferreteria", "Varios"];
+  
 
   const { planchasDisponibles } = usePlanchaDisponibleSimple(modeloSeleccionado, bodegaSeleccionada);
   const { familias } = useFamilias();
