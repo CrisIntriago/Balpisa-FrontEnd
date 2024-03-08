@@ -4,7 +4,6 @@ import ComboBox from "../components/ComboBox";
 import useModelosPorFamilia from "../hooks/useModeloPorFamilia";
 import useBodegas from "../hooks/useBodegas";
 import TableSalida from "../components/TableSalida";
-import usePlanchasSimple from "../hooks/usePlanchasSimple";
 import TableIngreso from "../components/TableIngreso";
 import TablePlanchaIndividual from "../components/TablePlanchaIndividual";
 import TableModificarPlancha from "../components/TableModificarPlancha";
@@ -12,7 +11,7 @@ import useModelosUnitariosPorFamilia from "../hooks/useModelosUnitariosFromFamil
 import TableIngresoUnitario from "../components/TableIngresoUnitario";
 import TableSalidaUnitario from "../components/TableSalidaUnitario";
 import usePlanchaDisponibleSimple from "../hooks/usePlanchaDisponibleSimple";
-import obtenerPlanchaDisponibleSimple from "../config/obtenerPlanchaDisponibleSimple";
+import TableSalidaPlanchas from "../components/TableSalidaPlanchas";
 
 const Movimientos = ({ opcion }) => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState("");
@@ -29,10 +28,6 @@ const Movimientos = ({ opcion }) => {
   const { modelosUnitarios } =
     useModelosUnitariosPorFamilia(familiaSeleccionada);
   const { bodegas } = useBodegas();
-  const { planchas } = usePlanchasSimple(
-    modeloSeleccionado,
-    bodegaSeleccionada
-  );
 
   useEffect(() => {
     setModeloSeleccionado("");
@@ -156,6 +151,7 @@ const Movimientos = ({ opcion }) => {
                     modeloSeleccionado &&
                     (opcion === "Salida Inventario" ||
                       opcion === "Cambio Bodega" ||
+                      opcion === "Salida Múltiple" ||
                       opcion === "Modificar Plancha") && (
                       <ComboBox
                         placeholder="Seleccione una plancha"
@@ -181,6 +177,7 @@ const Movimientos = ({ opcion }) => {
             >
               Buscar
             </button>
+
           </div>
         )}
         {tablaVisible && opcion === "Ingreso Inventario" && idsFamiliasUnitarias.includes(familiaSeleccionada) && (
@@ -199,10 +196,13 @@ const Movimientos = ({ opcion }) => {
             modeloSeleccionado={modeloSeleccionado}
           />
         )}
+        {tablaVisible && opcion === "Salida Múltiple" && !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
+          <TableSalidaPlanchas
+            planchaSeleccionada={planchaSeleccionada}
+          />
+        )}
         {tablaVisible && opcion === "Salida Inventario" && !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
           <TableSalida
-            familiaSeleccionada={familiaSeleccionada}
-            modeloSeleccionado={modeloSeleccionado}
             planchaSeleccionada={planchaSeleccionada}
           />
         )}

@@ -115,11 +115,12 @@ const Navbar = () => {
                   </ListItem>
                   <ListItem
                     NavLink="#"
-                    active={currentSection === 'movimientos' || ['movimientos', '/ingreso-inventario', '/salida-inventario', '/cambio-bodega', '/modificar-plancha'].includes(currentSection)}
+                    active={currentSection === 'movimientos' || ['movimientos', '/ingreso-inventario', '/salida-inventario', 'salida-multiple', '/cambio-bodega', '/modificar-plancha'].includes(currentSection)}
                     onClick={() => handleSectionClick('movimientos')}
                     subMenu={[
                       { name: 'Ingreso de inventario', link: '/ingreso-inventario' },
                       { name: 'Salida de inventario', link: '/salida-inventario' },
+                      { name: 'Salida múltiple', link: '/salida-multiple' },
                       { name: 'Cambio de bodega', link: '/cambio-bodega' },
                       { name: 'Modificar plancha', link: '/modificar-plancha' }
                     ]}

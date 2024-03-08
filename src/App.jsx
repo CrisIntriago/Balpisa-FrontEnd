@@ -39,6 +39,12 @@ function App() {
           opcion={"Salida Inventario"}/>}
           />
         </Route>
+
+        <Route path="/salida-multiple" element={<RutaProtegida />}>
+          <Route index element={<Movimientos
+          opcion={"Salida Múltiple"}/>} 
+          />
+        </Route>
     
         <Route path="/cambio-bodega" element={<RutaProtegida />}>
           <Route index element={<Movimientos
