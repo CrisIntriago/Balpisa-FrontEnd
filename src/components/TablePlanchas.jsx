@@ -89,13 +89,13 @@ const TablePlanchas = ({ modeloSeleccionado, bodegaSeleccionada }) => {
                         <td className={TdStyle.TdStyle}>{bodegaSeleccionada}</td>
                         <td className={TdStyle.TdStyle2}>{nombre}</td>
                         <td className={TdStyle.TdStyle}>{alto}</td>
-                        <td className={TdStyle.TdStyle}>{ancho}</td>
+                        <td className={TdStyle.TdStyle2}>{ancho}</td>
                         <td className={TdStyle.TdStyle}>{despunte1A}</td>
-                        <td className={TdStyle.TdStyle}>{despunte1B}</td>
+                        <td className={TdStyle.TdStyle2}>{despunte1B}</td>
                         <td className={TdStyle.TdStyle}>{despunte2A}</td>
-                        <td className={TdStyle.TdStyle}>{despunte2B}</td>
+                        <td className={TdStyle.TdStyle2}>{despunte2B}</td>
                         <td className={TdStyle.TdStyle}>{despunte3A}</td>
-                        <td className={TdStyle.TdStyle}>{despunte3B}</td>
+                        <td className={TdStyle.TdStyle2}>{despunte3B}</td>
                         <td className={TdStyle.TdStyle}>
                           {(alto*ancho - (despunte1A * despunte1B) - (despunte2A * despunte2B) - (despunte3A * despunte3B)).toFixed(2)}
                         </td>

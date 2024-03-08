@@ -22,6 +22,14 @@ const Home = () => {
     useModelosUnitariosPorFamilia(familiaSeleccionada);
   const familiasUnitarias = ["Porcelanato", "Ceramica", "Ferreteria", "Varios"];
 
+  const mostrarPlanchasConSeleccion = (familiaId, modeloId, bodegaId = 1) => {
+    setSearchMode("plancha");
+    setFamiliaSeleccionada(familiaId);
+    setModeloSeleccionado(modeloId);
+    setBodegaSeleccionada(bodegaId);
+    setTablaVisible(true);
+  };
+
   useEffect(() => {
     setFamiliaSeleccionada("");
     setModeloSeleccionado("");
@@ -175,9 +183,10 @@ const Home = () => {
             searchMode === "modelo" &&
             !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
               <Table
-                familiaSeleccionada={familiaSeleccionada}
-                modeloSeleccionado={modeloSeleccionado}
-              />
+  familiaSeleccionada={familiaSeleccionada}
+  modeloSeleccionado={modeloSeleccionado}
+  onVerPlanchasClick={mostrarPlanchasConSeleccion}
+/>
             )}
           {tablaVisible &&
             searchMode === "plancha" &&

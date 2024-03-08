@@ -116,7 +116,7 @@ const Movimientos = ({ opcion }) => {
             value={familiaSeleccionada}
             onChange={handleFamiliaSelect}
             options={
-              opcion === "Cambio Bodega" || opcion === "Modificar Plancha"
+              opcion === "Cambio Bodega" || opcion === "Modificar Plancha" || opcion === "Salida Múltiple"
                 ? opcionesFamiliasNoUnitarias
                 : opcionesFamilias
             }
