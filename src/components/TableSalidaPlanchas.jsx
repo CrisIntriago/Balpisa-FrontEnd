@@ -141,9 +141,9 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
   };
 
   return (
-    <section className="bg-gray-100 py-20 lg:py-[50px] w-full">
+    <section className="bg-gray-100 py-20 lg:py-[10px] w-full">
       <div className="container mx-auto">
-        <h2 className="text-xl font-bold mt-8 mb-4 text-center"></h2>
+        <h2 className="text-xl font-bold mt-8 mb-4 text-center">Datos Salida</h2>
         <table className="w-full table-fixed">
           <thead className="text-center bg-primary">
             <tr>
@@ -291,7 +291,7 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
             ))}
           </tbody>
         </table>
-        <h2 className="text-xl font-bold mt-8 mb-4">Planchas Agregadas</h2>
+        <h2 className="text-xl font-bold mt-8 mb-4 text-center">Planchas Agregadas</h2>
         <table className="w-full table-fixed">
           <thead className="text-center bg-primary">
             <tr>
