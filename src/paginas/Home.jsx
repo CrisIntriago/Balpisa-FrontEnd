@@ -27,15 +27,8 @@ const Home = () => {
     setFamiliaSeleccionada(familiaId);
     setModeloSeleccionado(modeloId);
     setBodegaSeleccionada(bodegaId);
-    setTablaVisible(true);
   };
 
-  useEffect(() => {
-    setFamiliaSeleccionada("");
-    setModeloSeleccionado("");
-    setBodegaSeleccionada("");
-    setTablaVisible(false);
-  }, [searchMode]);
 
   useEffect(() => {
     setModeloSeleccionado("");
@@ -136,7 +129,7 @@ const Home = () => {
               }
               label={"Familia:"}
             />
-            {familiaSeleccionada && (
+            {(familiaSeleccionada) && (
               <>
                 <ComboBox
                   placeholder="Seleccione un modelo"
@@ -163,7 +156,7 @@ const Home = () => {
               </>
             )}
           </div>
-          {familiaSeleccionada && (
+          {(familiaSeleccionada) && (
             <button
               onClick={handleBuscarClick}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded"

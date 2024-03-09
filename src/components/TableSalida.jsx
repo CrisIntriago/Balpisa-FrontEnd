@@ -133,9 +133,8 @@ const TableSalida = ({ planchaSeleccionada }) => {
             </button>
           </div>
 
-
-        <TableModal isOpen={isTableModalOpen} onClose={handleClose} planchaSeleccionada={planchaSeleccionada} plancha={planchas[0]}/>
       </div>
+      <TableModal isOpen={isTableModalOpen} onClose={handleClose} planchaSeleccionada={planchaSeleccionada} plancha={planchas[0]}/>
     </section>
 
   );

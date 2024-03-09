@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Loading from "./Loading";
-import useModelosCompletos from "../hooks/useModelosCompletos"; 
+import useModelosCompletos from "../hooks/useModelosCompletos";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -9,7 +9,11 @@ const TdStyle = {
   TdButton: `inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary hover:text-white font-medium`,
 };
 
-const Table = ({ familiaSeleccionada, modeloSeleccionado, onVerPlanchasClick }) => {
+const Table = ({
+  familiaSeleccionada,
+  modeloSeleccionado,
+  onVerPlanchasClick,
+}) => {
   const { modelosCompletos } = useModelosCompletos(familiaSeleccionada);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
@@ -21,8 +25,10 @@ const Table = ({ familiaSeleccionada, modeloSeleccionado, onVerPlanchasClick }) 
   // Calcula los elementos filtrados fuera del render
   const filteredElements = useMemo(() => {
     let filtered = modelosCompletos;
-    if (familiaSeleccionada !== '' && modeloSeleccionado !== '') {
-      filtered = modelosCompletos.filter(modelo => modelo.id === modeloSeleccionado);
+    if (familiaSeleccionada !== "" && modeloSeleccionado !== "") {
+      filtered = modelosCompletos.filter(
+        (modelo) => modelo.id === modeloSeleccionado
+      );
     }
     return filtered;
   }, [modelosCompletos, familiaSeleccionada, modeloSeleccionado]);
@@ -53,7 +59,6 @@ const Table = ({ familiaSeleccionada, modeloSeleccionado, onVerPlanchasClick }) 
     return <Loading />;
   }
 
-
   return (
     <section className="bg-gray-100 py-20 lg:py-[50px] w-full">
       <div className="container mx-auto">
@@ -83,25 +88,27 @@ const Table = ({ familiaSeleccionada, modeloSeleccionado, onVerPlanchasClick }) 
                   </thead>
                   <tbody>
                     {/* Llamada a currentElements para obtener y mapear los elementos de la página actual */}
-                    {currentElements().map(({ nombre, m2Disponibles, preciom2 }) => (
-                      <tr key={nombre}>
-                        <td className={TdStyle.TdStyle}>{nombre}</td>
-                        <td className={TdStyle.TdStyle2}>{preciom2}</td>
-                        <td className={TdStyle.TdStyle}>{m2Disponibles}</td>
-                        <td className={TdStyle.TdStyle2}>
-                        <a
-  href="/#"
-  onClick={(e) => {
-    e.preventDefault();
-    onVerPlanchasClick(familiaSeleccionada, modeloSeleccionado);
-  }}
-  className={TdStyle.TdButton}
->
-  Ver Planchas
-</a>
-                        </td>
-                      </tr>
-                    ))}
+                    {currentElements().map(
+                      ({ id, nombre, m2Disponibles, preciom2 }) => (
+                        <tr key={nombre}>
+                          <td className={TdStyle.TdStyle}>{nombre}</td>
+                          <td className={TdStyle.TdStyle2}>{preciom2}</td>
+                          <td className={TdStyle.TdStyle}>{m2Disponibles}</td>
+                          <td className={TdStyle.TdStyle2}>
+                            <a
+                              href="/#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                onVerPlanchasClick(familiaSeleccionada, id);
+                              }}
+                              className={TdStyle.TdButton}
+                            >
+                              Ver Planchas
+                            </a>
+                          </td>
+                        </tr>
+                      )
+                    )}
                   </tbody>
                 </table>
               </div>

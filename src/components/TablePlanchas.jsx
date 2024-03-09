@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Loading from "./Loading";
 import useallPlanchas from "../hooks/useallPlanchas";
+import TableModalHistorial from "./TableModalHistorial";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -9,18 +10,26 @@ const TdStyle = {
   TdButton: `inline-block px-3 py-2.5 border rounded-md border-primary text-primary hover:bg-primary hover:text-white font-medium`,
 }
 
-
 const TablePlanchas = ({ modeloSeleccionado, bodegaSeleccionada }) => {
   const { planchas } = useallPlanchas(modeloSeleccionado, bodegaSeleccionada);
   const [currentPage, setCurrentPage] = useState(0);
-  const [mostrarAgotadas, setMostrarAgotadas] = useState(false); // Nuevo estado para el checkbox
+  const [modalInfo, setModalInfo] = useState({ isOpen: false, selectedId: null });
+  const [mostrarAgotadas, setMostrarAgotadas] = useState(false);
   const itemsPerPage = 5;
 
+  // Esta función ahora recibe el id de la plancha y lo guarda en el estado
+  const onVerHistorialClick = (id) => {
+    setModalInfo({ isOpen: true, selectedId: id });
+  };
+
+  const handleClose = () => {
+    setModalInfo({ isOpen: false, selectedId: null });
+  };
+
   useEffect(() => {
-    setCurrentPage(0); // Reinicia la página actual al cambiar de modelo o bodega
+    setCurrentPage(0);
   }, [modeloSeleccionado, bodegaSeleccionada, planchas.length, mostrarAgotadas]);
 
-  // Filtra planchas basadas en mostrarAgotadas antes de calcular totalItems y maxPage
   const planchasFiltradas = mostrarAgotadas ? planchas : planchas.filter(plancha => plancha.estado === 1);
 
   const totalItems = planchasFiltradas.length;
@@ -31,7 +40,7 @@ const TablePlanchas = ({ modeloSeleccionado, bodegaSeleccionada }) => {
       setCurrentPage(currentPage + 1);
     }
   };
-  
+
   const prevPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
@@ -46,7 +55,6 @@ const TablePlanchas = ({ modeloSeleccionado, bodegaSeleccionada }) => {
   if (!modeloSeleccionado || !bodegaSeleccionada) {
     return <Loading />;
   }
-
 
   return (
 <section className="bg-gray-100 py-20 lg:py-[50px] w-full">
@@ -100,9 +108,16 @@ const TablePlanchas = ({ modeloSeleccionado, bodegaSeleccionada }) => {
                           {(alto*ancho - (despunte1A * despunte1B) - (despunte2A * despunte2B) - (despunte3A * despunte3B)).toFixed(2)}
                         </td>
                         <td className={TdStyle.TdStyle2}>
-                          <a href="/#" className={TdStyle.TdButton}>
-                            Ver Historial
-                          </a>
+                        <a
+                          href="/#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onVerHistorialClick(id);
+                          }}
+                          className={TdStyle.TdButton}
+                        >
+                          Ver Historial
+                        </a>
                         </td>
                       </tr>
                     ))}
@@ -121,6 +136,7 @@ const TablePlanchas = ({ modeloSeleccionado, bodegaSeleccionada }) => {
           </div>
         </div>
       </div>
+      <TableModalHistorial isOpen={modalInfo.isOpen} onClose={handleClose} planchaSeleccionada={modalInfo.selectedId} />
     </section>
   );
 };
