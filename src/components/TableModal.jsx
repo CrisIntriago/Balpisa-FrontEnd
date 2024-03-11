@@ -18,7 +18,7 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha }) => {
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [planchaTerminada, setPlanchaTerminada] = useState(false);
   const [values, setValues] = useState({
-    factura: "",
+    factura: "000-000-000000000",
     precioVenta: "",
     m2Usados: "",
     COD: "",
@@ -32,21 +32,12 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha }) => {
     D3B: "",
   });
 
-  // Función para formatear la factura
-  const formatFactura = (factura) => {
-    const parts = factura.split('-');
-    if (parts.length === 3) {
-      return `${parts[0].padStart(3, '0')}-${parts[1].padStart(3, '0')}-${parts[2].padStart(9, '0')}`;
-    }
-    return "000-000-000000000";
-  };
 
   useEffect(() => {
-    // Establecer los valores iniciales de los inputs con los valores de `plancha`
     if (plancha) {
       setValues({
         ...values,
-        factura: formatFactura(plancha.factura || ""),
+        factura: "000-000-000000000",
         COD: plancha.nombre || "",
         alto: plancha.alto || "",
         ancho: plancha.ancho || "",
@@ -125,24 +116,34 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha }) => {
     let value = e.target.value;
   
     if (field === "factura") {
-      // Verificar si el valor tiene la longitud esperada y sigue el patrón correcto.
-      const regexFactura = /^\d{3}-\d{3}-\d{9}$/;
+      let cursorPosition = document.activeElement.selectionStart; // Captura la posición actual del cursor antes de cambiar el valor.
+  
       // Extraer solo dígitos y reinsertar guiones en las posiciones adecuadas.
       let digits = value.replace(/\D/g, '');
       if (digits.length > 15) digits = digits.substring(0, 15); // Asegurar la longitud máxima de dígitos.
-      value = `${digits.substring(0, 3)}-${digits.substring(3, 6)}-${digits.substring(6, 15)}`;
+      value = `${digits.substring(0, 3)}-${digits.substring(3, 6)}-${digits.substring(6)}`.padEnd(15, "0");
   
+      const regexFactura = /^\d{3}-\d{3}-\d{9}$/;
       if (!regexFactura.test(value)) return; // Si no coincide con el formato, no actualizar.
-    } else {
-      const numericFields = ["alto", "ancho", "D1A", "D1B", "D2A", "D2B", "D3A", "D3B"];
   
+      // Actualizar el valor en el estado.
+      setValues({ ...values, [field]: value });
+  
+      setTimeout(() => {
+        let element = document.activeElement;
+        element.setSelectionRange(cursorPosition, cursorPosition);
+      }, 1);
+    } else {
+      // La lógica para otros campos permanece igual.
+      const numericFields = ["alto", "ancho", "D1A", "D1B", "D2A", "D2B", "D3A", "D3B"];
       if (numericFields.includes(field)) {
         const regexNumeric = /^(\d{0,2})(\.\d{0,2})?$/;
         if (!regexNumeric.test(value)) return; // Si no cumple con el formato numérico deseado, no actualizar.
       }
+  
+      setValues({ ...values, [field]: value });
     }
-    setValues({ ...values, [field]: value });
-  }  
+  };
 
   const handleSave = async () => {
     const {
@@ -235,7 +236,7 @@ const TableModal = ({ isOpen, onClose, planchaSeleccionada, plancha }) => {
             <table className="w-full table-fixed">
               <thead className="text-center bg-primary">
                 <tr>
-                  <th className={TdStyle.ThStyle}>Factura</th>
+                  <th className={`${TdStyle.ThStyle} w-[25%]`}>Factura</th>
                   <th className={TdStyle.ThStyle}>Precio Venta</th>
                   <th className={TdStyle.ThStyle}>
                     m<sup>2</sup> Usados

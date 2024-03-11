@@ -12,13 +12,14 @@ const TdStyle = {
 
 const TableSalidaUnitario = ({ modeloSeleccionado }) => {
   const initialStateUnitario = {
-    factura: "",
+    factura: "000-000-000000000",
     cantidad: "",
     precioVenta: "",
   };
 
   const [nombre, setNombre] = useState('');
   const [values, setValues] = useState(initialStateUnitario);
+  const numericFields = ["cantidad", "precioVenta"];
   const [totalm2, setTotalm2] = useState(0);
   const [isDesperfecto, setIsDesperfecto] = useState(false); 
 
@@ -52,22 +53,27 @@ const TableSalidaUnitario = ({ modeloSeleccionado }) => {
 
   const handleInputChange = (e, field) => {
     let value = e.target.value;
-    const numericFields = [
-      "cantidad",
-      "precio",
-    ];
+    let index = -1; 
 
-    if (numericFields.includes(field)) {
-      value = value.replace(",", ".");
+    if (field === "factura") {
+      let cursorPosition = e.target.selectionStart; // Captura la posición del cursor
+      let digits = value.replace(/\D/g, "");
+      if (digits.length > 15) digits = digits.substring(0, 15);
+      value = `${digits.substring(0, 3)}-${digits.substring(3, 6)}-${digits.substring(6)}`.padEnd(15, "0");
 
+      setTimeout(() => {
+        let element = e.target;
+        element.setSelectionRange(cursorPosition, cursorPosition);
+      }, 1);
+    } else if (numericFields.includes(field)) {
       // Permitir solo valores numéricos y decimales
-      if (/^\d*\.?\d*$/.test(value) || value === "") {
+      if ((/^\d*\.?\d{0,2}$/.test(value)) || value === "") {
         setValues({ ...values, [field]: value });
+      } else {
+        return; // No actualizar si no cumple la condición
       }
-    } else {
-      // Para campos no numéricos, actualizar directamente
-      setValues({ ...values, [field]: value });
-    }
+    } 
+    setValues({ ...values, [field]: value });
   };
 
   const handleSave = async () => {
@@ -104,7 +110,15 @@ const TableSalidaUnitario = ({ modeloSeleccionado }) => {
     <section className="bg-gray-100 py-20 lg:py-[50px] w-full">
       <div className="container mx-auto">
         <div className="flex flex-wrap -mx-4">
-          <div className="w-full">
+        <label className="flex items-center space-x-2 my-3">
+                <input
+                  type="checkbox"
+                  checked={isDesperfecto}
+                  onChange={(e) => setIsDesperfecto(e.target.checked)}
+                />
+                <span>Salida por desperfecto</span>
+              </label>
+          <div className="w-full">            
             <div className="max-w-full overflow-x-auto">
               <table className="w-full table-fixed">
                 <thead className="text-center bg-primary">
@@ -134,15 +148,7 @@ const TableSalidaUnitario = ({ modeloSeleccionado }) => {
                 </tbody>
               </table>
             </div>
-            <div className="flex justify-between mt-4">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={isDesperfecto}
-                  onChange={(e) => setIsDesperfecto(e.target.checked)}
-                />
-                <span>Salida por desperfecto</span>
-              </label>
+            <div className="flex justify-center mt-4">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 onClick={handleOpenConfirmation}

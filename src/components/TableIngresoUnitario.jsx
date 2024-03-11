@@ -13,7 +13,7 @@ const TdStyle = {
 const TableIngresoUnitario = ({ modeloSeleccionado }) => {
 
   const initialStateUnitario = {
-    factura: "",
+    factura: "000-000-000000000",
     cantidad: "",
   }
 
@@ -49,21 +49,29 @@ const TableIngresoUnitario = ({ modeloSeleccionado }) => {
 
   const handleInputChange = (e, field) => {
     let value = e.target.value;
-    const numericFields = [
-      "cantidad",
-    ];
 
-    if (numericFields.includes(field)) {
+    if (field === "factura") {
+      let cursorPosition = e.target.selectionStart;
+      let digits = value.replace(/\D/g, "");
+      if (digits.length > 15) digits = digits.substring(0, 15);
+      value = `${digits.substring(0, 3)}-${digits.substring(3, 6)}-${digits.substring(6)}`.padEnd(15, "0");
+
+      setTimeout(() => {
+        let element = e.target;
+        element.setSelectionRange(cursorPosition, cursorPosition);
+      }, 1);
+    } else if (field === "cantidad") {
       value = value.replace(",", ".");
 
       // Permitir solo valores numéricos y decimales
       if (/^\d*\.?\d*$/.test(value) || value === "") {
-        setValues({ ...values, [field]: value });
+        value = value === "" ? "" : value; // Mantener como cadena para consistencia en el manejo del estado
+      } else {
+        return; // No actualizar si no cumple la condición
       }
-    } else {
-      // Para campos no numéricos, actualizar directamente
-      setValues({ ...values, [field]: value });
     }
+
+    setValues({ ...values, [field]: value });
   };
 
   const handleSave = async () => {
