@@ -267,7 +267,7 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
                   <input
                     type="text"
                     className={styles.inputSmall}
-                    value={plancha.precioTotal}
+                    value={parseFloat(plancha.precioTotal).toFixed(2)}
                     onChange={(e) =>
                       handleInputChange(index, "precioTotal", e.target.value)
                     }
