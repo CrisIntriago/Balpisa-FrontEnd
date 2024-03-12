@@ -115,7 +115,7 @@ const Navbar = () => {
                   </ListItem>
                   <ListItem
                     NavLink="#"
-                    active={currentSection === 'movimientos' || ['movimientos', '/ingreso-inventario', '/salida-inventario', 'salida-multiple', '/cambio-bodega', '/modificar-plancha'].includes(currentSection)}
+                    active={currentSection === 'movimientos' || ['/ingreso-inventario', '/salida-inventario', '/salida-multiple', '/cambio-bodega', '/modificar-plancha'].includes(currentSection)}
                     onClick={() => handleSectionClick('movimientos')}
                     subMenu={[
                       { name: 'Ingreso de inventario', link: '/ingreso-inventario' },
@@ -131,6 +131,19 @@ const Navbar = () => {
                   </ListItem>
                   <ListItem NavLink="/reportes" active={currentSection === 'reportes'} onClick={() => handleSectionClick('reportes')}>
                     Reportes
+                  </ListItem>
+                  <ListItem
+                    NavLink="#"
+                    active={currentSection === 'admin' || ['/agregar-modelo', '/modificar-modelo'].includes(currentSection)}
+                    onClick={() => handleSectionClick('admin')}
+                    subMenu={[
+                      { name: 'Agregar modelo', link: '/agregar-modelo' },
+                      { name: 'Modificar modelo', link: '/modificar-modelo' }
+                    ]}
+                    currentSection={currentSection}
+                    setCurrentSection={setCurrentSection}
+                  >
+                    Admin &#9660;
                   </ListItem>
                 </ul>
               </nav>

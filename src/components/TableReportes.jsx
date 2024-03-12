@@ -28,7 +28,7 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
     const prevPage = () => {
       setCurrentPage((prevCurrentPage) => {
         if (prevCurrentPage - 1 < 0) {
-          return totalPages - 1; // Regresa a la última página si prevCurrentPage es menor a 0
+          return totalPages - 1; 
         } else {
           return (prevCurrentPage - 1) % totalPages;
         }

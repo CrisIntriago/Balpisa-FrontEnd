@@ -7,6 +7,7 @@ import Home from './paginas/Home';
 import RutaProtegida from './layouts/RutaProtegida';
 import Reportes from './paginas/Reportes.jsx';
 import Movimientos from './paginas/Movimientos.jsx';
+import Admin from './paginas/Admin.jsx';
 
 
 function App() {
@@ -55,6 +56,18 @@ function App() {
         <Route path="/modificar-plancha" element={<RutaProtegida />}>
           <Route index element={<Movimientos 
           opcion={"Modificar Plancha"}/>} 
+          />
+        </Route>
+
+        <Route path="/agregar-modelo" element={<RutaProtegida />}>
+          <Route index element={<Admin
+          opcion={"Agregar Modelo"}/>} 
+          />
+        </Route>
+
+        <Route path="/modificar-modelo" element={<RutaProtegida />}>
+          <Route index element={<Admin
+          opcion={"Modificar Modelo"}/>} 
           />
         </Route>
       </Routes>

@@ -190,50 +190,13 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
                   />
                 </td>
                 <td className={styles.tableData}>
-                  <input
-                    type="text"
-                    className={styles.inputSmall}
-                    value={plancha.nombre}
-                    onChange={(e) =>
-                      handleInputChange(index, "nombre", e.target.value)
-                    }
-                  />
+                  {plancha.nombre}
                 </td>
                 <td className={styles.tableData}>
-                  <input
-                    type="number"
-                    className={styles.inputSmall}
-                    value={plancha.alto}
-                    onChange={(e) =>
-                      handleInputChange(
-                        index,
-                        "alto",
-                        parseFloat(e.target.value)
-                      )
-                    }
-                    style={{
-                      WebkitAppearance: "none",
-                      MozAppearance: "textfield",
-                    }}
-                  />
+                  {plancha.alto}
                 </td>
                 <td className={styles.tableData}>
-                  <input
-                    type="number"
-                    className={styles.inputSmall}
-                    value={plancha.ancho}
-                    onChange={(e) =>
-                      handleInputChange(
-                        index,
-                        "ancho",
-                        parseFloat(e.target.value)
-                      )
-                    }
-                    style={{
-                      WebkitAppearance: "none",
-                      MozAppearance: "textfield",
-                    }}
-                  />
+                  {plancha.ancho}
                 </td>
                 {[
                   "despunte1A",
@@ -244,22 +207,7 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
                   "despunte3B",
                 ].map((despunte) => (
                   <td key={despunte} className={styles.tableData}>
-                    <input
-                      type="number"
-                      className={styles.inputSmall}
-                      value={plancha[despunte]}
-                      onChange={(e) =>
-                        handleInputChange(
-                          index,
-                          despunte,
-                          parseFloat(e.target.value)
-                        )
-                      }
-                      style={{
-                        WebkitAppearance: "none",
-                        MozAppearance: "textfield",
-                      }}
-                    />
+                    {plancha[despunte]}
                   </td>
                 ))}
                 <td className={styles.tableData}>{plancha.totalM2}</td>
