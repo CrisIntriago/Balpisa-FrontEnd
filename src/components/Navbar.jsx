@@ -7,7 +7,7 @@ import useAuth from '../hooks/useAuth';
 const Navbar = () => {
   const { auth, cerrarSesionAuth } = useAuth();
   const [open, setOpen] = useState(false);
-  const [currentSection, setCurrentSection] = useState('consultas');
+  const [currentSection, setCurrentSection] = useState('');
   const [navbarHeight, setNavbarHeight] = useState(0);
 
   useEffect(() => {
@@ -39,6 +39,8 @@ const Navbar = () => {
     const storedSection = localStorage.getItem('currentSection');
     if (storedSection) {
       setCurrentSection(storedSection);
+    }else{
+      setCurrentSection('consultas');
     }
   }, []);
 
@@ -95,7 +97,7 @@ const Navbar = () => {
       <div className="container mx-auto">
         <div className="relative flex items-center justify-between">
           <div className="w-60 max-w-full">
-            <Link to="/consultas" className="block w-full py-5">
+          <Link to="/consultas" className="block w-full py-5" active={currentSection === 'consultas'} onClick={() => handleSectionClick('consultas')}>
               <img
                 src="/logo.png"
                 alt="logo"
