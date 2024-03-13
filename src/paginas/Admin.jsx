@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import useFamilias from "../hooks/useFamilias";
 import ComboBox from "../components/ComboBox";
+import TableIngresoModeloUnitario from "../components/TableIngresoModeloUnitario";
+import TableIngresoModelo from "../components/TableIngresoModelo";
 
 const Admin = ({ opcion }) => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState("");
@@ -63,10 +65,14 @@ const Admin = ({ opcion }) => {
           </div>
         )}
         {tablaVisible && opcion === "Agregar Modelo" && idsFamiliasUnitarias.includes(familiaSeleccionada) && (
-          <p>MOSTRANDO TABLA AGREGAR MODELO PARA UNITARIAS</p>
+          <TableIngresoModeloUnitario
+          familiaSeleccionada={familiaSeleccionada}
+          />
         )}
         {tablaVisible && opcion === "Agregar Modelo" && !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
-          <p>MOSTRANDO TABLA AGREGAR MODELO PARA NOOOO UNITARIAS</p>
+          <TableIngresoModelo
+          familiaSeleccionada={familiaSeleccionada}
+          />
         )}
         {tablaVisible && opcion === "Modificar Modelo" && idsFamiliasUnitarias.includes(familiaSeleccionada) && (
           <p>MOSTRANDO TABLA MODIFICAR MODELO PARA  UNITARIAS</p>

@@ -19,7 +19,7 @@ const TablePlanchaIndividual = ({
   opcionesBodegas,
 }) => {
   const [bodegaDestinoSeleccionada, setBodegaSeleccionada] = useState("");
-  const { planchas } = usePlanchaFromId(planchaSeleccionada);
+  const { plancha } = usePlanchaFromId(planchaSeleccionada);
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
 
   const { hacerCambioBodega } = useCambiarBodega();
@@ -56,7 +56,7 @@ const TablePlanchaIndividual = ({
       despunte2B,
       despunte3A,
       despunte3B,
-    } = planchas[0];
+    } = plancha;
 
     const m2Usados = (
       alto * ancho -
@@ -114,41 +114,26 @@ const TablePlanchaIndividual = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {planchas.map(
-                    ({
-                      id,
-                      nombre,
-                      alto,
-                      ancho,
-                      despunte1A,
-                      despunte1B,
-                      despunte2A,
-                      despunte2B,
-                      despunte3A,
-                      despunte3B,
-                    }) => (
-                      <tr key={id}>
-                        <td className={TdStyle.TdStyle}>{nombre}</td>
-                        <td className={TdStyle.TdStyle}>{alto}</td>
-                        <td className={TdStyle.TdStyle}>{ancho}</td>
-                        <td className={TdStyle.TdStyle}>{despunte1A}</td>
-                        <td className={TdStyle.TdStyle}>{despunte1B}</td>
-                        <td className={TdStyle.TdStyle}>{despunte2A}</td>
-                        <td className={TdStyle.TdStyle}>{despunte2B}</td>
-                        <td className={TdStyle.TdStyle}>{despunte3A}</td>
-                        <td className={TdStyle.TdStyle}>{despunte3B}</td>
-                        <td className={TdStyle.TdStyle}>
-                          {(
-                            alto * ancho -
-                            despunte1A * despunte1B -
-                            despunte2A * despunte2B -
-                            despunte3A * despunte3B
-                          ).toFixed(2)}
-                        </td>
-                      </tr>
-                    )
-                  )}
-                </tbody>
+  <tr key={plancha.id}>
+    <td className={TdStyle.TdStyle}>{plancha.nombre}</td>
+    <td className={TdStyle.TdStyle}>{plancha.alto}</td>
+    <td className={TdStyle.TdStyle}>{plancha.ancho}</td>
+    <td className={TdStyle.TdStyle}>{plancha.despunte1A}</td>
+    <td className={TdStyle.TdStyle}>{plancha.despunte1B}</td>
+    <td className={TdStyle.TdStyle}>{plancha.despunte2A}</td>
+    <td className={TdStyle.TdStyle}>{plancha.despunte2B}</td>
+    <td className={TdStyle.TdStyle}>{plancha.despunte3A}</td>
+    <td className={TdStyle.TdStyle}>{plancha.despunte3B}</td>
+    <td className={TdStyle.TdStyle}>
+      {(
+        plancha.alto * plancha.ancho -
+        plancha.despunte1A * plancha.despunte1B -
+        plancha.despunte2A * plancha.despunte2B -
+        plancha.despunte3A * plancha.despunte3B
+      ).toFixed(2)}
+    </td>
+  </tr>
+</tbody>
               </table>
             </div>
           </div>

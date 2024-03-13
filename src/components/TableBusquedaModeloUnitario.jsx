@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Loading from "./Loading";
-import useModelosCompletos from "../hooks/useModelosCompletos"; 
 import useModelosUnitariosCompletos from "../hooks/useModelosUnitariosCompletos";
 
 const TdStyle = {

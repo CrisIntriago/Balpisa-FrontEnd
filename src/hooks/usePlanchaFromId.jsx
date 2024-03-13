@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import obtenerPlanchaFromId from '../config/obtenerPlanchaFromId';
 
 const usePlanchaFromId = (planchaId) => {
-    const [planchas, setPlanchas] = useState([]);
+    const [plancha, setPlanchas] = useState([]);
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState(null);
 
@@ -16,7 +16,7 @@ const usePlanchaFromId = (planchaId) => {
                 // Acceder al arreglo dentro del objeto 'data' de la respuesta
                 const planchas = response.data;
                 // Actualizar el estado con el arreglo de modelos
-                setPlanchas(planchas);
+                setPlanchas(planchas[0]);
                 setError(null);
             } catch (error) {
                 // Manejar el error
@@ -31,7 +31,7 @@ const usePlanchaFromId = (planchaId) => {
         fetchData();
     }, [planchaId]);
 
-    return { planchas };
+    return { plancha };
 };
 
 export default usePlanchaFromId;

@@ -15,7 +15,7 @@ const styles = {
 };
 
 const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
-  const { planchas } = usePlanchaFromId(planchaSeleccionada);
+  const { plancha } = usePlanchaFromId(planchaSeleccionada);
   const [editableData, setEditableData] = useState([]);
   const [addedData, setAddedData] = useState([]);
   const numericFields = [
@@ -34,17 +34,16 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
   const { gastarPlanchaPorId } = useGastarPlancha();
 
   useEffect(() => {
-    const initialData = planchas.map((plancha) => {
-      const totalM2 = calculateTotalM2(plancha);
-      return {
-        ...plancha,
-        totalM2: totalM2,
-        precioTotal: totalM2 * plancha.preciom2,
-        factura: "000-000-000000000",
-      };
-    });
+    const totalM2 = calculateTotalM2(plancha);
+    const initialData = [{
+      ...plancha,
+      totalM2: totalM2,
+      precioTotal: totalM2 * plancha.preciom2,
+      factura: "000-000-000000000",
+    }];
+  
     setEditableData(initialData);
-  }, [planchas]);
+  }, [plancha]);
 
   const handleInputChange = (index, key, value) => {
     const newData = [...editableData];

@@ -13,7 +13,6 @@ const TdStyle = {
 };
 
 const TableModificarPlancha = ({ planchaSeleccionada }) => {
-  const [plancha, setPlancha] = useState("");
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [values, setValues] = useState({
     COD: "",
@@ -30,13 +29,8 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
   const { enviarPlanchaActualizada } = useActualizarPlancha();
   const { enviarMovimiento } = useAgregarMovimiento();
 
-  const { planchas } = usePlanchaFromId(planchaSeleccionada);
+  const { plancha } = usePlanchaFromId(planchaSeleccionada);
 
-  useEffect(() => {
-    if (planchas.length > 0) {
-      setPlancha(planchas[0]);
-    }
-  }, [planchas]);
 
   const handleOpenConfirmation = () => {
     setConfirmationModalOpen(true);
@@ -52,9 +46,8 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
   };
 
   useEffect(() => {
-    if (planchas.length > 0) {
-      const { nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B } = planchas[0];
-      setPlancha(planchas[0]);
+    if (plancha) {
+      const { nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B } = plancha;
       setValues({
         ...values,
         COD: nombre,
@@ -68,7 +61,7 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
         D3B: despunte3B.toString(),
       });
     }
-  }, [planchas]);
+  }, [plancha]);
 
   const handleInputChange = (e, field) => {
     let value = e.target.value;
