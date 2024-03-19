@@ -25,7 +25,6 @@ const TableModalHistorial = ({ isOpen, onClose, planchaSeleccionada }) => {
           >
             &times;
           </button>
-          {/* Envoltura para el contenido del modal, excluyendo el botón de cierre */}
           <div className="mt-16">
             <div className={`max-w-full overflow-x-auto ${TdStyle.TableContainer}`}>
               <p className="font-bold text-xl text-center md:w-1/2 lg:w-1/2 mx-auto pb-10">
