@@ -64,7 +64,7 @@ const Navbar = () => {
             position: fixed;
             top: 0;
             width: 100%;
-            z-index: 1000;
+            z-index: 30;
           }
 
           .navbar {
@@ -134,7 +134,7 @@ const Navbar = () => {
                   <ListItem NavLink="/reportes" active={currentSection === 'reportes'} onClick={() => handleSectionClick('reportes')}>
                     Reportes
                   </ListItem>
-                  
+            
                   <ListItem
                     NavLink="#"
                     active={currentSection === 'admin' || ['/agregar-modelo', '/modificar-modelo'].includes(currentSection)}
@@ -148,7 +148,7 @@ const Navbar = () => {
                   >
                     Admin &#9660;
                   </ListItem>
-                  
+                
                 </ul>
               </nav>
             </div>
