@@ -46,7 +46,7 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
   };
 
   useEffect(() => {
-    if (plancha) {
+    if (plancha && plancha.alto && plancha.ancho) {
       const { nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B } = plancha;
       setValues({
         ...values,
