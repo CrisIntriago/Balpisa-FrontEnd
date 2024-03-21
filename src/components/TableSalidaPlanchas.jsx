@@ -139,6 +139,10 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
     setAddedData(addedData.concat(planchaToAdd));
   };
 
+  const handleRemovePlancha = (indexToRemove) => {
+    setAddedData(addedData.filter((_, index) => index !== indexToRemove));
+  };
+
   return (
     <section className="bg-gray-100 py-20 lg:py-[10px] w-full">
       <div className="container mx-auto">
@@ -247,6 +251,7 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
                   {header}
                 </th>
               ))}
+              <th className={styles.tableHeader}>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -256,6 +261,14 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
                 <td className={styles.tableData}>{plancha.nombre}</td>
                 <td className={styles.tableData}>{plancha.totalM2}</td>
                 <td className={styles.tableData}>{plancha.precioTotal}</td>
+                <td className={styles.tableData}>
+                  <button
+                    className={styles.button}
+                    onClick={() => handleRemovePlancha(index)}
+                  >
+                    Eliminar
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
