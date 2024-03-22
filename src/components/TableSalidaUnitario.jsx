@@ -32,7 +32,7 @@ const TableSalidaUnitario = ({ modeloSeleccionado }) => {
     const total = modelo.m2PorUnidad * parseFloat(values.cantidad || 0);
     setTotalm2(total);
     const precioVenta = total * modelo.precio;
-    setValues(values => ({ ...values, factura: "000-000-000000000", precioVenta: precioVenta.toFixed(2) }));
+    setValues(values => ({ ...values, precioVenta: precioVenta.toFixed(2) }));
   }, [modelo, values.cantidad]);
 
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
