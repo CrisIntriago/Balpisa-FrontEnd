@@ -48,11 +48,6 @@ const Reportes = () => {
         Buscar
       </button>
 
-
-      {
-        tablaVisible
-      }
-
       {tablaVisible && (
         <TableReportes
           fechaInicio={fechaInicio}

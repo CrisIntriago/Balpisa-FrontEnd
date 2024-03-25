@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import imprimirMovimientos from '../config/imprimirMovimientos';
 
 const useImprimirMovimientos = (fechaInicio, fechaFin) => {
-    const [movimientos, setMovimientos] = useState({});
-    const [cargando, setCargando] = useState(false);
+    const [movimientos, setMovimientos] = useState(null); 
+    const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -12,19 +12,19 @@ const useImprimirMovimientos = (fechaInicio, fechaFin) => {
             try {
                 const data = await imprimirMovimientos(fechaInicio, fechaFin);
                 setMovimientos(data);
-                setError(null); // Limpia errores previos si la petición es exitosa
+                setError(null); 
             } catch (error) {
                 setError(error);
+                setMovimientos(null); 
             } finally {
-                setCargando(false);
+                setCargando(false); 
             }
         };
 
         cargarMovimientos();
-    }, [fechaInicio,fechaFin]); 
+    }, [fechaInicio, fechaFin]); 
 
-    return { movimientos };
+    return { movimientos, cargando, error }; 
 }
 
 export default useImprimirMovimientos;
-

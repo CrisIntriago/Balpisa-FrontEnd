@@ -9,7 +9,15 @@ const TdStyle = {
 
 const TablaParaImprimir = forwardRef(({ fechaInicio, fechaFin }, ref) => {
 
-    const { movimientos } = useImprimirMovimientos(fechaInicio, fechaFin);
+    const { movimientos, cargando } = useImprimirMovimientos(fechaInicio, fechaFin);
+
+    if (cargando) {
+        return <div>Cargando movimientos...</div>;
+      }
+    
+      if (!movimientos) {
+        return <div>No hay datos disponibles.</div>;
+      }
 
     return (
         <div ref={ref}>

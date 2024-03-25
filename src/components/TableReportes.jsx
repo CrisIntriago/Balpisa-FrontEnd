@@ -13,13 +13,20 @@ const TdStyle = {
 };
 
 const TableReportes = ({ fechaInicio, fechaFin }) => {
+  const [showPrintComponent, setShowPrintComponent] = useState(false); 
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 5;
 
     const componentRef = useRef();
-const handlePrint = useReactToPrint({
-  content: () => componentRef.current,
-});
+    const handlePrint = useReactToPrint({
+      content: () => componentRef.current,
+      onAfterPrint: () => setShowPrintComponent(false), // Opcional: Ocultar después de imprimir
+    });
+
+    const handlePrintButtonClick = () => {
+      setShowPrintComponent(true); // Cambia el estado para mostrar el componente
+      handlePrint(); // Y luego imprime
+    };
 
     const { totalFilas } = useFilasFromMovimientos(fechaInicio, fechaFin);
 
@@ -40,14 +47,11 @@ const handlePrint = useReactToPrint({
       });
     };
   
-    if (movimientos.length === 0) {
-      //return <Loading />;
-    }
     return (
       <section className="bg-gray-100 py-20 lg:py-[50px] w-full">
         <div className="container mx-auto">
         <div className="flex justify-center flex-grow ">
-                <button onClick={handlePrint}  className={TdStyle.TdButton}>Imprimir Movimientos</button>
+                <button onClick={handlePrintButtonClick} className={TdStyle.TdButton}>Imprimir Movimientos</button>
               </div>
         <p className="font-bold text-2xl mt-10 text-center md:w-1/2 mx-auto pb-10 ">Movimiento de Granito / Quarcita y Onix/ Mármol </p>
           <div className="flex flex-wrap -mx-4">
@@ -100,9 +104,11 @@ const handlePrint = useReactToPrint({
             </div>
           </div>
         </div>
+        {showPrintComponent && 
         <div style={{ display: 'none' }}>
           <TablaParaImprimir ref={componentRef} fechaInicio={fechaInicio} fechaFin={fechaFin} />
         </div>
+      }
       </section>
     );
   };

@@ -52,6 +52,7 @@ const TableReportesUnitarios = ({ fechaInicio, fechaFin }) => {
                         <th className={TdStyle.ThStyle}>Cantidad Cambiada</th>
                         <th className={TdStyle.ThStyle}>Valor Registro</th>
                         <th className={TdStyle.ThStyle}>nFactura</th>
+                        <th className={TdStyle.ThStyle}>Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -63,6 +64,14 @@ const TableReportesUnitarios = ({ fechaInicio, fechaFin }) => {
                           <td className={TdStyle.TdStyle}>{mov.cantidadCambiada}</td>
                           <td className={TdStyle.TdStyle2}>{mov.valorRegistro}</td>
                           <td className={TdStyle.TdStyle}>{mov.nFactura}</td>
+                          <td className={TdStyle.TdStyle2}>
+                        <a
+                          href="/#"
+                          className={TdStyle.TdButton}
+                        >
+                          Ver en Bodegas
+                        </a>
+                        </td>
                         </tr>
                       ))}
                     </tbody>
