@@ -18,8 +18,6 @@ const TableReportesUnitarios = ({ fechaInicio, fechaFin }) => {
 
     const { movimientos } = useMovimientosUnitarios(fechaInicio, fechaFin, currentPage * itemsPerPage);
     const totalPages = Math.ceil(totalFilas / itemsPerPage);
-    console.log(movimientos);
-    console.log(totalFilas)
   
     const nextPage = () => {
       setCurrentPage((prevCurrentPage) => (prevCurrentPage + 1) % totalPages);

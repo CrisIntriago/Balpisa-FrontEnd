@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Loading from "./Loading";
 import useMovimientos from "../hooks/useMovimientos";
 import useFilasFromMovimientos from "../hooks/useFilasFromMovimientos";
+import { useReactToPrint } from 'react-to-print';
+import TablaParaImprimir from "./TablaParaImprimir";
+
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
   TdStyle: `text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium`,
@@ -13,13 +16,15 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 5;
 
+    const componentRef = useRef();
+const handlePrint = useReactToPrint({
+  content: () => componentRef.current,
+});
+
     const { totalFilas } = useFilasFromMovimientos(fechaInicio, fechaFin);
 
     const { movimientos } = useMovimientos(fechaInicio, fechaFin, currentPage * itemsPerPage);
     const totalPages = Math.ceil(totalFilas / itemsPerPage);
-    console.log(itemsPerPage)
-    console.log(totalFilas)
-    console.log(totalPages)
   
     const nextPage = () => {
       setCurrentPage((prevCurrentPage) => (prevCurrentPage + 1) % totalPages);
@@ -41,6 +46,10 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
     return (
       <section className="bg-gray-100 py-20 lg:py-[50px] w-full">
         <div className="container mx-auto">
+        <div className="flex justify-center flex-grow ">
+                <button onClick={handlePrint}  className={TdStyle.TdButton}>Imprimir Movimientos</button>
+              </div>
+        <p className="font-bold text-2xl mt-10 text-center md:w-1/2 mx-auto pb-10 ">Movimiento de Granito / Quarcita y Onix/ Mármol </p>
           <div className="flex flex-wrap -mx-4">
             <div className="w-full">
               <div className="max-w-full overflow-x-auto">
@@ -90,6 +99,9 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
               Página {currentPage + 1} de {totalPages}
             </div>
           </div>
+        </div>
+        <div style={{ display: 'none' }}>
+          <TablaParaImprimir ref={componentRef} fechaInicio={fechaInicio} fechaFin={fechaFin} />
         </div>
       </section>
     );
