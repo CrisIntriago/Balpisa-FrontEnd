@@ -215,7 +215,7 @@ const Movimientos = ({ opcion }) => {
         )}
         {tablaVisible && opcion === "Modificar Plancha" && (
           <TableModificarPlancha planchaSeleccionada={planchaSeleccionada} />
-        )}
+        )}  
       </>
     </div>
   );
