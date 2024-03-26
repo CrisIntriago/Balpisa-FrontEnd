@@ -33,13 +33,18 @@ const TableSalidaUnitario = ({ modeloSeleccionado, bodegaSeleccionada }) => {
 
   useEffect(() => {
     setNombre(modelo.nombre);
-      const cantidad = cantidades ? cantidades.cantidad : 0;
-      const total = modelo.m2PorUnidad * parseFloat(cantidad);
-    setTotalm2(total);
+    const cantidadInicial = cantidades ? cantidades.cantidad : 0;
+    setValues(values => ({ ...values, cantidad: cantidadInicial }));
+  }, [modelo, cantidades]);
   
-    const precioVenta = total * modelo.precio;
-      setValues(values => ({ ...values, cantidad: cantidad, precioVenta: precioVenta.toFixed(2) }));
-  }, [modelo, values.cantidad, cantidades]); 
+  useEffect(() => {
+    const cantidad = parseFloat(values.cantidad) || 0;
+    const totalm2 = modelo.m2PorUnidad * cantidad;
+    setTotalm2(totalm2);
+    const precioVenta = totalm2 * modelo.precio;
+    setValues(values => ({ ...values, precioVenta: precioVenta.toFixed(2) }));
+  
+  }, [values.cantidad, modelo]);
 
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
 
