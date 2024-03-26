@@ -3,6 +3,8 @@ import ConfirmationModal from "./ConfirmationModal";
 import useAgregarMovimientoUnitario from "../hooks/useAgregarMovimientoUnitario";
 import useModeloUnitarioFromId from "../hooks/useModeloUnitarioFromId";
 import useDecrementarModeloUnitario from "../hooks/useDecrementarModeloUnitario";
+import useCantidadPorBodegaIndividual from "../hooks/useCantidadPorBodegaIndividual";
+
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -10,7 +12,7 @@ const TdStyle = {
   InputSmall: `w-full max-w-xs px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center`,
 };
 
-const TableSalidaUnitario = ({ modeloSeleccionado }) => {
+const TableSalidaUnitario = ({ modeloSeleccionado, bodegaSeleccionada }) => {
   const initialStateUnitario = {
     factura: "000-000-000000000",
     cantidad: "",
@@ -22,18 +24,22 @@ const TableSalidaUnitario = ({ modeloSeleccionado }) => {
   const numericFields = ["cantidad", "precioVenta"];
   const [totalm2, setTotalm2] = useState(0);
   const [isDesperfecto, setIsDesperfecto] = useState(false); 
+  const { cantidades } = useCantidadPorBodegaIndividual(modeloSeleccionado, bodegaSeleccionada);
+  console.log(cantidades)
 
   const { decrementarUnitario } = useDecrementarModeloUnitario();
   const { enviarMovimientoUnitario } = useAgregarMovimientoUnitario();
   const { modelo } = useModeloUnitarioFromId(modeloSeleccionado);
 
-  useEffect (() => {
+  useEffect(() => {
     setNombre(modelo.nombre);
-    const total = modelo.m2PorUnidad * parseFloat(values.cantidad || 0);
+      const cantidad = cantidades ? cantidades.cantidad : 0;
+      const total = modelo.m2PorUnidad * parseFloat(cantidad);
     setTotalm2(total);
+  
     const precioVenta = total * modelo.precio;
-    setValues(values => ({ ...values, precioVenta: precioVenta.toFixed(2) }));
-  }, [modelo, values.cantidad]);
+      setValues(values => ({ ...values, cantidad: cantidad, precioVenta: precioVenta.toFixed(2) }));
+  }, [modelo, values.cantidad, cantidades]); 
 
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
 
@@ -56,7 +62,7 @@ const TableSalidaUnitario = ({ modeloSeleccionado }) => {
     let index = -1; 
 
     if (field === "factura") {
-      let cursorPosition = e.target.selectionStart; // Captura la posición del cursor
+      let cursorPosition = e.target.selectionStart; 
       let digits = value.replace(/\D/g, "");
       if (digits.length > 15) digits = digits.substring(0, 15);
       value = `${digits.substring(0, 3)}-${digits.substring(3, 6)}-${digits.substring(6)}`.padEnd(15, "0");
@@ -88,7 +94,7 @@ const TableSalidaUnitario = ({ modeloSeleccionado }) => {
     }
 
     try {
-      await decrementarUnitario(modeloSeleccionado, cantidad);
+      await decrementarUnitario(modeloSeleccionado, bodegaSeleccionada, cantidad);
       const datosMovimiento = {
         tipo: isDesperfecto ? "Desperfecto" : "Salida", 
         cantidadCambiada: cantidad,

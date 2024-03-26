@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Loading from "./Loading";
 import useModelosUnitariosCompletos from "../hooks/useModelosUnitariosCompletos";
+import TableModalUnitarios from "./TableModalUnitarios";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -13,7 +14,15 @@ const TableBusquedaModeloUnitario = ({ familiaSeleccionada, modeloSeleccionado }
   const { modelosCompletos } = useModelosUnitariosCompletos(familiaSeleccionada);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
+  const [modalInfo, setModalInfo] = useState({ isOpen: false, selectedId: null, nombre: null });
 
+  const onVerCantidadesClick = (id, nombre) => {
+    setModalInfo({ isOpen: true, selectedId: id, nombre: nombre });
+  };
+
+  const handleClose = () => {
+    setModalInfo({ isOpen: false, selectedId: null });
+  };
   useEffect(() => {
     setCurrentPage(0);
   }, [familiaSeleccionada, modeloSeleccionado]);
@@ -27,7 +36,6 @@ const TableBusquedaModeloUnitario = ({ familiaSeleccionada, modeloSeleccionado }
     return filtered;
   }, [modelosCompletos, familiaSeleccionada, modeloSeleccionado]);
 
-  // Usa la longitud de los elementos filtrados para calcular maxPage
   const totalItems = filteredElements.length;
   const maxPage = Math.ceil(totalItems / itemsPerPage);
 
@@ -75,6 +83,7 @@ const TableBusquedaModeloUnitario = ({ familiaSeleccionada, modeloSeleccionado }
                       <th className={TdStyle.ThStyle}>Unidades</th>
                       <th className={TdStyle.ThStyle}>m<sup>2</sup> Disponibles</th>
                       <th className={TdStyle.ThStyle}>Precio/m<sup>2</sup></th>
+                      <th className={TdStyle.ThStyle}>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -85,6 +94,18 @@ const TableBusquedaModeloUnitario = ({ familiaSeleccionada, modeloSeleccionado }
                         <td className={TdStyle.TdStyle2}>{unidades}</td>
                         <td className={TdStyle.TdStyle}>{m2Disponibles}</td>
                         <td className={TdStyle.TdStyle2}>{preciom2}</td>
+                        <td className={TdStyle.TdStyle2}>
+                        <a
+                          href="/#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onVerCantidadesClick(id, nombre);
+                          }}
+                          className={TdStyle.TdButton}
+                        >
+                          Ver en Bodegas
+                        </a>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -113,6 +134,7 @@ const TableBusquedaModeloUnitario = ({ familiaSeleccionada, modeloSeleccionado }
           </div>
         </div>
       </div>
+      <TableModalUnitarios isOpen={modalInfo.isOpen} onClose={handleClose} modeloSeleccionado={modalInfo.selectedId} modelo={modalInfo.nombre}/>
     </section>
   );
 };

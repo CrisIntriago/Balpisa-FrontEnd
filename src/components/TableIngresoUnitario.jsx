@@ -10,7 +10,7 @@ const TdStyle = {
   InputSmall: `w-full max-w-xs px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center`,
 };
 
-const TableIngresoUnitario = ({ modeloSeleccionado }) => {
+const TableIngresoUnitario = ({ modeloSeleccionado, bodegaSeleccionada }) => {
 
   const initialStateUnitario = {
     factura: "000-000-000000000",
@@ -85,7 +85,7 @@ const TableIngresoUnitario = ({ modeloSeleccionado }) => {
     }
 
     try {
-      await incrementarUnitario(modeloSeleccionado, cantidad);
+      await incrementarUnitario(modeloSeleccionado, bodegaSeleccionada, cantidad);
       const totalm2 = cantidad * modelo.m2PorUnidad
       const datosMovimiento = {
         tipo: "Ingreso",

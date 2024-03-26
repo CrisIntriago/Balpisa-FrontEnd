@@ -12,6 +12,7 @@ import TableIngresoUnitario from "../components/TableIngresoUnitario";
 import TableSalidaUnitario from "../components/TableSalidaUnitario";
 import usePlanchaDisponibleSimple from "../hooks/usePlanchaDisponibleSimple";
 import TableSalidaPlanchas from "../components/TableSalidaPlanchas";
+import TableCambioBodegaUnitario from "../components/TableCambioBodegaUnitario";
 
 const Movimientos = ({ opcion }) => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState("");
@@ -66,10 +67,7 @@ const Movimientos = ({ opcion }) => {
         modeloSeleccionado &&
         bodegaSeleccionada &&
         (opcion !== "Salida Inventario" ||
-          (opcion === "Salida Inventario" && planchaSeleccionada))) ||
-      (familiaSeleccionada &&
-        modeloSeleccionado &&
-        idsFamiliasUnitarias.includes(familiaSeleccionada))
+          (opcion === "Salida Inventario" && (planchaSeleccionada || idsFamiliasUnitarias.includes(familiaSeleccionada)))))
     ) {
       setTablaVisible(true);
     } else {
@@ -116,7 +114,7 @@ const Movimientos = ({ opcion }) => {
             value={familiaSeleccionada}
             onChange={handleFamiliaSelect}
             options={
-              opcion === "Cambio Bodega" || opcion === "Modificar Plancha" || opcion === "Salida Múltiple"
+              opcion === "Modificar Plancha" || opcion === "Salida Múltiple"
                 ? opcionesFamiliasNoUnitarias
                 : opcionesFamilias
             }
@@ -135,7 +133,7 @@ const Movimientos = ({ opcion }) => {
                 }
                 label={"Modelo"}
               />
-              {!idsFamiliasUnitarias.includes(familiaSeleccionada) && (
+              {
                 <>
                   <ComboBox
                     placeholder="Seleccione una bodega"
@@ -149,6 +147,7 @@ const Movimientos = ({ opcion }) => {
 
                   {bodegaSeleccionada &&
                     modeloSeleccionado &&
+                    !idsFamiliasUnitarias.includes(familiaSeleccionada) &&
                     (opcion === "Salida Inventario" ||
                       opcion === "Cambio Bodega" ||
                       opcion === "Salida Múltiple" ||
@@ -162,7 +161,7 @@ const Movimientos = ({ opcion }) => {
                       />
                     )}
                 </>
-              )}
+              }
             </>
           )}
         </div>
@@ -183,6 +182,7 @@ const Movimientos = ({ opcion }) => {
         {tablaVisible && opcion === "Ingreso Inventario" && idsFamiliasUnitarias.includes(familiaSeleccionada) && (
           <TableIngresoUnitario
             modeloSeleccionado={modeloSeleccionado}
+            bodegaSeleccionada={bodegaSeleccionada}
           />
         )}
         {tablaVisible && opcion === "Ingreso Inventario" && !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
@@ -194,6 +194,7 @@ const Movimientos = ({ opcion }) => {
         {tablaVisible && opcion === "Salida Inventario" && idsFamiliasUnitarias.includes(familiaSeleccionada) && (
           <TableSalidaUnitario
             modeloSeleccionado={modeloSeleccionado}
+            bodegaSeleccionada={bodegaSeleccionada}
           />
         )}
         {tablaVisible && opcion === "Salida Múltiple" && !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
@@ -206,9 +207,16 @@ const Movimientos = ({ opcion }) => {
             planchaSeleccionada={planchaSeleccionada}
           />
         )}
-        {tablaVisible && opcion === "Cambio Bodega" && (
+        {tablaVisible && opcion === "Cambio Bodega" && !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
           <TablePlanchaIndividual
             planchaSeleccionada={planchaSeleccionada}
+            bodegaSeleccionada={bodegaSeleccionada}
+            opcionesBodegas={opcionesBodegas}
+          />
+        )}
+        {tablaVisible && opcion === "Cambio Bodega" && idsFamiliasUnitarias.includes(familiaSeleccionada) && (
+          <TableCambioBodegaUnitario
+            modeloSeleccionado={modeloSeleccionado}
             bodegaSeleccionada={bodegaSeleccionada}
             opcionesBodegas={opcionesBodegas}
           />

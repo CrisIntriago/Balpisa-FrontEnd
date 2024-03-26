@@ -6,10 +6,10 @@ const useIncrementarModeloUnitario = () => {
     const [error, setError] = useState(null);
     const [respuesta, setRespuesta] = useState(null);
 
-    const incrementarUnitario = async (modeloId, cantidad) => {
+    const incrementarUnitario = async (modeloId, bodegaSeleccionada, cantidad) => {
         setCargando(true);
         try {
-            const data = await IncrementarModeloUnitario(modeloId, cantidad);
+            const data = await IncrementarModeloUnitario(modeloId, bodegaSeleccionada, cantidad);
             setRespuesta(data);
             setError(null);
         } catch (error) {
