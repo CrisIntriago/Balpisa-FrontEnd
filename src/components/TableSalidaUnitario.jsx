@@ -25,7 +25,6 @@ const TableSalidaUnitario = ({ modeloSeleccionado, bodegaSeleccionada }) => {
   const [totalm2, setTotalm2] = useState(0);
   const [isDesperfecto, setIsDesperfecto] = useState(false); 
   const { cantidades } = useCantidadPorBodegaIndividual(modeloSeleccionado, bodegaSeleccionada);
-  console.log(cantidades)
 
   const { decrementarUnitario } = useDecrementarModeloUnitario();
   const { enviarMovimientoUnitario } = useAgregarMovimientoUnitario();

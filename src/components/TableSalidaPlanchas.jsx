@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import usePlanchaFromId from "../hooks/usePlanchaFromId";
 import useGastarPlancha from "../hooks/useGastarPlancha";
 import useAgregarMovimiento from "../hooks/useAgregarMovimiento";
+import ConfirmationModal from "./ConfirmationModal";
 
 const styles = {
   tableHeader:
@@ -29,6 +30,23 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
     "D3B",
   ];
   const [isSubmitting, setIsSubmitting] = useState(false); 
+
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+
+  const handleOpenConfirmation = () => {
+    setConfirmationModalOpen(true);
+  };
+
+  const handleCloseConfirmation = () => {
+    setConfirmationModalOpen(false);
+  };
+
+  const handleConfirm = async () => {
+    setConfirmationModalOpen(false);
+    await handleHacerSalidas();
+    setAddedData([]);
+      setEditableData([]);
+  };
 
   const { enviarMovimiento } = useAgregarMovimiento();
 
@@ -119,8 +137,6 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
         }
       }
       alert('El movimiento ha sido guardado con éxito.');
-      setAddedData([]);
-      setEditableData([]);
       setIsSubmitting(false); 
     };
 
@@ -275,13 +291,20 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
         <div className="flex justify-center mt-4">
           <button
             className={styles.button}
-            onClick={() => handleHacerSalidas()}
+            onClick={() => handleOpenConfirmation()}
             disabled={isSubmitting} 
           >
             Hacer Salidas
           </button>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={isConfirmationModalOpen}
+        onClose={handleCloseConfirmation}
+        onConfirm={handleConfirm}
+        header={"Confirmación de salida"}
+        message={"¿Estás seguro de que deseas guardar la salida?"}
+      />
     </section>
   );
 };
