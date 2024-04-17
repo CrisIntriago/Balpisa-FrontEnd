@@ -13,6 +13,7 @@ const TdStyle = {
 };
 
 const TableModificarPlancha = ({ planchaSeleccionada }) => {
+  const [planchaTerminada, setPlanchaTerminada] = useState(false);
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [values, setValues] = useState({
     COD: "",
@@ -151,6 +152,17 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
         <p className="font-bold text-xl mt-10 text-center md:w-1/2 lg:w-1/2 mx-auto pb-10">
           Modificar los datos de la plancha {plancha.nombre}
         </p>
+        <div className="flex justify-between items-center mb-4">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={planchaTerminada}
+                  onChange={(e) => setPlanchaTerminada(e.target.checked)}
+                  className="mr-2"
+                />
+                Plancha terminada
+              </label>
+            </div>
         <table className="w-full table-fixed">
           <thead className="text-center bg-primary">
             <tr>

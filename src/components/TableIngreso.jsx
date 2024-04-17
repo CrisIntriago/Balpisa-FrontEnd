@@ -133,6 +133,8 @@ const TableIngreso = ({ modeloSeleccionado, bodegaSeleccionada }) => {
       alert("Hubo un error al guardar la plancha o el movimiento.");
       console.error(error);
     }
+    alert('El movimiento ha sido guardado con éxito.');
+
   };
 
   return (

@@ -112,6 +112,8 @@ const TableSalidax = ({ planchaSeleccionada }) => {
       alert("Hubo un error al guardar el movimiento.");
       console.error(error);
     }
+    alert('El movimiento ha sido guardado con éxito.');
+
 
     await gastarPlanchaPorId(planchaSeleccionada);
   };

@@ -77,6 +77,7 @@ const TablePlanchaIndividual = ({
       alert("Hubo un error al hacer el movimiento.");
       console.error(error);
     }
+    alert('El movimiento ha sido guardado con éxito.');
 
     try {
       await hacerCambioBodega(planchaSeleccionada, bodegaDestinoSeleccionada);

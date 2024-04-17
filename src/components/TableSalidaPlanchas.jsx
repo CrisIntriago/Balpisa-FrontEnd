@@ -28,6 +28,7 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
     "D3A",
     "D3B",
   ];
+  const [isSubmitting, setIsSubmitting] = useState(false); 
 
   const { enviarMovimiento } = useAgregarMovimiento();
 
@@ -49,7 +50,7 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
     const newData = [...editableData];
 
     if (key === "factura") {
-      let cursorPosition = document.activeElement.selectionStart; // Captura la posición actual del cursor antes de cambiar el valor.
+      let cursorPosition = document.activeElement.selectionStart;
       let digits = value.replace(/\D/g, "");
       if (digits.length > 15) digits = digits.substring(0, 15);
       value = `${digits.substring(0, 3)}-${digits.substring(
@@ -94,36 +95,34 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
       +despunte3A * +despunte3B
     ).toFixed(2);
 
-  const handleHacerSalidas = async () => {
-    for (const { id, totalM2, precioTotal, factura } of addedData) {
-      if (!id || !factura || !precioTotal || !totalM2) {
-        alert("Por favor, complete todos los campos antes de guardar.");
-        return;
+    const handleHacerSalidas = async () => {
+      setIsSubmitting(true); 
+      for (const { id, totalM2, precioTotal, factura } of addedData) {
+        if (!id || !factura || !precioTotal || !totalM2) {
+          alert("Por favor, complete todos los campos antes de guardar.");
+          setIsSubmitting(false); 
+          return;
+        }
+  
+        try {
+          await enviarMovimiento({
+            valorRegistro: totalM2,
+            planchaId: id,
+            nFactura: factura,
+            precioVenta: precioTotal,
+            tipo: "Salida",
+          });
+          await gastarPlanchaPorId(id);
+        } catch (error) {
+          alert("Hubo un error en el proceso");
+          console.error(error);
+        }
       }
-
-      const datosMovimiento = {
-        valorRegistro: totalM2,
-        planchaId: id,
-        nFactura: factura,
-        precioVenta: precioTotal,
-        tipo: "Salida",
-      };
-
-      try {
-        await enviarMovimiento(datosMovimiento);
-      } catch (error) {
-        alert("Hubo un error al guardar el movimiento.");
-        console.error(error);
-      }
-
-      try {
-        await gastarPlanchaPorId(id);
-      } catch (error) {
-        alert("Hubo un error al hacer la salida");
-        console.error(error);
-      }
-    }
-  };
+      alert('El movimiento ha sido guardado con éxito.');
+      setAddedData([]);
+      setEditableData([]);
+      setIsSubmitting(false); 
+    };
 
   const handleCalculate = (index) => {
     const newData = [...editableData];
@@ -277,6 +276,7 @@ const TableSalidaPlanchas = ({ planchaSeleccionada }) => {
           <button
             className={styles.button}
             onClick={() => handleHacerSalidas()}
+            disabled={isSubmitting} 
           >
             Hacer Salidas
           </button>

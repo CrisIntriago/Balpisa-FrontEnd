@@ -108,7 +108,7 @@ const Movimientos = ({ opcion }) => {
         <p className="font-bold text-4xl mt-10 text-center md:w-1/2 lg:w-1/2 mx-auto pb-10 ">
           {opcion}
         </p>
-        <div className="flex justify-between mb-10 mx-4 md:mx-auto w-full md:w-1/2 lg:w-1/2">
+        <div className="flex justify-center mb-10 mx-4 md:mx-auto w-full md:w-1/2 lg:w-1/2">
           <ComboBox
             placeholder="Seleccione una familia"
             value={familiaSeleccionada}

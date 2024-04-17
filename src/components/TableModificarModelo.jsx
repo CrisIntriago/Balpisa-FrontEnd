@@ -84,6 +84,8 @@ const TableModificarModelo = ({ modeloSeleccionado }) => {
       alert("Hubo un error al modificar el modelo.");
       console.error(error);
     }
+    alert('El movimiento ha sido guardado con éxito.');
+
   };
 
   return (
