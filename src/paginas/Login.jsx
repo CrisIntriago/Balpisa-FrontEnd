@@ -74,7 +74,7 @@ const Login = () => {
                     <input
                         type="submit"
                         value="Iniciar Sesión"
-                        className="w-full cursor-pointer rounded-md border border-primary bg-indigo-600 px-5 py-3 text-base font-medium text-white transition hover:bg-opacity-90"
+                        className="w-full cursor-pointer rounded-md border border-primary bg-primary px-5 py-3 text-base font-medium text-white transition hover:bg-opacity-90"
                     />
                 </div>
                 <div className="flex mb-10 justify-center">

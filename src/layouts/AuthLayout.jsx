@@ -6,7 +6,7 @@ const AuthLayout = () => {
     <section className="Login flex h-screen w-full flex-wrap mx-0 px-0">
       <section className='Imagen hidden w-full h-screen md:flex md:w-1/2 md: lg:flex lg:w-3/5 overflow-hidden'>
         <div className='overflow-hidden w-full'>
-          <img src="https://res.cloudinary.com/dc6dbkutq/image/upload/v1713448617/IMAGEN_BUDA_rtdmmh.jpg" className='min-w-full min-h-full object-cover'>
+          <img src="https://res.cloudinary.com/dc6dbkutq/image/upload/v1713459692/carrara_d2moho.jpg" className='min-w-full min-h-full object-cover'>
 
           </img>
 
