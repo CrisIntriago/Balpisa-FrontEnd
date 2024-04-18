@@ -46,7 +46,7 @@ const Login = () => {
 
     return (
         <div className='shadow-2xl flex flex-col overflow-hidden rounded-lg bg-white justify-center h-full'>
-            <div className="mb-6 text-center md:mb-12">
+            <div className="mb-6 text-center md:mb-10">
                 <a
                     href="/#"
                     className="mx-auto inline-block w-[300px] md:w-[300px] lg:w-[350px]"
@@ -63,6 +63,7 @@ const Login = () => {
                     name="user"
                     placeholder="Usuario"
                     onChange={(e) => setUsername(e.target.value)}
+                    className="text-sm"
                 />
                 <InputBox
                     type="password"
@@ -70,15 +71,15 @@ const Login = () => {
                     placeholder="Contraseña"
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <div className="mb-10">
+                <div className="mb-6">
                     <input
                         type="submit"
                         value="Iniciar Sesión"
-                        className="w-full cursor-pointer rounded-md border border-primary bg-primary px-5 py-3 text-base font-medium text-white transition hover:bg-opacity-90"
+                        className="w-full cursor-pointer rounded-md border border-primary bg-primary px-5 py-3 text-sm font-medium text-white transition hover:bg-opacity-90"
                     />
                 </div>
-                <div className="flex mb-10 justify-center">
-                    <p className='text-gray-500'>Copyright © Balpisa 2024.</p>
+                <div className="flex text-xs mb-10 justify-center">
+                    <p className='text-gray-400'>Copyright © Balpisa 2024.</p>
                 </div>
             </form>
         </div>
@@ -96,7 +97,7 @@ const InputBox = ({ type, placeholder, name, onChange }) => {
                 placeholder={placeholder}
                 name={name}
                 onChange={onChange} // Añadido el evento onChange
-                className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-base text-black outline-none focus:border-primary focus-visible:shadow-none"
+                className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-sm text-black outline-none hover:border-black focus:border-primary focus-visible:shadow-none"
             />
         </div>
     );
