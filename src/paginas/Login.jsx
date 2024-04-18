@@ -45,7 +45,7 @@ const Login = () => {
     };
 
     return (
-        <div className='flex flex-col overflow-hidden rounded-lg bg-white justify-center h-full'>
+        <div className='shadow-2xl flex flex-col overflow-hidden rounded-lg bg-white justify-center h-full'>
             <div className="mb-6 text-center md:mb-12">
                 <a
                     href="/#"

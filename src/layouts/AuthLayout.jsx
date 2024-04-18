@@ -12,7 +12,7 @@ const AuthLayout = () => {
 
         </div>
       </section>
-      <section className='Login w-full h-screen md:w-2/3 lg:w-1/2  items-center justify-center'>
+      <section className='shadow-2xl Login w-full h-screen md:w-2/3 lg:w-1/2  items-center justify-center'>
         <Outlet />
 
       </section>
