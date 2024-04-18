@@ -1,9 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Loading from "./Loading";
 import useMovimientos from "../hooks/useMovimientos";
 import useFilasFromMovimientos from "../hooks/useFilasFromMovimientos";
 import { useReactToPrint } from 'react-to-print';
 import TablaParaImprimir from "./TablaParaImprimir";
+import useEliminarMovimiento from "../hooks/useEliminarMovimiento";
+import ConfirmationModal from "./ConfirmationModal";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -14,23 +16,44 @@ const TdStyle = {
 
 const TableReportes = ({ fechaInicio, fechaFin }) => {
   const [showPrintComponent, setShowPrintComponent] = useState(false); 
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 5;
 
     const componentRef = useRef();
     const handlePrint = useReactToPrint({
       content: () => componentRef.current,
-      onAfterPrint: () => setShowPrintComponent(false), // Opcional: Ocultar después de imprimir
+      onAfterPrint: () => setShowPrintComponent(false), 
     });
 
+    const { movimientos, setMovimientos } = useMovimientos(fechaInicio, fechaFin, currentPage * itemsPerPage); 
+
+  const { eliminarMov } = useEliminarMovimiento();
+  
+
+  const handleOpenConfirmation = (id) => {
+    setSelectedId(id);
+    setConfirmationModalOpen(true);
+  };
+
+  const handleCloseConfirmation = () => {
+    setConfirmationModalOpen(false);
+  };
+
+  const handleConfirm = async () => {
+    await eliminarMov(selectedId);
+    setMovimientos(movs => movs.filter(mov => mov.id !== selectedId)); 
+    handleCloseConfirmation();
+  };
     const handlePrintButtonClick = () => {
-      setShowPrintComponent(true); // Cambia el estado para mostrar el componente
-      handlePrint(); // Y luego imprime
+      setShowPrintComponent(true); 
+      handlePrint();
     };
+
+    const [selectedId, setSelectedId] = useState(null); 
 
     const { totalFilas } = useFilasFromMovimientos(fechaInicio, fechaFin);
 
-    const { movimientos } = useMovimientos(fechaInicio, fechaFin, currentPage * itemsPerPage);
     const totalPages = Math.ceil(totalFilas / itemsPerPage);
   
     const nextPage = () => {
@@ -84,16 +107,16 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
                           <td className={TdStyle.TdStyle2}>{mov.valorRegistro}</td>
                           <td className={TdStyle.TdStyle}>{mov.nFactura}</td>
                           <td className={TdStyle.TdStyle2}>
-                        <a
-                          href="/#"
-                          //onClick={(e) => {
-                            //e.preventDefault();
-                            //onVerHistorialClick(id);
-                          //}}
-                          className={TdStyle.TdButton}
-                        >
-                          Eliminar
-                        </a>
+                          <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handleOpenConfirmation(mov.id); 
+              }}
+              className={TdStyle.TdButton}
+            >
+              Eliminar
+            </a>
                         </td>
                         </tr>
                       ))}
@@ -122,6 +145,13 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
           <TablaParaImprimir ref={componentRef} fechaInicio={fechaInicio} fechaFin={fechaFin} />
         </div>
       }
+      <ConfirmationModal
+        isOpen={isConfirmationModalOpen}
+        onClose={handleCloseConfirmation}
+        onConfirm={handleConfirm}
+        header={"Confirmación de eliminación"}
+        message={"¿Estás seguro de que deseas eliminar el movimiento? Los cambios hechos en la plancha no se deshacerán, solo se borra el registro"}
+      />
       </section>
     );
   };

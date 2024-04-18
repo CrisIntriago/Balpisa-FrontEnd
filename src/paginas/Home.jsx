@@ -7,6 +7,7 @@ import useBodegas from "../hooks/useBodegas";
 import TablePlanchas from "../components/TablePlanchas";
 import TableBusquedaModeloUnitario from "../components/TableBusquedaModeloUnitario";
 import useModelosUnitariosPorFamilia from "../hooks/useModelosUnitariosFromFamilia";
+import TableMovimientosPorModelo from "../components/TableMovimientosPorModelo";
 
 const Home = () => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState("");
@@ -173,14 +174,22 @@ const Home = () => {
               />
             )}
           {tablaVisible &&
-            searchMode === "modelo" &&
-            !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
-              <Table
-  familiaSeleccionada={familiaSeleccionada}
-  modeloSeleccionado={modeloSeleccionado}
-  onVerPlanchasClick={mostrarPlanchasConSeleccion}
-/>
-            )}
+  searchMode === "modelo" &&
+  !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
+    <>
+      <Table
+        familiaSeleccionada={familiaSeleccionada}
+        modeloSeleccionado={modeloSeleccionado}
+        onVerPlanchasClick={mostrarPlanchasConSeleccion}
+      />
+      {modeloSeleccionado !== "" && (
+        <TableMovimientosPorModelo
+          modeloSeleccionado={modeloSeleccionado}
+        />
+      )}
+    </>
+  )
+}
           {tablaVisible &&
             searchMode === "plancha" &&
             !idsFamiliasUnitarias.includes(familiaSeleccionada) && (

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import obtenerMovimientos from '../config/obtenerMovimientos';
-const useMovimientos = (fechaInicio, fechaFin, offset) => {
+import obtenerMovimientosFromModelo from '../config/obtenerMovimientosFromModelo';
+
+const useMovimientosFromModelo = (modeloId, offset) => {
     const [movimientos, setMovimientos] = useState([]);
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState(null);
@@ -9,7 +10,7 @@ const useMovimientos = (fechaInicio, fechaFin, offset) => {
         const cargarMovimientos = async () => {
             setCargando(true);
             try {
-                const data = await obtenerMovimientos(fechaInicio, fechaFin, offset);
+                const data = await obtenerMovimientosFromModelo(modeloId, offset);
                 setMovimientos(data.data);
                 setError(null);
             } catch (error) {
@@ -20,9 +21,9 @@ const useMovimientos = (fechaInicio, fechaFin, offset) => {
         };
 
         cargarMovimientos();
-    }, [fechaInicio, fechaFin, offset]);
+    }, [modeloId, offset]);
 
-    return { movimientos, setMovimientos };
+    return { movimientos };
 }
 
-export default useMovimientos;
+export default useMovimientosFromModelo;
