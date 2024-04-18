@@ -23,7 +23,7 @@ const useMovimientosUnitarios = (fechaInicio, fechaFin, offset) => {
         cargarMovimientos();
     }, [fechaInicio,fechaFin, offset]); 
 
-    return { movimientos };
+    return { movimientos, setMovimientos };
 }
 
 export default useMovimientosUnitarios;

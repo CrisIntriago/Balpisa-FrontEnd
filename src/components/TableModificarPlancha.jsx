@@ -3,6 +3,7 @@ import ConfirmationModal from "./ConfirmationModal";
 import useActualizarPlancha from "../hooks/useActualizarPlancha";
 import useAgregarMovimiento from "../hooks/useAgregarMovimiento";
 import usePlanchaFromId from "../hooks/usePlanchaFromId";
+import useGastarPlancha from "../hooks/useGastarPlancha";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -46,10 +47,11 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
     handleSave();
   };
 
+  const {gastarPlanchaPorId} = useGastarPlancha()
+
   useEffect(() => {
     if (plancha && plancha.alto && plancha.ancho) {
       const { nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B } = plancha;
-      console.log(plancha)
       setValues({
         ...values,  
         COD: nombre,
@@ -62,6 +64,12 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
         D3A: despunte3A.toString(),
         D3B: despunte3B.toString(),
       });
+    }
+  }, [plancha]);
+
+  useEffect(() => {
+    if (plancha) {
+      setPlanchaTerminada(plancha.estado); 
     }
   }, [plancha]);
 
@@ -136,6 +144,7 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
       despunte2B: D2B,
       despunte3A: D3A,
       despunte3B: D3B,
+      estado: planchaTerminada
     };
 
     try {
@@ -160,7 +169,7 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
                   onChange={(e) => setPlanchaTerminada(e.target.checked)}
                   className="mr-2"
                 />
-                Plancha terminada
+                Plancha disponible
               </label>
             </div>
         <table className="w-full table-fixed">
