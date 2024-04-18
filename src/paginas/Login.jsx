@@ -46,10 +46,10 @@ const Login = () => {
 
     return (
         <div className='flex flex-col overflow-hidden rounded-lg bg-white justify-center h-full'>
-            <div className="mb-8 text-center md:mb-12">
+            <div className="mb-6 text-center md:mb-12">
                 <a
                     href="/#"
-                    className="mx-auto inline-block w-[250px] md:w-[300px] lg:w-[350px]"
+                    className="mx-auto inline-block w-[300px] md:w-[300px] lg:w-[350px]"
                 >
                     <img
                         src="/logo.png"
@@ -57,7 +57,7 @@ const Login = () => {
                     />
                 </a>
             </div>
-            <form onSubmit={handleSubmit} className=' mx-[10px] md:mx-28 lg:mx-28'>
+            <form onSubmit={handleSubmit} className='mx-[10px] md:mx-14 lg:mx-14'>
                 <InputBox
                     type="text"
                     name="user"
