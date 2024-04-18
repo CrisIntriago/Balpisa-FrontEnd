@@ -42,12 +42,15 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
     setConfirmationModalOpen(false);
   };
 
+  const {gastarPlanchaPorId} = useGastarPlancha()
+
   const handleConfirm = async () => {
     setConfirmationModalOpen(false);
     handleSave();
+    
   };
 
-  const {gastarPlanchaPorId} = useGastarPlancha()
+
 
   useEffect(() => {
     if (plancha && plancha.alto && plancha.ancho) {
@@ -148,7 +151,11 @@ const TableModificarPlancha = ({ planchaSeleccionada }) => {
     };
 
     try {
-      await enviarPlanchaActualizada(planchaSeleccionada, datosPlancha);
+      if(planchaTerminada) {
+        await enviarPlanchaActualizada(planchaSeleccionada, datosPlancha);
+      } else {
+        await gastarPlanchaPorId(planchaSeleccionada)
+      }
     } catch (error) {
       alert("Hubo un error al guardar la plancha.");
       console.error(error);
