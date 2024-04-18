@@ -45,11 +45,11 @@ const Login = () => {
     };
 
     return (
-        <>
-            <div className="mb-10 text-center md:mb-16">
+        <div className='flex flex-col overflow-hidden rounded-lg bg-white justify-center h-full'>
+            <div className="mb-8 text-center md:mb-12">
                 <a
                     href="/#"
-                    className="mx-auto inline-block max-w-[160px]"
+                    className="mx-auto inline-block w-[250px] md:w-[300px] lg:w-[350px]"
                 >
                     <img
                         src="/logo.png"
@@ -57,7 +57,7 @@ const Login = () => {
                     />
                 </a>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className=' mx-auto md:mx-28 lg:mx-28'>
                 <InputBox
                     type="text"
                     name="user"
@@ -77,8 +77,11 @@ const Login = () => {
                         className="w-full cursor-pointer rounded-md border border-primary bg-indigo-600 px-5 py-3 text-base font-medium text-white transition hover:bg-opacity-90"
                     />
                 </div>
+                <div className="flex mb-10 justify-center">
+                    <p className='text-gray-500'>Copyright © Balpisa 2024.</p>
+                </div>
             </form>
-        </>
+        </div>
     );
 };
 
