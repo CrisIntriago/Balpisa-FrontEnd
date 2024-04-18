@@ -57,7 +57,7 @@ const Login = () => {
                     />
                 </a>
             </div>
-            <form onSubmit={handleSubmit} className=' mx-auto md:mx-28 lg:mx-28'>
+            <form onSubmit={handleSubmit} className=' mx-[10px] md:mx-28 lg:mx-28'>
                 <InputBox
                     type="text"
                     name="user"
