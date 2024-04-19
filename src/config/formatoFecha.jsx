@@ -1,6 +1,5 @@
-import config from "@/config";
 
-const formatoFecha = async (fechaSinFormato) => {
+const formatoFecha = (fechaSinFormato) => {
 
     const dateFormatted = new Date(fechaSinFormato);
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
