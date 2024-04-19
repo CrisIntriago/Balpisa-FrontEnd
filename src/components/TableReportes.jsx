@@ -6,6 +6,7 @@ import { useReactToPrint } from 'react-to-print';
 import TablaParaImprimir from "./TablaParaImprimir";
 import useEliminarMovimiento from "../hooks/useEliminarMovimiento";
 import ConfirmationModal from "./ConfirmationModal";
+import TableModalModificarMovimiento from "./TableModalModificarMovimiento";
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -15,16 +16,32 @@ const TdStyle = {
 };
 
 const TableReportes = ({ fechaInicio, fechaFin }) => {
-  const [showPrintComponent, setShowPrintComponent] = useState(false); 
-  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
-    const [currentPage, setCurrentPage] = useState(0);
-    const itemsPerPage = 5;
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 5;
 
+    const [showPrintComponent, setShowPrintComponent] = useState(false);
+    const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+    const [isTableModalOpen, setTableModalOpen] = useState(false); 
+    const [selectedId, setSelectedId] = useState(null);
+    const [selectedFactura, setSelectedFactura] = useState(null); 
+  
     const componentRef = useRef();
     const handlePrint = useReactToPrint({
       content: () => componentRef.current,
-      onAfterPrint: () => setShowPrintComponent(false), 
+      onAfterPrint: () => setShowPrintComponent(false),
     });
+  
+  
+    const handleOpenEditModal = (id, factura) => {
+      setSelectedId(id);
+      setSelectedFactura(factura);
+      setTableModalOpen(true); 
+    };
+  
+    const handleCloseEditModal = () => {
+      setTableModalOpen(false);
+    };
+  
 
     const { movimientos, setMovimientos } = useMovimientos(fechaInicio, fechaFin, currentPage * itemsPerPage); 
 
@@ -50,7 +67,16 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
       handlePrint();
     };
 
-    const [selectedId, setSelectedId] = useState(null); 
+    const handleUpdateMovimiento = (updatedMovimiento) => {
+      setMovimientos((prevMovimientos) => {
+        return prevMovimientos.map((mov) => {
+          if (mov.id === updatedMovimiento.id) {
+            return { ...mov, ...updatedMovimiento };
+          }
+          return mov; 
+        });
+      });
+    };
 
     const { totalFilas } = useFilasFromMovimientos(fechaInicio, fechaFin);
 
@@ -80,7 +106,7 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
           <div className="flex flex-wrap -mx-4">
             <div className="w-full">
               <div className="max-w-full overflow-x-auto">
-                <div className="table-container" style={{ maxHeight: "560px", minHeight: "560px", overflowY: "auto" }}>
+                <div className="table-container" style={{ maxHeight: "700px", minHeight: "700px", overflowY: "auto" }}>
                   <table className="w-full table-fixed">
                     <thead className="text-center bg-primary">
                       <tr>
@@ -104,9 +130,20 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
                           <td className={TdStyle.TdStyle}>{mov.nombreModelo}</td>
                           <td className={TdStyle.TdStyle2}>{mov.nombrePlancha}</td>
                           <td className={TdStyle.TdStyle}>{mov.CodigoContable}</td>
-                          <td className={TdStyle.TdStyle2}>{mov.valorRegistro}</td>
+                          <td className={TdStyle.TdStyle2}>{Number(mov.valorRegistro).toFixed(2)}</td>
                           <td className={TdStyle.TdStyle}>{mov.nFactura}</td>
                           <td className={TdStyle.TdStyle2}>
+                          <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handleOpenEditModal(mov.id, mov.nFactura)
+              }}
+              className={`${TdStyle.TdButton} mb-2`} 
+            >
+              Editar
+            </a>
+                          
                           <a
               href="#"
               onClick={(e) => {
@@ -145,6 +182,15 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
           <TablaParaImprimir ref={componentRef} fechaInicio={fechaInicio} fechaFin={fechaFin} />
         </div>
       }
+       {isTableModalOpen && (
+          <TableModalModificarMovimiento
+          isOpen={isTableModalOpen}
+          onClose={handleCloseEditModal}
+          movimientoId={selectedId}
+          numeroFactura={selectedFactura}
+          onUpdate={handleUpdateMovimiento} 
+        />
+        )}
       <ConfirmationModal
         isOpen={isConfirmationModalOpen}
         onClose={handleCloseConfirmation}

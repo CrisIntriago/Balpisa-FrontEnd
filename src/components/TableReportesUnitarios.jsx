@@ -4,6 +4,8 @@ import useMovimientosUnitarios from "../hooks/useMovimientosUnitarios";
 import useFilasFromMovimientosUnitarios from "../hooks/useFilasFromMovimientosUnitarios";
 import useEliminarMovimientoUnitario from "../hooks/useEliminarMovimientoUnitario";
 import ConfirmationModal from "./ConfirmationModal";
+import TableModalModificarMovimientoUnitario from "./TableModalModificarMovimientoUnitario";
+
 
 
 const TdStyle = {
@@ -12,17 +14,18 @@ const TdStyle = {
   TdStyle2: `text-dark border-b border-[#E8E8E8] bg-white py-5 px-2 text-center text-base font-medium`,
   TdButton: `inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary hover:text-white font-medium`,
 };
-
 const TableReportes = ({ fechaInicio, fechaFin }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); 
   const [selectedId, setSelectedId] = useState(null);
+  const [selectedMovimiento, setSelectedMovimiento] = useState(null); 
   const itemsPerPage = 5;
 
   const { totalFilas } = useFilasFromMovimientosUnitarios(fechaInicio, fechaFin);
   const { movimientos, setMovimientos } = useMovimientosUnitarios(fechaInicio, fechaFin, currentPage * itemsPerPage);
   const { eliminarMov } = useEliminarMovimientoUnitario();
-  
+
   const totalPages = Math.ceil(totalFilas / itemsPerPage);
 
   const nextPage = () => {
@@ -37,6 +40,28 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
         return (prevCurrentPage - 1) % totalPages;
       }
     });
+  };
+
+  const handleOpenEditModal = (id, movimiento) => {
+    setSelectedId(id);
+    setSelectedMovimiento(movimiento);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const handleUpdateMovimientoUnitario = (updatedMovimiento) => {
+    setMovimientos((prevMovimientos) => {
+      return prevMovimientos.map((mov) => {
+        if (mov.id === updatedMovimiento.id) {
+          return { ...mov, ...updatedMovimiento };
+        }
+        return mov;
+      });
+    });
+    handleCloseEditModal();
   };
 
   const handleOpenConfirmation = (id) => {
@@ -84,15 +109,26 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
                         <td className={TdStyle.TdStyle}>{mov.nFactura}</td>
                         <td className={TdStyle.TdStyle2}>
                           <a
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleOpenConfirmation(mov.id);
-                            }}
-                            className={TdStyle.TdButton}
-                          >
-                            Eliminar
-                          </a>
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handleOpenEditModal(mov.id, mov.nFactura)
+              }}
+              className={`${TdStyle.TdButton} mb-2`} 
+            >
+              Editar
+            </a>
+                          
+                          <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handleOpenConfirmation(mov.id); 
+              }}
+              className={TdStyle.TdButton}
+            >
+              Eliminar
+            </a>
                         </td>
                       </tr>
                     ))}
@@ -116,6 +152,15 @@ const TableReportes = ({ fechaInicio, fechaFin }) => {
           </div>
         </div>
       </div>
+      {isEditModalOpen && (
+          <TableModalModificarMovimientoUnitario
+            isOpen={isEditModalOpen}
+            onClose={handleCloseEditModal}
+            movimientoId={selectedId}
+            numeroFactura={selectedMovimiento}
+            onUpdate={handleUpdateMovimientoUnitario}
+          />
+        )}
       <ConfirmationModal
         isOpen={isConfirmationModalOpen}
         onClose={handleCloseConfirmation}

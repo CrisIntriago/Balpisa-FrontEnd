@@ -8,6 +8,7 @@ import TablePlanchas from "../components/TablePlanchas";
 import TableBusquedaModeloUnitario from "../components/TableBusquedaModeloUnitario";
 import useModelosUnitariosPorFamilia from "../hooks/useModelosUnitariosFromFamilia";
 import TableMovimientosPorModelo from "../components/TableMovimientosPorModelo";
+import TableMovimientosPorModeloUnitario from "../components/TableMovimientosPorModeloUnitario";
 
 const Home = () => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState("");
@@ -166,12 +167,20 @@ const Home = () => {
             </button>
           )}
           {tablaVisible &&
-            searchMode === "modelo" &&
+            searchMode === "modelo" && 
+           
             idsFamiliasUnitarias.includes(familiaSeleccionada) && (
+              <>
               <TableBusquedaModeloUnitario
                 familiaSeleccionada={familiaSeleccionada}
                 modeloSeleccionado={modeloSeleccionado}
               />
+              {modeloSeleccionado !== "" && (
+                <TableMovimientosPorModeloUnitario
+                  modeloSeleccionado={modeloSeleccionado}
+                />
+              )}
+              </>
             )}
           {tablaVisible &&
   searchMode === "modelo" &&
