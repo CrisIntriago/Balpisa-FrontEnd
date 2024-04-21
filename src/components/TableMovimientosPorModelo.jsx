@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import useMovimientosFromModelo from "../hooks/useMovimientosFromModelo";
 import useFilasFromMovPorModelo from "../hooks/useFilasFromMovPorModelo";
+import formatoFecha from "../config/formatoFecha";
+
 
 const TdStyle = {
   ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-bold text-white lg:py-7 lg:px-4`,
@@ -57,7 +59,7 @@ const TableMovimientosPorModelo = ({ modeloSeleccionado }) => {
                     <tbody>
                       {movimientos.map((mov, index) => (
                         <tr key={index}>
-                          <td className={TdStyle.TdStyle2}>{mov.fecha}</td>
+                          <td className={TdStyle.TdStyle2}>{formatoFecha(mov.fecha)}</td>
                           <td className={TdStyle.TdStyle}>{mov.tipo}</td>
                           <td className={TdStyle.TdStyle2}>{mov.nombreBodega}</td>
                           <td className={TdStyle.TdStyle}>{mov.nombrePlancha}</td>
