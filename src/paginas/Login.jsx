@@ -8,12 +8,18 @@ import useAuth from "../hooks/useAuth";
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [show, setShow] = useState('')
+
     const navigate = useNavigate();
 
     const { auth, setAuth, cargando } = useAuth();
 
     console.log(auth);
     console.log(cargando);
+
+    const handleShow = () => {
+        setShow(!show);
+    }
 
 
     const handleSubmit = async (e) => {
@@ -75,12 +81,35 @@ const Login = () => {
                     onChange={(e) => setUsername(e.target.value)}
                     className="text-sm"
                 />
-                <InputBox
-                    type="password"
-                    name="password"
-                    placeholder="Contraseña"
-                    onChange={(e) => setPassword(e.target.value)}
-                />
+
+
+
+
+
+                <div className="mb-6">
+                    <div style={{ position: "relative" }}>
+                        <input
+                            type={show ? "text" : "password"}
+                            placeholder="Contraseña"
+                            name="password"
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-sm text-black outline-none hover:border-black focus:border-primary focus-visible:shadow-none"
+                        />
+                        <label
+                            onClick={handleShow}
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm text-gray-500"
+
+                        >
+                            {show ? "Ocultar" : "Mostrar"}
+                        </label>
+                    </div>
+                </div>
+
+
+
+
+
+
                 <div className="mb-6">
                     <input
                         type="submit"
@@ -109,6 +138,20 @@ const InputBox = ({ type, placeholder, name, onChange }) => {
                 onChange={onChange} // Añadido el evento onChange
                 className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-sm text-black outline-none hover:border-black focus:border-primary focus-visible:shadow-none"
             />
+        </div>
+    );
+};
+const PasswordBox = ({ placeholder, name, onChange }) => {
+    return (
+        <div className="mb-6">
+            <input
+                type={show ? "text" : "password"}
+                placeholder="Contraseña"
+                name="password"
+                onChange={(e) => setPassword(e.target.value)} // Añadido el evento onChange
+                className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-sm text-black outline-none hover:border-black focus:border-primary focus-visible:shadow-none"
+            />
+            <label onClick={handleShow}></label>
         </div>
     );
 };
