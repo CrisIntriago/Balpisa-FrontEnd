@@ -17,6 +17,7 @@
     "react-router-dom": "6.22.0",
     "react-select": "^5.8.0",
     "react-to-print": "^2.15.1",
+    "sweetalert2": "^11.6.13",
     "tailgrids": "^2.1.0"
   },
   "devDependencies": {

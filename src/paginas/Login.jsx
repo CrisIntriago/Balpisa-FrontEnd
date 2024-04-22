@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clienteAxios from '../config/clienteAxios';
+import Swal from 'sweetalert2'
 
 import useAuth from "../hooks/useAuth";
 
@@ -9,7 +10,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const {auth, setAuth, cargando} = useAuth();
+    const { auth, setAuth, cargando } = useAuth();
 
     console.log(auth);
     console.log(cargando);
@@ -34,11 +35,20 @@ const Login = () => {
             } else {
                 // La solicitud no fue exitosa (código de respuesta fuera del rango 200-299)
                 // Manejar el error aquí
-                console.error('Error:', response.statusText);
+                Swal.fire({
+                    text: 'La contraseña no es correcta. Compruébala.',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                })
             }
         } catch (error) {
             // Manejar errores de red u otros errores relacionados con la solicitud
             console.error('Error:', error.message);
+            Swal.fire({
+                text: 'Contraseña o nombre de usuario no es correcto.',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            })
         }
 
 
