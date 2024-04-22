@@ -14,8 +14,6 @@ const Login = () => {
 
     const { auth, setAuth, cargando } = useAuth();
 
-    console.log(auth);
-    console.log(cargando);
 
     const handleShow = () => {
         setShow(!show);
