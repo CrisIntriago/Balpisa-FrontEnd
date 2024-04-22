@@ -49,7 +49,7 @@ const Login = () => {
             // Manejar errores de red u otros errores relacionados con la solicitud
             console.error('Error:', error.message);
             Swal.fire({
-                text: 'La contraseña o el nombre de usuario no son correctos.',
+                text: 'The username or password is incorrect.',
                 icon: 'error',
                 confirmButtonText: 'Ok'
             })
@@ -75,7 +75,7 @@ const Login = () => {
                 <InputBox
                     type="text"
                     name="user"
-                    placeholder="Usuario"
+                    placeholder="User"
                     onChange={(e) => setUsername(e.target.value)}
                     className="text-sm"
                 />
@@ -88,7 +88,7 @@ const Login = () => {
                     <div style={{ position: "relative" }}>
                         <input
                             type={show ? "text" : "password"}
-                            placeholder="Contraseña"
+                            placeholder="Password"
                             name="password"
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-sm text-black outline-none hover:border-black focus:border-primary focus-visible:shadow-none"
@@ -98,7 +98,7 @@ const Login = () => {
                             className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm text-gray-500"
 
                         >
-                            {show ? "Ocultar" : "Mostrar"}
+                            {show ? "Hide" : "Show"}
                         </label>
                     </div>
                 </div>
@@ -108,16 +108,32 @@ const Login = () => {
 
 
 
-                <div className="mb-6">
+                <div className="mb-2">
                     <input
                         type="submit"
-                        value="Iniciar Sesión"
+                        value="Log In"
                         className="w-full cursor-pointer rounded-md border border-primary bg-primary px-5 py-3 text-sm font-medium text-white transition hover:bg-opacity-90"
                     />
                 </div>
-                <div className="flex text-xs mb-10 justify-center">
-                    <p className='text-gray-400'>Copyright © Balpisa 2024.</p>
+
+
+                <div className=" flex mb-2 w-full px-8 py-3 text-sm justify-between text-gray-600">
+                    <p
+                    >Test Account: test@test.com  </p>
+
+                    <p>
+                    Password: testing
+                    </p>
+
                 </div>
+
+
+                <div className="flex text-xs mb-10 justify-center">
+                    <p className='text-gray-400'>Developed by CrisIntriago & Jairrami</p>
+                </div>
+
+
+
             </form>
         </div>
     );
