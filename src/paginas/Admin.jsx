@@ -12,7 +12,7 @@ const Admin = ({ opcion }) => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState("");
   const [modeloSeleccionado, setModeloSeleccionado] = useState("");
   const [tablaVisible, setTablaVisible] = useState(false);
-  const familiasUnitarias = ["Porcelanato", "Ceramica", "Ferreteria", "Varios"];
+  const familiasUnitarias = ["Porcelanato", "Ceramica"];
   
 
   const { familias } = useFamilias();

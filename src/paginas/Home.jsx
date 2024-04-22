@@ -22,7 +22,7 @@ const Home = () => {
   const { bodegas } = useBodegas();
   const { modelosUnitarios } =
     useModelosUnitariosPorFamilia(familiaSeleccionada);
-  const familiasUnitarias = ["Porcelanato", "Ceramica", "Ferreteria", "Varios"];
+  const familiasUnitarias = ["Porcelanato", "Ceramica"];
 
   const mostrarPlanchasConSeleccion = (familiaId, modeloId, bodegaId = 1) => {
     setSearchMode("plancha");

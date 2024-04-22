@@ -56,7 +56,7 @@ const Reportes = () => {
       )}
       {
         tablaVisible &&
-        <p className="font-bold text-2xl mt-10 text-center md:w-1/2 mx-auto pb-10 ">Movimiento de Porcelanato, Cerámica, Ferretería y Varios </p>
+        <p className="font-bold text-2xl mt-10 text-center md:w-1/2 mx-auto pb-10 ">Movimiento de Porcelanato, Cerámica </p>
       }
 
 
