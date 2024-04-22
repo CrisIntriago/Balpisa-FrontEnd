@@ -45,7 +45,7 @@ const Login = () => {
             // Manejar errores de red u otros errores relacionados con la solicitud
             console.error('Error:', error.message);
             Swal.fire({
-                text: 'Contraseña o nombre de usuario no es correcto.',
+                text: 'La contraseña o el nombre de usuario no son correctos.',
                 icon: 'error',
                 confirmButtonText: 'Ok'
             })
