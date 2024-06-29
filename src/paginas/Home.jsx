@@ -219,14 +219,16 @@ const Home = () => {
       <div style={{ display: 'none' }}>
         {modeloSeleccionado && idsFamiliasUnitarias.includes(familiaSeleccionada) ? (
           <TablaParaImprimirInfoModeloUnitario
-            ref={componentRef}
-            modeloSeleccionado={modeloSeleccionado}
-          />
+          ref={componentRef}
+          modeloSeleccionado={modeloSeleccionado}
+          familiaSeleccionada={familiaSeleccionada} 
+        />
         ) : (
           <TablaParaImprimirInfoModelo
-            ref={componentRef}
-            modeloSeleccionado={modeloSeleccionado}
-          />
+          ref={componentRef}
+          modeloSeleccionado={modeloSeleccionado}
+          familiaSeleccionada={familiaSeleccionada} 
+        />
         )}
       </div>
     </div>

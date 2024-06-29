@@ -11,13 +11,12 @@ const TdStyle = {
   TdButton: `inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary hover:text-white font-medium`,
 };
 
-const TableMovimientosPorModelo = ({ modeloSeleccionado, offset = 0 }) => {
-  const [currentPage, setCurrentPage] = useState(0);
+const TableMovimientosPorModelo = ({ modeloSeleccionado }) => {
+    const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 5;
   
-    const offsetValue = offset === 0 ? currentPage * itemsPerPage : -1;
-    const { movimientos } = useMovimientosFromModelo(modeloSeleccionado, { offset: offsetValue });
-    
+    const { movimientos } = useMovimientosFromModelo(modeloSeleccionado, currentPage * itemsPerPage);
+
     const { totalFilas } = useFilasFromMovPorModelo(modeloSeleccionado);
     console.log(totalFilas)
 
