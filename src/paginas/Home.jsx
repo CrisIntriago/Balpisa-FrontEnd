@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 import Table from "../components/Table";
 import useFamilias from "../hooks/useFamilias";
 import ComboBox from "../components/ComboBox";
@@ -9,6 +10,8 @@ import TableBusquedaModeloUnitario from "../components/TableBusquedaModeloUnitar
 import useModelosUnitariosPorFamilia from "../hooks/useModelosUnitariosFromFamilia";
 import TableMovimientosPorModelo from "../components/TableMovimientosPorModelo";
 import TableMovimientosPorModeloUnitario from "../components/TableMovimientosPorModeloUnitario";
+import TablaParaImprimirInfoModelo from "../components/TablaParaImprimirInfoModelo";
+import TablaParaImprimirInfoModeloUnitario from "../components/TablaParaImprimirInfoModeloUnitario";
 
 const Home = () => {
   const [familiaSeleccionada, setFamiliaSeleccionada] = useState("");
@@ -24,13 +27,17 @@ const Home = () => {
     useModelosUnitariosPorFamilia(familiaSeleccionada);
   const familiasUnitarias = ["Porcelanato", "Ceramica"];
 
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
   const mostrarPlanchasConSeleccion = (familiaId, modeloId, bodegaId = 1) => {
     setSearchMode("plancha");
     setFamiliaSeleccionada(familiaId);
     setModeloSeleccionado(modeloId);
     setBodegaSeleccionada(bodegaId);
   };
-
 
   useEffect(() => {
     setModeloSeleccionado("");
@@ -131,7 +138,7 @@ const Home = () => {
               }
               label={"Familia:"}
             />
-            {(familiaSeleccionada) && (
+            {familiaSeleccionada && (
               <>
                 <ComboBox
                   placeholder="Seleccione un modelo"
@@ -158,7 +165,7 @@ const Home = () => {
               </>
             )}
           </div>
-          {(familiaSeleccionada) && (
+          {familiaSeleccionada && (
             <button
               onClick={handleBuscarClick}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded"
@@ -166,39 +173,45 @@ const Home = () => {
               Buscar
             </button>
           )}
+          {modeloSeleccionado && (
+            <button
+              onClick={handlePrint}
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 my-2 px-4 rounded"
+            >
+              Imprimir
+            </button>
+          )}
           {tablaVisible &&
-            searchMode === "modelo" && 
-           
+            searchMode === "modelo" &&
             idsFamiliasUnitarias.includes(familiaSeleccionada) && (
               <>
-              <TableBusquedaModeloUnitario
-                familiaSeleccionada={familiaSeleccionada}
-                modeloSeleccionado={modeloSeleccionado}
-              />
-              {modeloSeleccionado !== "" && (
-                <TableMovimientosPorModeloUnitario
+                <TableBusquedaModeloUnitario
+                  familiaSeleccionada={familiaSeleccionada}
                   modeloSeleccionado={modeloSeleccionado}
                 />
-              )}
+                {modeloSeleccionado !== "" && (
+                  <TableMovimientosPorModeloUnitario
+                    modeloSeleccionado={modeloSeleccionado}
+                  />
+                )}
               </>
             )}
           {tablaVisible &&
-  searchMode === "modelo" &&
-  !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
-    <>
-      <Table
-        familiaSeleccionada={familiaSeleccionada}
-        modeloSeleccionado={modeloSeleccionado}
-        onVerPlanchasClick={mostrarPlanchasConSeleccion}
-      />
-      {modeloSeleccionado !== "" && (
-        <TableMovimientosPorModelo
-          modeloSeleccionado={modeloSeleccionado}
-        />
-      )}
-    </>
-  )
-}
+            searchMode === "modelo" &&
+            !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
+              <>
+                <Table
+                  familiaSeleccionada={familiaSeleccionada}
+                  modeloSeleccionado={modeloSeleccionado}
+                  onVerPlanchasClick={mostrarPlanchasConSeleccion}
+                />
+                {modeloSeleccionado !== "" && (
+                  <TableMovimientosPorModelo
+                    modeloSeleccionado={modeloSeleccionado}
+                  />
+                )}
+              </>
+            )}
           {tablaVisible &&
             searchMode === "plancha" &&
             !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
@@ -209,6 +222,22 @@ const Home = () => {
             )}
         </>
       )}
+      <div style={{ display: "none" }}>
+        {modeloSeleccionado &&
+        idsFamiliasUnitarias.includes(familiaSeleccionada) ? (
+          <TablaParaImprimirInfoModeloUnitario
+            ref={componentRef}
+            modeloSeleccionado={modeloSeleccionado}
+            familiaSeleccionada={familiaSeleccionada}
+          />
+        ) : (
+          <TablaParaImprimirInfoModelo
+            ref={componentRef}
+            modeloSeleccionado={modeloSeleccionado}
+            familiaSeleccionada={familiaSeleccionada}
+          />
+        )}
+      </div>
     </div>
   );
 };
