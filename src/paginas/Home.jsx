@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useReactToPrint } from 'react-to-print';
+import { useReactToPrint } from "react-to-print";
 import Table from "../components/Table";
 import useFamilias from "../hooks/useFamilias";
 import ComboBox from "../components/ComboBox";
@@ -26,7 +26,7 @@ const Home = () => {
   const { modelosUnitarios } =
     useModelosUnitariosPorFamilia(familiaSeleccionada);
   const familiasUnitarias = ["Porcelanato", "Ceramica", "Ferreteria", "Varios"];
-  
+
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -181,54 +181,61 @@ const Home = () => {
               Imprimir
             </button>
           )}
-          {tablaVisible && searchMode === "modelo" && idsFamiliasUnitarias.includes(familiaSeleccionada) && (
-            <>
-              <TableBusquedaModeloUnitario
-                familiaSeleccionada={familiaSeleccionada}
-                modeloSeleccionado={modeloSeleccionado}
-              />
-              {modeloSeleccionado !== "" && (
-                <TableMovimientosPorModeloUnitario
+          {tablaVisible &&
+            searchMode === "modelo" &&
+            idsFamiliasUnitarias.includes(familiaSeleccionada) && (
+              <>
+                <TableBusquedaModeloUnitario
+                  familiaSeleccionada={familiaSeleccionada}
                   modeloSeleccionado={modeloSeleccionado}
                 />
-              )}
-            </>
-          )}
-          {tablaVisible && searchMode === "modelo" && !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
-            <>
-              <Table
-                familiaSeleccionada={familiaSeleccionada}
-                modeloSeleccionado={modeloSeleccionado}
-                onVerPlanchasClick={mostrarPlanchasConSeleccion}
-              />
-              {modeloSeleccionado !== "" && (
-                <TableMovimientosPorModelo
+                {modeloSeleccionado !== "" && (
+                  <TableMovimientosPorModeloUnitario
+                    modeloSeleccionado={modeloSeleccionado}
+                  />
+                )}
+              </>
+            )}
+          {tablaVisible &&
+            searchMode === "modelo" &&
+            !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
+              <>
+                <Table
+                  familiaSeleccionada={familiaSeleccionada}
                   modeloSeleccionado={modeloSeleccionado}
+                  onVerPlanchasClick={mostrarPlanchasConSeleccion}
                 />
-              )}
-            </>
-          )}
-          {tablaVisible && searchMode === "plancha" && !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
-            <TablePlanchas
-              modeloSeleccionado={modeloSeleccionado}
-              bodegaSeleccionada={bodegaSeleccionada}
-            />
-          )}
+                {modeloSeleccionado !== "" && (
+                  <TableMovimientosPorModelo
+                    modeloSeleccionado={modeloSeleccionado}
+                  />
+                )}
+              </>
+            )}
+          {tablaVisible &&
+            searchMode === "plancha" &&
+            !idsFamiliasUnitarias.includes(familiaSeleccionada) && (
+              <TablePlanchas
+                modeloSeleccionado={modeloSeleccionado}
+                bodegaSeleccionada={bodegaSeleccionada}
+              />
+            )}
         </>
       )}
-      <div style={{ display: 'none' }}>
-        {modeloSeleccionado && idsFamiliasUnitarias.includes(familiaSeleccionada) ? (
+      <div style={{ display: "none" }}>
+        {modeloSeleccionado &&
+        idsFamiliasUnitarias.includes(familiaSeleccionada) ? (
           <TablaParaImprimirInfoModeloUnitario
-          ref={componentRef}
-          modeloSeleccionado={modeloSeleccionado}
-          familiaSeleccionada={familiaSeleccionada} 
-        />
+            ref={componentRef}
+            modeloSeleccionado={modeloSeleccionado}
+            familiaSeleccionada={familiaSeleccionada}
+          />
         ) : (
           <TablaParaImprimirInfoModelo
-          ref={componentRef}
-          modeloSeleccionado={modeloSeleccionado}
-          familiaSeleccionada={familiaSeleccionada} 
-        />
+            ref={componentRef}
+            modeloSeleccionado={modeloSeleccionado}
+            familiaSeleccionada={familiaSeleccionada}
+          />
         )}
       </div>
     </div>

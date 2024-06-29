@@ -1,14 +1,16 @@
 import React, { forwardRef } from "react";
 import useMovimientosFromModeloUnitario from "../hooks/useMovimientosFromModeloUnitario";
 import useModelosUnitariosCompletos from "../hooks/useModelosUnitariosCompletos";
+
+
 const TdStyle = {
   ThStyle: `border-black border-2`,
   TdStyle: `text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium`,
   TdStyle2: `text-dark border-black border-2 bg-white py-5 px-2 text-center text-base font-medium`,
 };
 
-const TablaParaImprimirInfoModeloUnitario = forwardRef(({ modeloSeleccionado, familiaSeleccionada }, ref) => {
-
+const TablaParaImprimirInfoModeloUnitario = forwardRef(
+  ({ modeloSeleccionado, familiaSeleccionada }, ref) => {
     if (cargando) {
       return <div>Cargando Información del modelo...</div>;
     }
@@ -17,7 +19,10 @@ const TablaParaImprimirInfoModeloUnitario = forwardRef(({ modeloSeleccionado, fa
       return <div>No hay datos disponibles.</div>;
     }
 
-    const { movimientos } = useMovimientosFromModeloUnitario(modeloSeleccionado, -1);
+    const { movimientos } = useMovimientosFromModeloUnitario(
+      modeloSeleccionado,
+      -1
+    );
 
     const { modelosCompletos } =
       useModelosUnitariosCompletos(familiaSeleccionada);
