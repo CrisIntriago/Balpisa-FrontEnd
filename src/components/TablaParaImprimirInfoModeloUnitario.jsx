@@ -1,23 +1,17 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useMemo, useState, useEffect } from "react";
 import useMovimientosFromModeloUnitario from "../hooks/useMovimientosFromModeloUnitario";
 import useModelosUnitariosCompletos from "../hooks/useModelosUnitariosCompletos";
-
+import formatoFecha from "../config/formatoFecha";
 
 const TdStyle = {
   ThStyle: `border-black border-2`,
-  TdStyle: `text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium`,
+  TdStyle1: `text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium`,
   TdStyle2: `text-dark border-black border-2 bg-white py-5 px-2 text-center text-base font-medium`,
 };
 
 const TablaParaImprimirInfoModeloUnitario = forwardRef(
   ({ modeloSeleccionado, familiaSeleccionada }, ref) => {
-    if (cargando) {
-      return <div>Cargando Información del modelo...</div>;
-    }
-
-    if (!modeloSeleccionado) {
-      return <div>No hay datos disponibles.</div>;
-    }
+    const [cargando, setCargando] = useState(true);
 
     const { movimientos } = useMovimientosFromModeloUnitario(
       modeloSeleccionado,
@@ -27,7 +21,12 @@ const TablaParaImprimirInfoModeloUnitario = forwardRef(
     const { modelosCompletos } =
       useModelosUnitariosCompletos(familiaSeleccionada);
 
-    // Calcula los elementos filtrados fuera del render
+    useEffect(() => {
+      if (modeloSeleccionado) {
+        setCargando(false);
+      }
+    }, [modeloSeleccionado]);
+
     const filteredElements = useMemo(() => {
       let filtered = modelosCompletos;
       if (familiaSeleccionada !== "" && modeloSeleccionado !== "") {
@@ -37,6 +36,14 @@ const TablaParaImprimirInfoModeloUnitario = forwardRef(
       }
       return filtered;
     }, [modelosCompletos, familiaSeleccionada, modeloSeleccionado]);
+
+    if (cargando) {
+      return <div>Cargando Información del modelo...</div>;
+    }
+
+    if (!modeloSeleccionado) {
+      return <div>No hay datos disponibles.</div>;
+    }
 
     return (
       <div ref={ref}>
@@ -57,13 +64,12 @@ const TablaParaImprimirInfoModeloUnitario = forwardRef(
             </tr>
           </thead>
           <tbody>
-            {/* Llamada a currentElements para obtener y mapear los elementos de la página actual */}
             {filteredElements.map(
               ({ id, nombre, unidades, m2Disponibles, preciom2 }) => (
                 <tr key={id}>
-                  <td className={TdStyle.TdStyle}>{nombre}</td>
+                  <td className={TdStyle.TdStyle1}>{nombre}</td>
                   <td className={TdStyle.TdStyle2}>{unidades}</td>
-                  <td className={TdStyle.TdStyle}>{m2Disponibles}</td>
+                  <td className={TdStyle.TdStyle1}>{m2Disponibles}</td>
                   <td className={TdStyle.TdStyle2}>{preciom2}</td>
                 </tr>
               )
@@ -91,17 +97,16 @@ const TablaParaImprimirInfoModeloUnitario = forwardRef(
                 <td className={TdStyle.TdStyle2}>
                   {formatoFecha(mov.createdAt)}
                 </td>
-                <td className={TdStyle.TdStyle}>{mov.tipo}</td>
-                <td className={TdStyle.TdStyle}>{mov.cantidadCambiada}</td>
+                <td className={TdStyle.TdStyle1}>{mov.tipo}</td>
+                <td className={TdStyle.TdStyle1}>{mov.cantidadCambiada}</td>
                 <td className={TdStyle.TdStyle2}>
                   {Number(mov.valorRegistro).toFixed(2)}
                 </td>
-                <td className={TdStyle.TdStyle}>{mov.nFactura}</td>
+                <td className={TdStyle.TdStyle1}>{mov.nFactura}</td>
               </tr>
             ))}
           </tbody>
         </table>
-
       </div>
     );
   }

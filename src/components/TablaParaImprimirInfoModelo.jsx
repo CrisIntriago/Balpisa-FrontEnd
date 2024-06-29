@@ -1,27 +1,28 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useMemo, useState, useEffect } from "react";
 import useModelosCompletos from "../hooks/useModelosCompletos";
 import useMovimientosFromModelo from "../hooks/useMovimientosFromModelo";
 import useallPlanchas from "../hooks/useallPlanchas";
+import formatoFecha from "../config/formatoFecha";
 
 const TdStyle = {
   ThStyle: `border-black border-2`,
-  TdStyle: `text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium`,
+  TdStyle1: `text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium`,
   TdStyle2: `text-dark border-black border-2 bg-white py-5 px-2 text-center text-base font-medium`,
 };
 
 const TablaParaImprimirInfoModelo = forwardRef(
-  ({ modeloSeleccionado, familiaSeleccionada }, ref) => {
-    if (cargando) {
-      return <div>Cargando Información del modelo...</div>;
-    }
-
-    if (!modeloSeleccionado) {
-      return <div>No hay datos disponibles.</div>;
-    }
+  ({ modeloSeleccionado, familiaSeleccionada, bodegaSeleccionada }, ref) => {
+    const [cargando, setCargando] = useState(true);
 
     const { modelosCompletos } = useModelosCompletos(familiaSeleccionada);
     const { movimientos } = useMovimientosFromModelo(modeloSeleccionado, -1);
     const { planchas } = useallPlanchas(modeloSeleccionado, 1);
+
+    useEffect(() => {
+      if (modeloSeleccionado) {
+        setCargando(false);
+      }
+    }, [modeloSeleccionado]);
 
     const filteredElements = useMemo(() => {
       let filtered = modelosCompletos;
@@ -32,6 +33,14 @@ const TablaParaImprimirInfoModelo = forwardRef(
       }
       return filtered;
     }, [modelosCompletos, familiaSeleccionada, modeloSeleccionado]);
+
+    if (cargando) {
+      return <div>Cargando Información del modelo...</div>;
+    }
+
+    if (!modeloSeleccionado) {
+      return <div>No hay datos disponibles.</div>;
+    }
 
     return (
       <div ref={ref}>
@@ -51,12 +60,11 @@ const TablaParaImprimirInfoModelo = forwardRef(
             </tr>
           </thead>
           <tbody>
-            {/* Llamada a currentElements para obtener y mapear los elementos de la página actual */}
             {filteredElements.map(({ id, nombre, m2Disponibles, preciom2 }) => (
               <tr key={nombre}>
-                <td className={TdStyle.TdStyle}>{nombre}</td>
+                <td className={TdStyle.TdStyle1}>{nombre}</td>
                 <td className={TdStyle.TdStyle2}>{preciom2}</td>
-                <td className={TdStyle.TdStyle}>{m2Disponibles}</td>
+                <td className={TdStyle.TdStyle1}>{m2Disponibles}</td>
               </tr>
             ))}
           </tbody>
@@ -81,13 +89,13 @@ const TablaParaImprimirInfoModelo = forwardRef(
             {movimientos.map((mov, index) => (
               <tr key={index}>
                 <td className={TdStyle.TdStyle2}>{formatoFecha(mov.fecha)}</td>
-                <td className={TdStyle.TdStyle}>{mov.tipo}</td>
+                <td className={TdStyle.TdStyle1}>{mov.tipo}</td>
                 <td className={TdStyle.TdStyle2}>{mov.nombreBodega}</td>
-                <td className={TdStyle.TdStyle}>{mov.nombrePlancha}</td>
+                <td className={TdStyle.TdStyle1}>{mov.nombrePlancha}</td>
                 <td className={TdStyle.TdStyle2}>
                   {Number(mov.metraje).toFixed(2)}
                 </td>
-                <td className={TdStyle.TdStyle}>{mov.nFactura}</td>
+                <td className={TdStyle.TdStyle1}>{mov.nFactura}</td>
               </tr>
             ))}
           </tbody>
@@ -129,17 +137,17 @@ const TablaParaImprimirInfoModelo = forwardRef(
                 despunte3B,
               }) => (
                 <tr key={id}>
-                  <td className={TdStyle.TdStyle}>{bodegaSeleccionada}</td>
+                  <td className={TdStyle.TdStyle1}>{bodegaSeleccionada}</td>
                   <td className={TdStyle.TdStyle2}>{nombre}</td>
-                  <td className={TdStyle.TdStyle}>{alto}</td>
+                  <td className={TdStyle.TdStyle1}>{alto}</td>
                   <td className={TdStyle.TdStyle2}>{ancho}</td>
-                  <td className={TdStyle.TdStyle}>{despunte1A}</td>
+                  <td className={TdStyle.TdStyle1}>{despunte1A}</td>
                   <td className={TdStyle.TdStyle2}>{despunte1B}</td>
-                  <td className={TdStyle.TdStyle}>{despunte2A}</td>
+                  <td className={TdStyle.TdStyle1}>{despunte2A}</td>
                   <td className={TdStyle.TdStyle2}>{despunte2B}</td>
-                  <td className={TdStyle.TdStyle}>{despunte3A}</td>
+                  <td className={TdStyle.TdStyle1}>{despunte3A}</td>
                   <td className={TdStyle.TdStyle2}>{despunte3B}</td>
-                  <td className={TdStyle.TdStyle}>
+                  <td className={TdStyle.TdStyle1}>
                     {(
                       alto * ancho -
                       despunte1A * despunte1B -
