@@ -121,19 +121,9 @@ const Login = () => {
                 </div>
 
 
-                <div className=" flex mb-2 w-full px-8 py-3 text-sm justify-between text-gray-600">
-                    <p
-                    >Test Account: test@test.com  </p>
-
-                    <p>
-                    Password: testing
-                    </p>
-
-                </div>
-
 
                 <div className="flex text-xs mb-10 justify-center">
-                    <p className='text-gray-400'>Developed by CrisIntriago & Jairrami</p>
+                    <p className='text-gray-400'>2024 © Balpisa</p>
                 </div>
 
 
