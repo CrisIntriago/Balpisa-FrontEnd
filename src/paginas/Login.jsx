@@ -35,11 +35,6 @@ const Login = () => {
                 localStorage.setItem("token", JSON.stringify(response.data.token));
                 setAuth(response.data);
                 navigate("/consultas");
-                Swal.fire({
-                    text: 'Please switch Google Translator to Spanish.',
-                    icon: 'info',
-                    confirmButtonText: 'Ok'
-                })
             } else {
                 // La solicitud no fue exitosa (código de respuesta fuera del rango 200-299)
                 // Manejar el error aquí
