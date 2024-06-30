@@ -79,7 +79,7 @@ const Login = () => {
                 <InputBox
                     type="text"
                     name="user"
-                    placeholder="User"
+                    placeholder="Usuario"
                     onChange={(e) => setUsername(e.target.value)}
                     className="text-sm"
                 />
@@ -92,7 +92,7 @@ const Login = () => {
                     <div style={{ position: "relative" }}>
                         <input
                             type={show ? "text" : "password"}
-                            placeholder="Password"
+                            placeholder="Contraseña"
                             name="password"
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-sm text-black outline-none hover:border-black focus:border-primary focus-visible:shadow-none"
@@ -102,7 +102,7 @@ const Login = () => {
                             className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm text-gray-500"
 
                         >
-                            {show ? "Hide" : "Show"}
+                            {show ? "Ocultar" : "Mostrar"}
                         </label>
                     </div>
                 </div>
@@ -115,7 +115,7 @@ const Login = () => {
                 <div className="mb-2">
                     <input
                         type="submit"
-                        value="Log In"
+                        value="Ingresar
                         className="w-full cursor-pointer rounded-md border border-primary bg-primary px-5 py-3 text-sm font-medium text-white transition hover:bg-opacity-90"
                     />
                 </div>
