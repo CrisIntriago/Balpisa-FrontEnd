@@ -25,7 +25,7 @@ const Home = () => {
   const { bodegas } = useBodegas();
   const { modelosUnitarios } =
     useModelosUnitariosPorFamilia(familiaSeleccionada);
-  const familiasUnitarias = ["Porcelanato", "Ceramica"];
+  const familiasUnitarias = ["Porcelanato", "Ceramica","Ferreteria","Varios"];
 
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
