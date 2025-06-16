@@ -3,8 +3,8 @@ import obtenerMovimientosUnitarios from '../config/obtenerMovimientosUnitarios';
 
 const useMovimientosUnitarios = (fechaInicio, fechaFin, offset) => {
     const [movimientos, setMovimientos] = useState([]);
-    const [cargando, setCargando] = useState(false);
-    const [error, setError] = useState(null);
+    const [setCargando] = useState(false);
+    const [setError] = useState(null);
 
     useEffect(() => {
         const cargarMovimientos = async () => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
@@ -6,7 +6,6 @@ import useAuth from '../hooks/useAuth';
 
 const Navbar = () => {
   const { auth, cerrarSesionAuth } = useAuth();
-  const [open, setOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState('');
   const [navbarHeight, setNavbarHeight] = useState(0);
 
