@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import obtenerAllPlanchas from '../config/obtenerAllPlanchas';
 
-const useallPlanchas = (modeloId, bodegaId) => {
+const UseAllPlanchas = (modeloId, bodegaId) => {
     const [planchas, setPlanchas] = useState([]);
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState(null);
@@ -35,4 +35,4 @@ const useallPlanchas = (modeloId, bodegaId) => {
     return { planchas };
 };
 
-export default useallPlanchas;
+export default UseAllPlanchas;
