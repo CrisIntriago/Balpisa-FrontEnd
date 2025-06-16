@@ -2,9 +2,9 @@ import { useState } from 'react';
 import actualizarPlancha from '../config/actualizarPlancha';
 
 const useActualizarPlancha = () => {
-    const [cargando, setCargando] = useState(false);
-    const [error, setError] = useState(null);
-    const [respuesta, setRespuesta] = useState(null);
+    const [setCargando] = useState(false);
+    const [ setError] = useState(null);
+    const [ setRespuesta] = useState(null);
 
     const enviarPlanchaActualizada = async (planchaId, datosPlancha) => {
         setCargando(true);
